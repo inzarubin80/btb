@@ -1,47 +1,34 @@
-import { LOGIN_SUCCESS, LOGIN_LOGOUT, SET_USERNAME, SET_PASSWORD, SET_ROLES } from '../types'
+import { LOGIN_SUCCESS, LOGIN_REQUEST, LOGIN_FAILURE, LOGIN_LOGOUT, SET_USERNAME, SET_PASSWORD } from '../types'
 
 const  initialState = {
-    
-    user:  null ,
+    isLoggedIn:  false ,
+    loggingIn:  false,
     username:   '',
     password: '',
-    err:'',
-    uid:'',
-    userRoles: {roles:[], subscriptionRoles:null}
-
+    hash:'',
+    err:''
 };
-
-let buld;
 
 export default (state = initialState, action) => {
 
     switch (action.type) {
-        
+        case LOGIN_REQUEST:
+            return {
+                ...state,
+                ...action.payload,
+                loggingIn: true,
+                isLoggedIn: false,
+
+            };
+
         case LOGIN_SUCCESS:
             return {
                 ...state,
-                user: action.payload,
-                uid: action.payload.uid,
-                
-            };
-        
-            case SET_ROLES:
-                return {
-                    ...state,
-                    userRoles: action.payload
-                    
-                };
-                
-
-        case LOGIN_LOGOUT:
-            return {
-                ...state,
-                user: null,
-                uid:'',
-                userRoles: {roles:[], subscriptionRoles:null}
+                ...action.payload,
+                loggingIn: false,
+                isLoggedIn: true,
             };
 
-        
         case SET_USERNAME:
             return {
                 ...state,       
@@ -55,7 +42,23 @@ export default (state = initialState, action) => {
                 password: action.payload,
    
             };
-         
+        
+            case LOGIN_FAILURE:
+                return {
+                    ...state,
+
+                    ...action.payload,
+                    
+                    loggingIn: false,
+                    isLoggedIn: false,
+                };
+
+
+            case LOGIN_LOGOUT:
+                return {
+                    ...initialState
+                };
+        
 
         default:
 
