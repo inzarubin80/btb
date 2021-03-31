@@ -2,23 +2,28 @@ import './App.css';
 import {BrowserRouter as Router, Route, Switch} from 'react-router-dom'
  
 import Login from './components/LoginPage/LoginPage'
-import heder from './components/heder/heder'
+import Heder from './components/Heder/Heder'
+import Makets from './components/Maket/Makets'
+
+import {useSelector} from 'react-redux';
 
 
 function App() {
 
- const login = true
+
+    const isLoggedIn = useSelector(state => state.user.isLoggedIn);
+
   return (
     <div className="btb">
      
-     {!login && <Login/>}
+     {!isLoggedIn && <Login/>}
 
-     {login && <heder/>}
+     {isLoggedIn && <Heder/>}
 
-     {login && <Router>
+     {isLoggedIn && <Router>
             <>
                 <Switch>
-                    <Route path="/" exact component={Login}/>
+                    <Route path="/" exact component={Makets}/>
                 </Switch>      
             </>
         </Router>}

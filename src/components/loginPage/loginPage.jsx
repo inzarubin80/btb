@@ -12,6 +12,11 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 
 
+import { useDispatch, useSelector } from 'react-redux';
+import { login, logOut} from '../../redux/user/userActions';
+
+
+
 const validationSchema = yup.object({
   email: yup
     .string('Enter your email')
@@ -46,6 +51,12 @@ const useStyles = makeStyles((theme) => ({
 
 const LoginPage = () => {
 
+
+  const dispatch = useDispatch();
+  const isLoggedIn = useSelector(state => state.user.isLoggedIn);
+  const err = useSelector(state => state.user.err);
+
+
   const formik = useFormik({
     initialValues: {
       email: '',
@@ -53,8 +64,10 @@ const LoginPage = () => {
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      alert(JSON.stringify(values, null, 2));
-    },
+
+      dispatch(login(values.email, values.password))
+
+      },
   });
 
   const classes = useStyles();

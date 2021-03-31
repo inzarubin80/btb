@@ -4,9 +4,6 @@ import {
   LOGIN_REQUEST,
   LOGIN_FAILURE,
   LOGIN_LOGOUT,
-
-  SET_PASSWORD,
-  SET_USERNAME
 } from '../types'
 
 import { executeAuthenticationService, getHash } from '../../api/dataService1c';
@@ -19,21 +16,6 @@ const setLoginSuccess = (loginData) => {
   return {
     type: LOGIN_SUCCESS,
     payload: loginData,
-  };
-};
-
-
-export const setUserName = (userName) => {
-  return {
-    type: SET_USERNAME,
-    payload: userName,
-  };
-};
-
-export  const setPassword = (password) => {
-  return {
-    type: SET_PASSWORD,
-    payload: password,
   };
 };
 
@@ -68,7 +50,7 @@ export const logOut = (loginData) => {
 
 
 
-export const login = (username, password, navigation) => {
+export const login = (username, password) => {
   return (dispatch) => {
 
    const hash = getHash(username, password);
@@ -100,7 +82,7 @@ export const login = (username, password, navigation) => {
           
           dispatch(setLoginSuccess(loginData));
 
-          navigation.navigate('Calendar');
+         
 
         } else {
 
@@ -127,9 +109,6 @@ const setLoginLocal = async (loginData) => {
 
     const session = JSON.stringify(loginData);
 
-    console.log(session);
-
-   // await AsyncStorage.setItem('session', session );
 
   } catch (err) {
     console.log(err);

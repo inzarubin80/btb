@@ -2,7 +2,11 @@ import { API_URL } from '../Constants'
 import { encode } from 'base-64'
 
 export const getHash = (username, password) => {
+    
+    console.log('Basic ' + encode(username + ":" + password));
     return 'Basic ' + encode(username + ":" + password);
+
+
 }
 
 export const executeAuthenticationService = (hash) => {
@@ -13,7 +17,11 @@ export const executeAuthenticationService = (hash) => {
             method: 'get',
             headers: new Headers({
                 'Authorization': hash,
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+
+              
+
+
             })
         })
         ;

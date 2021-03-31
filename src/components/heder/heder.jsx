@@ -1,5 +1,5 @@
 import React from 'react';
-const layout = () => {
+const Heder = () => {
     return (<h1>Шапка сайта</h1>)
 }
-export default layout
+export default Heder

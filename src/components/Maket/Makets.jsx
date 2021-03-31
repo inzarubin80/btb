@@ -1,5 +1,5 @@
 import React from 'react';
-const itemListLayouts = () => {
+const Makets = () => {
     return (<h1>Список макетов</h1>)
 }
-export default itemListLayouts
+export default Makets
