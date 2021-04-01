@@ -2,7 +2,7 @@ import './App.css';
 import {BrowserRouter as Router, Route, Switch} from 'react-router-dom'
  
 import Login from './components/LoginPage/LoginPage'
-import Heder from './components/Heder/Heder'
+import Heder from './components/Heder/Heder.js'
 import Makets from './components/Maket/Makets'
 
 import {useSelector} from 'react-redux';
@@ -10,10 +10,7 @@ import {useSelector} from 'react-redux';
 
 function App() {
 
-
-    const d = 1
-
-    const isLoggedIn = useSelector(state => state.user.isLoggedIn);
+  const isLoggedIn = useSelector(state => state.user.isLoggedIn);
 
   return (
     <div className="btb">

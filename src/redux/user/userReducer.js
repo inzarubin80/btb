@@ -1,4 +1,4 @@
-import { LOGIN_SUCCESS, LOGIN_REQUEST, LOGIN_FAILURE, LOGIN_LOGOUT, SET_USERNAME, SET_PASSWORD } from '../types'
+import { LOGIN_SUCCESS, LOGIN_REQUEST, LOGIN_FAILURE, LOGIN_LOGOUT} from '../types'
 
 const  initialState = {
     isLoggedIn:  localStorage.getItem('token') ? true : false ,
@@ -41,7 +41,10 @@ export default (state = initialState, action) => {
 
             case LOGIN_LOGOUT:
                 return {
-                    ...initialState
+                    ...state,
+                ...action.payload,
+                loggingIn: false,
+                isLoggedIn: false,
                 };
         
 

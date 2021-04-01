@@ -17,7 +17,7 @@ import { login} from '../../redux/user/userActions';
 
 import { getToken} from '../../api/dataService1c';
 
-
+import { Alert, AlertTitle }  from '@material-ui/lab';
 
 const validationSchema = yup.object({
   email: yup
@@ -68,7 +68,7 @@ const LoginPage = () => {
     onSubmit: (values) => {
 
       dispatch(login(getToken(values.email, values.password)))
-      
+
       },
   });
 
@@ -114,8 +114,13 @@ const LoginPage = () => {
           helperText={formik.touched.password && formik.errors.password}
         />
         <Button color="primary" variant="contained" fullWidth type="submit">
-          Submit
+          Войти
         </Button>
+
+        {err&&<Alert severity="error">
+         <AlertTitle>  {err}</AlertTitle>
+        </Alert>}
+
       </form>
       </div>
     </Container>
