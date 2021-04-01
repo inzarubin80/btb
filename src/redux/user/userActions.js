@@ -1,4 +1,3 @@
-  
 import {
   LOGIN_SUCCESS,
   LOGIN_REQUEST,
@@ -6,8 +5,7 @@ import {
   LOGIN_LOGOUT,
 } from '../types'
 
-import { executeAuthenticationService, getHash } from '../../api/dataService1c';
-//import AsyncStorage from '@react-native-community/async-storage';
+import { executeAuthenticationService} from '../../api/dataService1c';
 
 const setLoginSuccess = (loginData) => {
 
@@ -30,18 +28,15 @@ const setLoginRequest = (loginData) => {
 
 const setLoginFailure = (loginData) => {
 
-  setLoginLocal(null);
-
   return {
     type: LOGIN_FAILURE,
     payload: loginData,
   };
 };
 
-export const logOut = (loginData) => {
-  
-  setLoginLocal(null);
 
+export const logOut = (loginData) => {
+  localStorage.removeItem('token')
   return {
     type: LOGIN_LOGOUT
   };
@@ -50,16 +45,15 @@ export const logOut = (loginData) => {
 
 
 
-export const login = (username, password) => {
+export const login = (token) => {
   return (dispatch) => {
 
-   const hash = getHash(username, password);
 
-    let loginData = { username: username, password: password, hash: hash, err: ''};
+    let loginData = {token: token, err: ''};
 
     dispatch(setLoginRequest(loginData));
 
-    return executeAuthenticationService(hash)
+    return executeAuthenticationService(token)
       .then(response => {
 
         console.log(response.status);
@@ -76,13 +70,9 @@ export const login = (username, password) => {
       .then((json) => {
 
         if (json.msg === 'success') {
-
-          
-
-          
+ 
           dispatch(setLoginSuccess(loginData));
-
-         
+          localStorage.setItem('token', token)
 
         } else {
 
@@ -93,7 +83,7 @@ export const login = (username, password) => {
       })
       .catch((err) => {
                
-        dispatch(setLoginFailure({ username: username, password: password, err:'Сервис недоступен, попробуйте позже'}));
+        dispatch(setLoginFailure({ err:'Сервис недоступен, попробуйте позже'}));
         console.log('Login Failed', 'Some error occurred, please retry');
         console.log(err);
       });

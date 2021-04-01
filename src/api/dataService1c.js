@@ -1,82 +1,23 @@
 import { API_URL } from '../Constants'
 import { encode } from 'base-64'
 
-export const getHash = (username, password) => {
-
-    //1
-    console.log('Basic ' + encode(username + ":" + password));
+export const getToken = (username, password) => {
     return 'Basic ' + encode(username + ":" + password);
-
-
 }
 
-export const executeAuthenticationService = (hash) => {
+//https://auth0.com/blog/secure-your-react-and-redux-app-with-jwt-authentication/
 
-    
+export const executeAuthenticationService = (token) => {
     return fetch(`${API_URL}/?typerequest=authenticate`,
         {
             method: 'get',
             headers: new Headers({
-                'Authorization': hash,
+                'Authorization': token,
                 'Content-Type': 'application/json',
-
-              
-
-
-            })
-        })
-        ;
-}
-
-export const getPartners = ({searchText, hash}) => {
-    return fetch(`${API_URL}/?typerequest=referencesPartners&searchText=${searchText}`,
-        {
-            method: 'get',
-            headers: new Headers({
-                'Authorization': hash,
-                'Content-Type': 'application/json'
             })
         })
         ;
 }
 
 
-export const getProjects = ({searchText, hash, idPartner}) => {
-    return fetch(`${API_URL}/?typerequest=referencesProjects&searchText=${searchText}&idPartner=${idPartner}`,
-        {
-            method: 'get',
-            headers: new Headers({
-                'Authorization': hash,
-                'Content-Type': 'application/json'
-            })
-        })
-        ;
-}
 
-export const getEvents = (beginningPeriod, endPeriod, hash) => {
-    
-    
-    return fetch(`${API_URL}/?typerequest=events&beginningPeriod=${beginningPeriod}&endPeriod=${endPeriod}`,
-        {
-            method: 'get',
-            headers: new Headers({
-                'Authorization': hash,
-                'Content-Type': 'application/json'
-            })
-        })
-        ;
-}
-
-export const saveEvent = (event, hash) => {
-
-    return fetch(`${API_URL}/?typerequest=saveEvent`,
-        {
-            method: 'POST',
-            body: JSON.stringify(event),
-            headers: new Headers({
-                'Authorization': hash,
-                'Content-Type': 'application/json'
-            })
-        })
-        ;
-}

@@ -13,7 +13,9 @@ import Container from '@material-ui/core/Container';
 
 
 import { useDispatch, useSelector } from 'react-redux';
-import { login, logOut} from '../../redux/user/userActions';
+import { login} from '../../redux/user/userActions';
+
+import { getToken} from '../../api/dataService1c';
 
 
 
@@ -65,8 +67,8 @@ const LoginPage = () => {
     validationSchema: validationSchema,
     onSubmit: (values) => {
 
-      dispatch(login(values.email, values.password))
-
+      dispatch(login(getToken(values.email, values.password)))
+      
       },
   });
 
