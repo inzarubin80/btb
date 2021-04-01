@@ -16,6 +16,9 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
+
+import AssessmentIcon from '@material-ui/icons/Assessment';
+
 import MailIcon from '@material-ui/icons/Mail';
 import Button from '@material-ui/core/Button';
 import { useDispatch} from 'react-redux';
@@ -151,10 +154,17 @@ export default function Heder() {
         </div>
         <Divider />
         <List>
+            
             <ListItem button key={'Makets'}>
               <ListItemIcon><InboxIcon /></ListItemIcon>
               <ListItemText primary={"Макеты"} />
             </ListItem>
+
+            <ListItem button key={'Reports'}>
+              <ListItemIcon><AssessmentIcon /></ListItemIcon>
+              <ListItemText primary={"Отчеты"} />
+            </ListItem>
+
         </List>
         <Divider />
         
