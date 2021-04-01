@@ -2,7 +2,8 @@ import { API_URL } from '../Constants'
 import { encode } from 'base-64'
 
 export const getHash = (username, password) => {
-    a = 2
+
+    //1
     console.log('Basic ' + encode(username + ":" + password));
     return 'Basic ' + encode(username + ":" + password);
 
