@@ -19,10 +19,16 @@ import InboxIcon from '@material-ui/icons/MoveToInbox';
 
 import AssessmentIcon from '@material-ui/icons/Assessment';
 
-import MailIcon from '@material-ui/icons/Mail';
 import Button from '@material-ui/core/Button';
-import { useDispatch} from 'react-redux';
-import { logOut} from '../../redux/user/userActions';
+import { useDispatch } from 'react-redux';
+import { logOut } from '../../redux/user/userActions';
+
+
+import {
+  BrowserRouter as Router,
+  Link,
+  useRouteMatch
+} from "react-router-dom";
 
 const drawerWidth = 240;
 
@@ -88,7 +94,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Heder() {
+export default function Heder(props) {
+
+  console.log('props', props);
+
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
@@ -96,6 +105,11 @@ export default function Heder() {
   const handleDrawerOpen = () => {
     setOpen(true);
   };
+
+
+  //let match = useRouteMatch();
+
+  let { path, url } = useRouteMatch();
 
   const handleDrawerClose = () => {
     setOpen(false);
@@ -112,30 +126,30 @@ export default function Heder() {
           [classes.appBarShift]: open,
         })}
       >
-             <Toolbar>
-          
+        <Toolbar>
+
 
           <IconButton
-                   color="inherit"
-                   aria-label="open drawer"
-                   onClick={handleDrawerOpen}
-                   edge="start"
-                   className={clsx(classes.menuButton, open && classes.hide)}
-                 >
-                   <MenuIcon />
-                 </IconButton>
-       
-                 <Typography variant="h6" className={classes.title}>
-                   НПО СЛАВА
-                 </Typography>
-                 
-                 <div className={classes.toolbarButtons}>
+            color="inherit"
+            aria-label="open drawer"
+            onClick={handleDrawerOpen}
+            edge="start"
+            className={clsx(classes.menuButton, open && classes.hide)}
+          >
+            <MenuIcon />
+          </IconButton>
 
-                 <Button color="inherit" onClick={()=>{dispatch(logOut())}}>Выйти</Button>
-       
-                 </div>
-       
-               </Toolbar>
+          <Typography variant="h6" className={classes.title}>
+            НПО СЛАВА
+                 </Typography>
+
+          <div className={classes.toolbarButtons}>
+
+            <Button color="inherit" onClick={() => { dispatch(logOut()) }}>Выйти</Button>
+
+          </div>
+
+        </Toolbar>
 
       </AppBar>
       <Drawer
@@ -154,20 +168,23 @@ export default function Heder() {
         </div>
         <Divider />
         <List>
-            
-            <ListItem button key={'Makets'}>
-              <ListItemIcon><InboxIcon /></ListItemIcon>
-              <ListItemText primary={"Макеты"} />
-            </ListItem>
 
-            <ListItem button key={'Reports'}>
-              <ListItemIcon><AssessmentIcon /></ListItemIcon>
-              <ListItemText primary={"Отчеты"} />
-            </ListItem>
+
+
+
+          <ListItem component={Link} to={"/makets"} button key={'Makets'}>
+            <ListItemIcon>   <InboxIcon /> </ListItemIcon>
+            <ListItemText primary={"Макеты"} />
+          </ListItem>
+
+          <ListItem  component={Link} to={"/reports"}  button key={'Reports'}>
+            <ListItemIcon><AssessmentIcon /></ListItemIcon>
+            <ListItemText primary={"Отчеты"} />
+          </ListItem>
 
         </List>
         <Divider />
-        
+
       </Drawer>
 
 

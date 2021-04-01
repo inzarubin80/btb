@@ -19,6 +19,15 @@ import { getToken} from '../../api/dataService1c';
 
 import { Alert, AlertTitle }  from '@material-ui/lab';
 
+
+
+
+import {
+  BrowserRouter as Router,
+  useHistory,
+  useLocation
+} from "react-router-dom";
+
 const validationSchema = yup.object({
   email: yup
     .string('Enter your email')
@@ -59,6 +68,7 @@ const LoginPage = () => {
   const err = useSelector(state => state.user.err);
 
 
+
   const formik = useFormik({
     initialValues: {
       email: '',
@@ -73,6 +83,18 @@ const LoginPage = () => {
   });
 
   const classes = useStyles();
+
+
+
+  let history = useHistory();
+  let location = useLocation();
+  
+  let { from } = location.state || { from: { pathname: "/" } };
+
+  if (isLoggedIn) {
+    history.replace(from);
+  }
+
 
   return (
   
