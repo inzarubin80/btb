@@ -94,16 +94,6 @@ const LoginPage = () => {
   const classes = useStyles();
 
 
-
-
-  /*
-  if (isLoggedIn) {
-    history.replace(from);
-  }
-*/
-
-
-
   return (
   
     <Container component="main" maxWidth="xs">

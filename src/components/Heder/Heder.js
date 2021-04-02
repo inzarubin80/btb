@@ -20,7 +20,7 @@ import InboxIcon from '@material-ui/icons/MoveToInbox';
 import AssessmentIcon from '@material-ui/icons/Assessment';
 
 import Button from '@material-ui/core/Button';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector} from 'react-redux';
 import { logOut } from '../../redux/user/userActions';
 
 
@@ -85,6 +85,7 @@ const useStyles = makeStyles((theme) => ({
     }),
     marginLeft: -drawerWidth,
   },
+  
   contentShift: {
     transition: theme.transitions.create('margin', {
       easing: theme.transitions.easing.easeOut,
@@ -92,11 +93,15 @@ const useStyles = makeStyles((theme) => ({
     }),
     marginLeft: 0,
   },
+  link:{
+
+  }
+
 }));
 
 export default function Heder(props) {
 
-  console.log('props', props);
+  console.log('Heder');
 
   const classes = useStyles();
   const theme = useTheme();
@@ -107,7 +112,7 @@ export default function Heder(props) {
   };
 
 
-  //let match = useRouteMatch();
+  const isLoggedIn = useSelector(state => state.user.isLoggedIn);
 
   let { path, url } = useRouteMatch();
 
@@ -138,16 +143,20 @@ export default function Heder(props) {
           >
             <MenuIcon />
           </IconButton>
+          
+          
+          
 
-          <Typography variant="h6" className={classes.title}>
+          <Typography variant="h6" className={classes.title} component={Link} to={"/"} style={{color: '#FFF'}}>
             НПО СЛАВА
-                 </Typography>
+          </Typography>
 
-          <div className={classes.toolbarButtons}>
+          
+         {isLoggedIn && <div className={classes.toolbarButtons}>
 
             <Button color="inherit" onClick={() => { dispatch(logOut()) }}>Выйти</Button>
 
-          </div>
+          </div>}
 
         </Toolbar>
 

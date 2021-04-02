@@ -5,7 +5,7 @@ import Login from './components/LoginPage/LoginPage';
 import Heder from './components/Heder/Heder.js';
 import Makets from './components/Maket/Makets.js';
 import Reports from './components/Reports/Reports';
-
+import Start from './components/Start/Start';
 
 
 
@@ -14,7 +14,7 @@ import { useSelector } from 'react-redux';
 
 function App() {
 
-    const isLoggedIn = useSelector(state => state.user.isLoggedIn);
+   
 
     return (
         <div className="btb">
@@ -25,22 +25,26 @@ function App() {
 
                     <Heder />
 
-                    <Switch path="/login" >
+                    <Switch>
+
+                       <Route exact path="/">
+                          <Start/>
+                       </Route>
 
                         <Route path="/login">
                             <Login/>
                         </Route>
 
                         <PrivateRoute path="/makets">
-                            <Makets />
+                            <Makets/>
                         </PrivateRoute>
                         
                         <PrivateRoute path="/reports">
-                            <Reports />
+                            <Reports/>
                         </PrivateRoute>
 
                         <Route path="*">
-                            <NoMatch />
+                            <NoMatch/>
                         </Route>
 
 
