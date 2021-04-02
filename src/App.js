@@ -25,10 +25,10 @@ function App() {
 
                     <Heder />
 
-                    <Switch path="/Login" >
+                    <Switch path="/login" >
 
                         <Route path="/login">
-                            <Login />
+                            <Login/>
                         </Route>
 
                         <PrivateRoute path="/makets">

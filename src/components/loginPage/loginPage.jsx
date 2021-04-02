@@ -64,9 +64,18 @@ const LoginPage = () => {
 
 
   const dispatch = useDispatch();
-  const isLoggedIn = useSelector(state => state.user.isLoggedIn);
   const err = useSelector(state => state.user.err);
 
+
+  
+  let history = useHistory();
+  let location = useLocation();
+  
+  let { from } = location.state || { from: { pathname: "/makets" } };
+
+  const sb = () => {
+    history.replace(from);
+  }
 
 
   const formik = useFormik({
@@ -77,7 +86,7 @@ const LoginPage = () => {
     validationSchema: validationSchema,
     onSubmit: (values) => {
 
-      dispatch(login(getToken(values.email, values.password)))
+      dispatch(login(getToken(values.email, values.password), sb))
 
       },
   });
@@ -86,14 +95,13 @@ const LoginPage = () => {
 
 
 
-  let history = useHistory();
-  let location = useLocation();
-  
-  let { from } = location.state || { from: { pathname: "/" } };
 
+  /*
   if (isLoggedIn) {
     history.replace(from);
   }
+*/
+
 
 
   return (

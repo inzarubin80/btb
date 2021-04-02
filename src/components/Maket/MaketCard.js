@@ -34,10 +34,12 @@ export default function MaketCard(Props) {
          Карточка макета №{Props.id+1}
         </Typography>
         <Typography variant="h5" component="h2">
-          be{bull}nev{bull}o{bull}lent
+          
+          Колбаса копченая 
         </Typography>
         <Typography className={classes.pos} color="textSecondary">
-          adjective
+          
+          
         </Typography>
         <Typography variant="body2" component="p">
           well meaning and kindly.

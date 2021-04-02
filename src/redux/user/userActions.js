@@ -45,7 +45,7 @@ export const logOut = (loginData) => {
 
 
 
-export const login = (token) => {
+export const login = (token, cb) => {
   return (dispatch) => {
 
 
@@ -73,6 +73,7 @@ export const login = (token) => {
  
           dispatch(setLoginSuccess(loginData));
           localStorage.setItem('token', token)
+          cb();
 
         } else {
 
