@@ -22,6 +22,12 @@ export const getMakets = (status) => {
     return fetch(`${API_URL}/?typerequest=getMakets&status=${status}`, config);
 }
 
+export const getMaket = (id) => {
+    const config = getConfig('get')
+    return fetch(`${API_URL}/?typerequest=getMaket&id=${id}`, config);
+}
+
+
 const getConfig = (method) => {
 
     let token = localStorage.getItem('token') || null

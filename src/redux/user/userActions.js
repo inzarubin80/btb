@@ -8,9 +8,6 @@ import {
 import { executeAuthenticationService} from '../../api/dataService1c';
 
 const setLoginSuccess = (loginData) => {
-
-  setLoginLocal(loginData);
-
   return {
     type: LOGIN_SUCCESS,
     payload: loginData,

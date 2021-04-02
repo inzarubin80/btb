@@ -5,12 +5,17 @@ import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
+import {getMaket} from '../../api/dataService1c';
+
+
 import {
-  useHistory
+ withRouter
 } from "react-router-dom";
+
+
 const useStyles = makeStyles({
   root: {
-    minWidth: 275,
+    minWidth: 120  
   },
   bullet: {
     display: 'inline-block',
@@ -25,30 +30,43 @@ const useStyles = makeStyles({
   },
 });
 
-export default function MaketCard(Props) {
+
+const MaketFullCard = (props) => {
+  
   const classes = useStyles();
   const bull = <span className={classes.bullet}>•</span>;
+  const [maket, setMaket] = React.useState({});;
 
-  let history = useHistory();
+  //console.log("props MaketFullCard", props.match.params.id);
+
+  React.useEffect(() => {
+    
+    getMaket(props.match.params.id)
+      .then(response => response.json())
+      .then((json) => {
+        setMaket(json);
+      })
+      .catch((err) => {
+        
+        setMaket({});
+
+      });
+  
+  }, []);
+  
+  console.log(maket);
+
 
   return (
     <Card className={classes.root}>
       <CardContent>
         <Typography className={classes.title} color="textSecondary" gutterBottom>
-          №{Props.id}
+            {maket.code}
         </Typography>
-        <Typography variant="h5" component="h2">       
-          {Props.product}
-        </Typography>
-        <Typography className={classes.pos} color="textSecondary">
-          {Props.chromaticity}  
-        </Typography> 
-      </CardContent>
-
-      <CardActions>
-         <Button size="small" onClick={() => {history.push(`/makets/${Props.id}`)}}>Открыть</Button>
-      </CardActions>
-    
+        </CardContent>
+      
     </Card>
   );
 }
+
+export default withRouter(MaketFullCard)

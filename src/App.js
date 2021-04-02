@@ -1,9 +1,12 @@
 import './App.css';
-import { BrowserRouter as Router, Route, Switch, Redirect, useLocation} from 'react-router-dom'
+import { BrowserRouter as Router, Route, Switch, Redirect, useLocation } from 'react-router-dom'
 
 import Login from './components/LoginPage/LoginPage';
 import Heder from './components/Heder/Heder.js';
 import Makets from './components/Maket/Makets.js';
+import MaketFullCard from './components/Maket/MaketFullCard';
+
+
 import Reports from './components/Reports/Reports';
 import Start from './components/Start/Start';
 
@@ -14,7 +17,7 @@ import { useSelector } from 'react-redux';
 
 function App() {
 
-   
+
 
     return (
         <div className="btb">
@@ -27,26 +30,29 @@ function App() {
 
                     <Switch>
 
-                       <Route exact path="/">
-                          <Start/>
-                       </Route>
-
-                        <Route path="/login">
-                            <Login/>
+                        <Route exact path="/">
+                            <Start />
                         </Route>
 
-                        <PrivateRoute path="/makets">
-                            <Makets/>
+                        <Route path="/login">
+                            <Login />
+                        </Route>
+
+                        <PrivateRoute exact path="/makets">
+                            <Makets />
                         </PrivateRoute>
-                        
+
+                        <PrivateRoute path="/makets/:id">
+                            <MaketFullCard />
+                        </PrivateRoute>
+
                         <PrivateRoute path="/reports">
-                            <Reports/>
+                            <Reports />
                         </PrivateRoute>
 
                         <Route path="*">
-                            <NoMatch/>
+                            <NoMatch />
                         </Route>
-
 
                     </Switch>
                 </>
@@ -81,15 +87,15 @@ function PrivateRoute({ children, ...rest }) {
 
 function NoMatch() {
     let location = useLocation();
-  
+
     return (
-      <div>
-        <h3>
-           Возможно, ссылка не работает или страница удалена. Проверьте правильность ссылки, по которой вы пытаетесь перейти. 
+        <div>
+            <h3>
+                Возможно, ссылка не работает или страница удалена. Проверьте правильность ссылки, по которой вы пытаетесь перейти.
         </h3>
-      </div>
+        </div>
     );
-  }
-  
+}
+
 
 export default App;
