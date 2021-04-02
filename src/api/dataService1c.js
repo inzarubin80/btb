@@ -5,8 +5,6 @@ export const getToken = (username, password) => {
     return 'Basic ' + encode(username + ":" + password);
 }
 
-//https://auth0.com/blog/secure-your-react-and-redux-app-with-jwt-authentication/
-
 export const executeAuthenticationService = (token) => {
     return fetch(`${API_URL}/?typerequest=authenticate`,
         {
@@ -19,5 +17,28 @@ export const executeAuthenticationService = (token) => {
         ;
 }
 
+export const getMakets = (status) => {
+    const config = getConfig('get')
+    return fetch(`${API_URL}/?typerequest=getMakets&status=${status}`, config);
+}
 
+const getConfig = (method) => {
 
+    let token = localStorage.getItem('token') || null
+    let config = {}
+    if (!token) {
+        throw "No token saved!"
+    } else {
+        config = {
+
+            method: method,
+            headers: new Headers({
+                'Authorization': token,
+                'Content-Type': 'application/json'
+            })
+
+        }
+    }
+
+    return config
+}

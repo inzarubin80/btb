@@ -93,15 +93,3 @@ export const login = (token, cb) => {
 
 
 
-
-
-const setLoginLocal = async (loginData) => {
-  try {
-
-    const session = JSON.stringify(loginData);
-
-
-  } catch (err) {
-    console.log(err);
-  }
-};
