@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { DataGrid } from '@material-ui/data-grid';
 
-import {getMakets} from '../../api/dataService1c';
+import { getMakets } from '../../api/dataService1c';
 import BottomNavigation from '@material-ui/core/BottomNavigation';
 import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
 
@@ -30,33 +30,35 @@ const useStyles = makeStyles((theme) => ({
   },
 
   stickToBottom: {
-    width: '100%',
-    position: 'fixed',
-    bottom: 0,
+    //width: '100%',
+    //position: 'fixed',
+   // bottom: 0,
   },
-  
+
 
 }));
 
 const columns = [
-  { field: 'code', headerName: 'Код', width: 80,  type: 'number', renderCell: (params) => (
-    <strong>
-      <Link to={`/makets/${params.value}`}>{params.value}</Link>
-    </strong>
-  ),},
+  {
+    field: 'code', headerName: 'Код', width: 80, type: 'number', renderCell: (params) => (
+      <strong>
+        <Link to={`/makets/${params.value}`}>{params.value}</Link>
+      </strong>
+    ),
+  },
 
   { field: 'product', headerName: 'Продукт', width: 450, type: 'string' },
   { field: 'finalBuyer', headerName: 'Конечный покупатель', width: 200, type: 'string' },
-  { field: 'Shell', headerName: 'Вид оболочки', width: 200, type: 'string' },
+  { field: 'Shell', headerName: 'Вид оболочки', width: 150, type: 'string' },
   { field: 'shellType', headerName: 'Тип оболочки', width: 200, type: 'string' },
-  { field: 'shellСolor', headerName: 'Цвет оболочки', width: 200, type: 'string' },
-  { field: 'dateAgreement', headerName: 'Дата согласования', width: 200,  type: 'date'},  
-  { field: 'chromaticity', headerName: 'Цветность', width: 130 , type: 'string'},
-  { field: 'caliber', headerName: 'Калибр', width: 130 , type: 'string'},
-  { field: 'typPrinting', headerName: 'Тип печати', width: 130 , type: 'string'},
+  { field: 'shellСolor', headerName: 'Цвет оболочки', width: 150, type: 'string' },
+  //  { field: 'dateAgreement', headerName: 'Дата согласования', width: 200, type: 'date' },
+  { field: 'chromaticity', headerName: 'Цветность', width: 130, type: 'string' },
+  { field: 'caliber', headerName: 'Калибр', width: 120, type: 'string' },
+  { field: 'typPrinting', headerName: 'Тип печати', width: 200, type: 'string' },
 
 
- 
+
 ];
 
 
@@ -71,11 +73,11 @@ export default function Makets() {
 
   const classes = useStyles();
 
-  
+
   const [status, setStatus] = React.useState('harmonization');
 
   React.useEffect(() => {
-    
+
     getMakets(status)
       .then(response => response.json())
       .then((json) => {
@@ -83,30 +85,38 @@ export default function Makets() {
         console.log(json)
       })
       .catch((err) => {
-        
+
         //setMakets(setEventsFailure());
 
       });
-  
+
   }, [status]);
 
   //style={{ height: 400, width: '100%' }}
 
   return (
-    <div style={{ height: '800px', width: '100%' }}> 
+
+
+    <div>
+
     
-      <DataGrid rows={maketsAr} columns={columns} rowHeight={25}/>
-      
-      
-      {/*
-      <BottomNavigation value={status} onChange={handleChangeBottomNavigation} className={classes.stickToBottom} showLabels>
-      <BottomNavigationAction label="Согласование"   value="harmonization" icon={<HowToRegIcon />} />
-      <BottomNavigationAction label="Разработка"     value="development" icon={<BuildIcon />} />
-      <BottomNavigationAction label="Готовые"       value="ready" icon={<LocalPrintshopIcon />} />
-      <BottomNavigationAction label="Архив"         value="archive" icon={<ArchiveIcon />} />
-      </BottomNavigation>
-      */}
+        <BottomNavigation value={status} onChange={handleChangeBottomNavigation} className={classes.stickToBottom} showLabels>
+          <BottomNavigationAction label="Согласование" value="harmonization" icon={<HowToRegIcon />} />
+          <BottomNavigationAction label="Разработка" value="development" icon={<BuildIcon />} />
+          <BottomNavigationAction label="Готовые" value="ready" icon={<LocalPrintshopIcon />} />
+          <BottomNavigationAction label="Архив" value="archive" icon={<ArchiveIcon />} />
+        </BottomNavigation>
+    
+
+
+      <div style={{ width: '100%' }}>
+
+        <DataGrid rows={maketsAr} columns={columns} pageSize={10} rowsPerPageOptions={[5, 10, 25]} autoHeight={true} rowHeight={25} />
+
+      </div>
+
 
     </div>
+
   );
 }
