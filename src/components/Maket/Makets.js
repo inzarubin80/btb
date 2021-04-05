@@ -111,7 +111,7 @@ export default function Makets() {
 
       <div style={{ width: '100%' }}>
 
-        <DataGrid rows={maketsAr} columns={columns} pageSize={10} rowsPerPageOptions={[5, 10, 25]} autoHeight={true} rowHeight={25} />
+        <DataGrid rows={maketsAr} columns={columns} pageSize={10} rowsPerPageOptions={[5, 10, 25]} autoHeight={true} rowHeight={25} hideFooterSelectedRowCount={true}/>
 
       </div>
 
