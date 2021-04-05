@@ -5,12 +5,18 @@ import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
+import { getMaket } from '../../api/dataService1c';
+import { Descriptions } from 'antd';
+import 'antd/dist/antd.css';
+
 import {
-  useHistory
+  withRouter
 } from "react-router-dom";
+
+
 const useStyles = makeStyles({
   root: {
-    minWidth: 275,
+    minWidth: 120
   },
   bullet: {
     display: 'inline-block',
@@ -25,30 +31,67 @@ const useStyles = makeStyles({
   },
 });
 
-export default function MaketCard(Props) {
-  const classes = useStyles();
-  const bull = <span className={classes.bullet}>•</span>;
 
-  let history = useHistory();
+const MaketCard = (props) => {
+
+  const classes = useStyles();
+  const [maket, setMaket] = React.useState({});;
+
+  //console.log("props MaketFullCard", props.match.params.id);
+
+  React.useEffect(() => {
+
+    getMaket(props.match.params.id)
+      .then(response => response.json())
+      .then((json) => {
+
+        setMaket(json);
+        console.log(json);
+
+      })
+      .catch((err) => {
+
+        setMaket({});
+
+      });
+
+  }, []);
+
+  console.log(maket);
+
 
   return (
-    <Card className={classes.root}>
-      <CardContent>
-        <Typography className={classes.title} color="textSecondary" gutterBottom>
-          №{Props.id}
-        </Typography>
-        <Typography variant="h5" component="h2">       
-          {Props.product}
-        </Typography>
-        <Typography className={classes.pos} color="textSecondary">
-          {Props.chromaticity}  
-        </Typography> 
-      </CardContent>
+    <div style={{ textAlign: 'center', maxWidth: '50%', margin: 'auto', marginTop: 30 }}>
+      <Card className={classes.root}>
+        <CardContent>
+          <Typography className={classes.title} color="textSecondary" gutterBottom>
+            Макет №{maket.code}
+          </Typography>
 
-      <CardActions>
-         <Button size="small" onClick={() => {history.push(`/makets/${Props.id}`)}}>Открыть</Button>
-      </CardActions>
-    
-    </Card>
+          <Descriptions layout="vertical" bordered >
+
+            <Descriptions.Item label="Продукт">{maket.product}</Descriptions.Item>
+            <Descriptions.Item label="Конечный потребитель">{maket.finalBuyer}</Descriptions.Item>
+
+
+            <Descriptions.Item label="Основная информация" style={{ textAlign: 'left' }}>
+              Вид оболочки: {maket.Shell}
+              <br />
+            Цветность: {maket.chromaticity}
+              <br />
+            Калибр/Ширина: {maket.caliber}
+              <br />
+            Тип печати: {maket.typPrinting}
+              <br />
+            </Descriptions.Item>
+
+          </Descriptions>
+
+
+        </CardContent>
+      </Card>
+    </div>
   );
 }
+
+export default withRouter(MaketCard)

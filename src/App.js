@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Route, Switch, Redirect, useLocation } from 'r
 import Login from './components/LoginPage/LoginPage';
 import Heder from './components/Heder/Heder.js';
 import Makets from './components/Maket/Makets.js';
-import MaketFullCard from './components/Maket/MaketFullCard';
+import MaketCard from './components/Maket/MaketCard';
 
 
 import Reports from './components/Reports/Reports';
@@ -43,7 +43,7 @@ function App() {
                         </PrivateRoute>
 
                         <PrivateRoute path="/makets/:id">
-                            <MaketFullCard />
+                            <MaketCard />
                         </PrivateRoute>
 
                         <PrivateRoute path="/reports">
