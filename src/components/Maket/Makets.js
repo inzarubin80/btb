@@ -13,7 +13,7 @@ import LocalPrintshopIcon from '@material-ui/icons/LocalPrintshop'
 
 import { useDispatch, useSelector } from 'react-redux';
 
-import {changeMaketsStatus, сhangePageParams,  сhangeFiltr, сhangeSort} from '../../redux/makets/maketsActions';
+import {changeMaketsStatus, сhangePageParams,  сhangeFiltr, сhangeSort, setMaketsStatus} from '../../redux/makets/maketsActions';
 
 import {
   Link
@@ -68,7 +68,7 @@ const columns = [
 
 export default function Makets() {
 
-  const [maketsAr, setMakets] = React.useState([]);
+
 
  
   const classes = useStyles();
@@ -79,6 +79,8 @@ export default function Makets() {
   const page = useSelector(state => state.makets.page);
   const filterModel = useSelector(state => state.makets.filterModel);
   const sortModel = useSelector(state => state.makets.sortModel);
+  const makets = useSelector(state => state.makets.makets);
+  
 
 
   const dispatch = useDispatch();
@@ -86,27 +88,19 @@ export default function Makets() {
   const handleChangeBottomNavigation = (event, newStatus) => {
     //setStatus(newStatus);
 
-    dispatch(changeMaketsStatus(newStatus))
+    dispatch(setMaketsStatus(newStatus))
   };
-
   
-  React.useEffect(() => {
-
-    getMakets(status)
-      .then(response => response.json())
-      .then((json) => {
-        setMakets(json);
-        console.log(json)
-      })
-      .catch((err) => {
-
-        //setMakets(setEventsFailure());
-
-      });
-
-  }, [status]);
+  React.useEffect(() => { 
+    if (status == '') {
+      dispatch(setMaketsStatus('harmonization'))
+    }
+  },[status]);
 
   //style={{ height: 400, width: '100%' }}
+
+
+  console.log("Рендер макеты");
 
   return (
 
@@ -127,9 +121,9 @@ export default function Makets() {
 
         <DataGrid 
         
-        rowsPerPageOptions={[5, 10, 25, 35, 50, 70, 100, 1000]}
+        rowsPerPageOptions={[5, 10, 25, 35, 50, 70, 100]}
         rowHeight={25} 
-        rows={maketsAr} 
+        rows={makets} 
         columns={columns} 
         pageSize={pageSize} 
 
