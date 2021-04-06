@@ -26,8 +26,8 @@ export default (state = initialState, action) => {
             case MAKETS_FILTER_CHANGE:
                 return {
                     ...state,
+                    page:0,
                     filterModel: action.payload
-    
                 };
                 
         

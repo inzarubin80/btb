@@ -10,8 +10,6 @@ export const changeMaketsStatus = (status) => {
   };
 };
 
-
-
 export const сhangePageParams = (pageSize,  page) => {
   return {
     type: MAKETS_SGRID_PAGE_CHANGE_PARAMS,

@@ -125,18 +125,21 @@ export default function Makets() {
 
       <div style={{ width: '100%' }}>
 
-        <DataGrid rows={maketsAr} columns={columns} pageSize={pageSize} 
-        rowsPerPageOptions={[5, 10, 25, 35, 50, 70, 100]} 
-        autoHeight={true} rowHeight={25} 
+        <DataGrid 
+        
+        rowsPerPageOptions={[5, 10, 25, 35, 50, 70, 100, 1000]}
+        rowHeight={25} 
+        rows={maketsAr} 
+        columns={columns} 
+        pageSize={pageSize} 
+        autoHeight={true}
+      
         page = {page}
         filterModel = {filterModel}
-        
         hideFooterSelectedRowCount={true} 
-        onPageSizeChange={(GridPageChangeParams)=>{dispatch(сhangePageParams(GridPageChangeParams.pageSize, GridPageChangeParams.page))}}
+        onPageSizeChange={(GridPageChangeParams)=>{dispatch(сhangePageParams(GridPageChangeParams.pageSize, 0))}}
         onPageChange = {(GridPageChangeParams)=>{dispatch(сhangePageParams(GridPageChangeParams.pageSize, GridPageChangeParams.page))}}
-        onFilterModelChange = {(GridFilterModelParams)=>{dispatch(сhangeFiltr(GridFilterModelParams.filterModel))}}
-       
-       
+        onFilterModelChange = {(GridFilterModelParams)=>{console.log(GridFilterModelParams)   ;dispatch(сhangeFiltr(GridFilterModelParams.filterModel))}}  
        />
      
 
