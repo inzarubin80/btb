@@ -5,7 +5,7 @@ const initialState = {
     page: 0,
     pageSize: 10,
     filterModel: null,
-    sortModel: null,
+    sortModel: [],
     makets: []
 };
 

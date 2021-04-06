@@ -1,19 +1,14 @@
 import * as React from 'react';
 import { DataGrid } from '@material-ui/data-grid';
-
 import BottomNavigation from '@material-ui/core/BottomNavigation';
 import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
-
 import ArchiveIcon from '@material-ui/icons/Archive';
 import HowToRegIcon from '@material-ui/icons/HowToReg';
 import BuildIcon from '@material-ui/icons/Build';
 import { makeStyles } from '@material-ui/core/styles';
 import LocalPrintshopIcon from '@material-ui/icons/LocalPrintshop'
-
 import { useDispatch, useSelector } from 'react-redux';
-
 import {сhangePageParams,  сhangeFiltr, сhangeSort, setMaketsStatus} from '../../redux/makets/maketsActions';
-
 import {
   Link
 } from "react-router-dom";
@@ -68,11 +63,7 @@ const columns = [
 export default function Makets() {
 
 
-
- 
   const classes = useStyles();
-
-
   const status = useSelector(state => state.makets.status);
   const pageSize = useSelector(state => state.makets.pageSize);
   const page = useSelector(state => state.makets.page);
@@ -80,8 +71,6 @@ export default function Makets() {
   const sortModel = useSelector(state => state.makets.sortModel);
   const makets = useSelector(state => state.makets.makets);
   
-
-
   const dispatch = useDispatch();
 
   const handleChangeBottomNavigation = (event, newStatus) => {
@@ -96,30 +85,15 @@ export default function Makets() {
     }
   },[status]);
 
-
-
-
-  console.log("Рендер макеты");
-
-  console.log("filterModel", filterModel);
-  console.log("sortModel", sortModel);
-
-
   return (
 
-
     <div>
-
-    
         <BottomNavigation value={status} onChange={handleChangeBottomNavigation} className={classes.stickToBottom} showLabels>
           <BottomNavigationAction label="Согласование" value="harmonization" icon={<HowToRegIcon />} />
           <BottomNavigationAction label="Разработка" value="development" icon={<BuildIcon />} />
           <BottomNavigationAction label="Готовые" value="ready" icon={<LocalPrintshopIcon />} />
           <BottomNavigationAction label="Архив" value="archive" icon={<ArchiveIcon />} />
         </BottomNavigation>
-    
-
-
       <div style={{ width: '100%' }}>
 
         <DataGrid 
