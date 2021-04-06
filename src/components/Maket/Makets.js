@@ -43,7 +43,7 @@ const useStyles = makeStyles((theme) => ({
 
 const columns = [
   {
-    field: 'code', headerName: 'Код', width: 80, type: 'number', renderCell: (params) => (
+    field: 'code', headerName: 'Код', width: 80, type: 'string', renderCell: (params) => (
       <strong>
         <Link to={`/makets/${params.value}`}>{params.value}</Link>
       </strong>
@@ -57,7 +57,7 @@ const columns = [
   { field: 'shellСolor', headerName: 'Цвет оболочки', width: 150, type: 'string' },
   //  { field: 'dateAgreement', headerName: 'Дата согласования', width: 200, type: 'date' },
   { field: 'chromaticity', headerName: 'Цветность', width: 130, type: 'string' },
-  { field: 'caliber', headerName: 'Калибр', width: 120, type: 'string' },
+  { field: 'caliber', headerName: 'Калибр', width: 120, type: 'number' },
   { field: 'typPrinting', headerName: 'Тип печати', width: 200, type: 'string' },
 
 
