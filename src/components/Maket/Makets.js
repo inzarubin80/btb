@@ -11,6 +11,9 @@ import BuildIcon from '@material-ui/icons/Build';
 import { makeStyles } from '@material-ui/core/styles';
 import LocalPrintshopIcon from '@material-ui/icons/LocalPrintshop'
 
+import { useDispatch, useSelector } from 'react-redux';
+
+import {changeMaketsStatus, сhangePageParams,  сhangeFiltr} from '../../redux/makets/maketsActions';
 
 import {
   Link
@@ -67,15 +70,26 @@ export default function Makets() {
 
   const [maketsAr, setMakets] = React.useState([]);
 
-  const handleChangeBottomNavigation = (event, newStatus) => {
-    setStatus(newStatus);
-  };
-
+ 
   const classes = useStyles();
 
 
-  const [status, setStatus] = React.useState('harmonization');
+  const status = useSelector(state => state.makets.status);
+  const pageSize = useSelector(state => state.makets.pageSize);
+  const page = useSelector(state => state.makets.page);
+  const filterModel = useSelector(state => state.makets.filterModel);
+  
 
+
+  const dispatch = useDispatch();
+
+  const handleChangeBottomNavigation = (event, newStatus) => {
+    //setStatus(newStatus);
+
+    dispatch(changeMaketsStatus(newStatus))
+  };
+
+  
   React.useEffect(() => {
 
     getMakets(status)
@@ -111,7 +125,20 @@ export default function Makets() {
 
       <div style={{ width: '100%' }}>
 
-        <DataGrid rows={maketsAr} columns={columns} pageSize={10} rowsPerPageOptions={[5, 10, 25]} autoHeight={true} rowHeight={25} hideFooterSelectedRowCount={true}/>
+        <DataGrid rows={maketsAr} columns={columns} pageSize={pageSize} 
+        rowsPerPageOptions={[5, 10, 25, 35, 50, 70, 100]} 
+        autoHeight={true} rowHeight={25} 
+        page = {page}
+        filterModel = {filterModel}
+        
+        hideFooterSelectedRowCount={true} 
+        onPageSizeChange={(GridPageChangeParams)=>{dispatch(сhangePageParams(GridPageChangeParams.pageSize, GridPageChangeParams.page))}}
+        onPageChange = {(GridPageChangeParams)=>{dispatch(сhangePageParams(GridPageChangeParams.pageSize, GridPageChangeParams.page))}}
+        onFilterModelChange = {(GridFilterModelParams)=>{dispatch(сhangeFiltr(GridFilterModelParams.filterModel))}}
+       
+       
+       />
+     
 
       </div>
 
