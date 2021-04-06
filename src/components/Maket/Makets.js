@@ -69,7 +69,7 @@ export default function Makets() {
   const page = useSelector(state => state.makets.page);
   const filterModel = useSelector(state => state.makets.filterModel);
   const sortModel = useSelector(state => state.makets.sortModel);
-  const makets = useSelector(state => state.makets.makets);
+  const maketsAr = useSelector(state => state.makets.makets);
   
   const dispatch = useDispatch();
 
@@ -84,6 +84,9 @@ export default function Makets() {
       dispatch(setMaketsStatus('harmonization'))
     }
   },[status]);
+
+
+  console.log("filterModel", filterModel)
 
   return (
 
@@ -100,7 +103,7 @@ export default function Makets() {
         
         rowsPerPageOptions={[5, 10, 25, 35, 50, 70, 100]}
         rowHeight={25} 
-        rows={makets} 
+        rows={maketsAr} 
         columns={columns} 
         pageSize={pageSize} 
         autoHeight={true}

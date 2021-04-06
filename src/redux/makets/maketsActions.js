@@ -1,8 +1,9 @@
 import {
-  CHANGE_MAKETS_STATUS, MAKETS_SGRID_PAGE_CHANGE_PARAMS, MAKETS_FILTER_CHANGE, MAKETS_SORT_CHANGE, MAKETS_SUCCESS
+  CHANGE_MAKETS_STATUS, MAKETS_SGRID_PAGE_CHANGE_PARAMS, MAKETS_FILTER_CHANGE, MAKETS_SORT_CHANGE, MAKETS_SUCCESS, MAKETS_FAILURE
 } from '../types'
 
 import { getMakets } from '../../api/dataService1c';
+import { logOut } from '../../redux/user/userActions';
 
 
 export const changeMaketsStatus = (status) => {
@@ -33,7 +34,11 @@ export const сhangeSort = (sortModel) => {
   };
 };
 
-
+export const failure = () => {
+  return {
+    type: MAKETS_FAILURE
+  };
+};
 
 export const setMaketsStatus = (status) => {
   
@@ -42,21 +47,21 @@ export const setMaketsStatus = (status) => {
     return getMakets(status)
       .then(response => {
 
-        console.log(response.status);
-
         if (response.status == 401){
-        console.log(response.status);
-          return {msg: 'Ошибка ввода имени или пароля'}
+        return 401
         }
         else {
           return response.json()
         }
       })
 
-      .then((json) => {
-
-         return dispatch({type: MAKETS_SUCCESS, payload: {status, makets:json}});
-          
+      .then((data) => {
+        if (data==401) {
+          dispatch(logOut())
+          return dispatch({type: MAKETS_FAILURE});
+        }else {
+            return dispatch({type: MAKETS_SUCCESS, payload: {status, makets:data}});
+        } 
       })
       .catch((err) => {
               

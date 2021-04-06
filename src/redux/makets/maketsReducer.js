@@ -1,15 +1,19 @@
-import { CHANGE_MAKETS_STATUS, MAKETS_SGRID_PAGE_CHANGE_PARAMS, MAKETS_FILTER_CHANGE, MAKETS_SORT_CHANGE, MAKETS_SUCCESS } from '../types'
+import { CHANGE_MAKETS_STATUS, MAKETS_SGRID_PAGE_CHANGE_PARAMS, MAKETS_FILTER_CHANGE, MAKETS_SORT_CHANGE, MAKETS_SUCCESS, MAKETS_FAILURE } from '../types'
 
 const initialState = {
     status: '',
     page: 0,
     pageSize: 10,
-    filterModel: null,
+    filterModel: {linkOperator: "and", items:[]},
     sortModel: [],
     makets: []
 };
 
 export default (state = initialState, action) => {
+
+
+    console.log(action,action);
+
 
     switch (action.type) {
         case CHANGE_MAKETS_STATUS:
@@ -59,6 +63,13 @@ export default (state = initialState, action) => {
                 makets: action.payload.makets,
                 status: action.payload.status
             };
+           
+         case MAKETS_FAILURE:
+                return {
+                    ...state,
+                };
+                    
+
 
         default:
 
