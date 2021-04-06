@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { DataGrid } from '@material-ui/data-grid';
 
-import { getMakets } from '../../api/dataService1c';
 import BottomNavigation from '@material-ui/core/BottomNavigation';
 import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
 
@@ -13,7 +12,7 @@ import LocalPrintshopIcon from '@material-ui/icons/LocalPrintshop'
 
 import { useDispatch, useSelector } from 'react-redux';
 
-import {changeMaketsStatus, сhangePageParams,  сhangeFiltr, сhangeSort, setMaketsStatus} from '../../redux/makets/maketsActions';
+import {сhangePageParams,  сhangeFiltr, сhangeSort, setMaketsStatus} from '../../redux/makets/maketsActions';
 
 import {
   Link
@@ -97,10 +96,14 @@ export default function Makets() {
     }
   },[status]);
 
-  //style={{ height: 400, width: '100%' }}
+
 
 
   console.log("Рендер макеты");
+
+  console.log("filterModel", filterModel);
+  console.log("sortModel", sortModel);
+
 
   return (
 
@@ -126,11 +129,8 @@ export default function Makets() {
         rows={makets} 
         columns={columns} 
         pageSize={pageSize} 
-
         autoHeight={true}
-      
         sortModel ={sortModel}
-
         page = {page}
         filterModel = {filterModel}
         hideFooterSelectedRowCount={true} 

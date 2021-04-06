@@ -36,6 +36,7 @@ export const сhangeSort = (sortModel) => {
 
 
 export const setMaketsStatus = (status) => {
+  
   return (dispatch) => {
 
     return getMakets(status)
