@@ -1,10 +1,11 @@
-import { CHANGE_MAKETS_STATUS, MAKETS_SGRID_PAGE_CHANGE_PARAMS, MAKETS_FILTER_CHANGE} from '../types'
+import { CHANGE_MAKETS_STATUS, MAKETS_SGRID_PAGE_CHANGE_PARAMS, MAKETS_FILTER_CHANGE, MAKETS_SORT_CHANGE} from '../types'
 
 const  initialState = {
     status:  'harmonization',
     page: 0,
     pageSize:10,
-    filterModel:null
+    filterModel:null,
+    sortModel:null
 };
 
 export default (state = initialState, action) => {
@@ -29,7 +30,12 @@ export default (state = initialState, action) => {
                     page:0,
                     filterModel: action.payload
                 };
-                
+            case MAKETS_SORT_CHANGE:
+                    return {
+                        ...state,
+                        page:0,
+                        sortModel: action.payload
+                    };     
         
         default:
 

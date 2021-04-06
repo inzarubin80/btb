@@ -1,5 +1,5 @@
 import {
-  CHANGE_MAKETS_STATUS, MAKETS_SGRID_PAGE_CHANGE_PARAMS, MAKETS_FILTER_CHANGE
+  CHANGE_MAKETS_STATUS, MAKETS_SGRID_PAGE_CHANGE_PARAMS, MAKETS_FILTER_CHANGE, MAKETS_SORT_CHANGE
 } from '../types'
 
 
@@ -24,5 +24,10 @@ export const сhangeFiltr = (filterModel) => {
   };
 };
 
-
+export const сhangeSort = (sortModel) => {
+  return {
+    type: MAKETS_SORT_CHANGE,
+    payload: sortModel
+  };
+};
 

@@ -13,7 +13,7 @@ import LocalPrintshopIcon from '@material-ui/icons/LocalPrintshop'
 
 import { useDispatch, useSelector } from 'react-redux';
 
-import {changeMaketsStatus, сhangePageParams,  сhangeFiltr} from '../../redux/makets/maketsActions';
+import {changeMaketsStatus, сhangePageParams,  сhangeFiltr, сhangeSort} from '../../redux/makets/maketsActions';
 
 import {
   Link
@@ -78,7 +78,7 @@ export default function Makets() {
   const pageSize = useSelector(state => state.makets.pageSize);
   const page = useSelector(state => state.makets.page);
   const filterModel = useSelector(state => state.makets.filterModel);
-  
+  const sortModel = useSelector(state => state.makets.sortModel);
 
 
   const dispatch = useDispatch();
@@ -132,14 +132,20 @@ export default function Makets() {
         rows={maketsAr} 
         columns={columns} 
         pageSize={pageSize} 
+
         autoHeight={true}
       
+        sortModel ={sortModel}
+
         page = {page}
         filterModel = {filterModel}
         hideFooterSelectedRowCount={true} 
         onPageSizeChange={(GridPageChangeParams)=>{dispatch(сhangePageParams(GridPageChangeParams.pageSize, 0))}}
         onPageChange = {(GridPageChangeParams)=>{dispatch(сhangePageParams(GridPageChangeParams.pageSize, GridPageChangeParams.page))}}
-        onFilterModelChange = {(GridFilterModelParams)=>{console.log(GridFilterModelParams)   ;dispatch(сhangeFiltr(GridFilterModelParams.filterModel))}}  
+        onFilterModelChange = {(GridFilterModelParams)=>{dispatch(сhangeFiltr(GridFilterModelParams.filterModel))}}
+        onSortModelChange = {(GridSortModelParams)=>dispatch(сhangeSort(GridSortModelParams.sortModel))}
+
+
        />
      
 
