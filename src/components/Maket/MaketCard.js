@@ -116,6 +116,7 @@ const MaketCard = (props) => {
   }, []);
 
   
+  console.log('maket', maket);
 
 
   if (maket != null && maket.code) {
@@ -174,7 +175,7 @@ const MaketCard = (props) => {
                   <ColorsTable colors={maket.colors} />
                 </TabPanel>
                 <TabPanel value={value} index={1} dir={theme.direction}>
-                  <FilesTable files={maket.files} />
+                  <FilesTable files={maket.files} macetCode={maket.code} />
                 </TabPanel>
 
               </SwipeableViews >

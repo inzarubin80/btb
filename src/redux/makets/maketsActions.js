@@ -65,6 +65,7 @@ export const setMaketsStatus = (status) => {
       })
       .catch((err) => {
               
+        console.log('err', err);
         //dispatch(setLoginFailure({ err:'Сервис недоступен, попробуйте позже'}));
        
       });

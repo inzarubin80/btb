@@ -18,6 +18,9 @@ export const executeAuthenticationService = (token) => {
 }
 
 export const getMakets = (status) => {
+    
+    console.log('getMakets');
+
     const config = getConfig('get')
     return fetch(`${API_URL}/?typerequest=getMakets&status=${status}`, config);
 }
@@ -27,16 +30,25 @@ export const getMaket = (id) => {
     return fetch(`${API_URL}/?typerequest=getMaket&id=${id}`, config);
 }
 
+export const getImgMaket = (id, fileName) => {
+    const config = getConfig('get')
+    return fetch(`${API_URL}/?typerequest=getImgMaket&id=${id}&fileName=${fileName}`, config);
+}
+
+export const saveFileСonfirmation = (id, fileName,  shortfileName, fileBase64) => {
+   let config = getConfig('post')
+    config.body = JSON.stringify({fileBase64:fileBase64});
+    return fetch(`${API_URL}/?typerequest=saveFileСonfirmation&id=${id}&fileName=${fileName}&shortfileName=${shortfileName}`, config);
+}
+
 
 const getConfig = (method) => {
-
     let token = localStorage.getItem('token') || null
     let config = {}
     if (!token) {
         throw "No token saved!"
     } else {
         config = {
-
             method: method,
             headers: new Headers({
                 'Authorization': token,
@@ -45,6 +57,5 @@ const getConfig = (method) => {
 
         }
     }
-
     return config
 }
