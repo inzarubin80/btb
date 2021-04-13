@@ -56,36 +56,6 @@ const FilesTable = ({ files, macetCode, handleChangeFile }) => {
         setOpen(false);
     };
 
-
-
-    const UploadButtons = (props) => {
-
-        console.log(props.fileName);
-
-        return (
-            <div className={classes.rootButton}>
-                <input
-
-                    accept="image/*"
-                    className={classes.inputButton}
-                    id="contained-button-file"
-                    type="file"
-
-
-                    onChange={(e) => handleChangeFile(props.code, e.target.files[0], props.fileName, props.shortfileName)}
-
-                />
-                <label htmlFor="contained-button-file">
-
-                    <IconButton aria-label="download" variant="contained" color="primary" component="span">
-                        <BackupIcon />
-                    </IconButton>
-
-                </label>
-            </div>
-        );
-    }
-
     const handleDownload = ({ fileName, shortfileName }) => {
 
         getImgMaket(macetCode, fileName)

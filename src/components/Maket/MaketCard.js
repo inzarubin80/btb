@@ -47,22 +47,22 @@ const useStyles = makeStyles((theme) => ({
 
 const getBase64 = (file) => {
   return new Promise(resolve => {
-      let fileInfo;
-      let baseURL = "";
-      // Make new FileReader
-      let reader = new FileReader();
+    let fileInfo;
+    let baseURL = "";
+    // Make new FileReader
+    let reader = new FileReader();
 
-      // Convert the file to base64 text
-      reader.readAsDataURL(file);
+    // Convert the file to base64 text
+    reader.readAsDataURL(file);
 
-      // on reader load somthing...
-      reader.onload = () => {
-          // Make a fileInfo Object
-          baseURL = reader.result;
-          //console.log(baseURL);
-          resolve(baseURL);
-      };
-     
+    // on reader load somthing...
+    reader.onload = () => {
+      // Make a fileInfo Object
+      baseURL = reader.result;
+      //console.log(baseURL);
+      resolve(baseURL);
+    };
+
   });
 };
 
@@ -113,6 +113,24 @@ const MaketCard = (props) => {
   };
 
 
+
+  const [stateFile, setStateFile] = React.useState({opens:[], loading:[], upLoading:[]});
+
+
+  console.log(stateFile);
+
+  const hendlerStateFile = (fileName, type, add) => {
+    setStateFile( (prevState)=>{
+      let state =  {...prevState};  
+      if (add) {
+        state[type] = [...state[type], fileName]  
+      }  else {
+        state[type] = state[type].filtr((fileNameAr)=>{return (fileNameAr!=fileName)})
+      }
+      return state;
+    })
+  }
+
   const handleChangeIndex = (index) => {
     setValue(index);
   };
@@ -120,12 +138,8 @@ const MaketCard = (props) => {
   const theme = useTheme();
 
 
+
   React.useEffect(() => {
-     getMaketHendler()
-  }, []);
-
-
-  const getMaketHendler = () => {
     getMaket(props.match.params.id)
       .then(response => response.json())
       .then((json) => {
@@ -138,40 +152,39 @@ const MaketCard = (props) => {
       .catch((err) => {
         setMaket({});
       });
-  }
+  }, []);
+
+
 
 
 
   const handleChangeFile = (macetCode, file, fileName, shortfileName) => {
-       
-    
+
+    hendlerStateFile(fileName, 'upLoading', true);
+
     getBase64(file).then(fileBase64 => {
-        
+
       saveFileСonfirmation(macetCode, fileName, shortfileName, fileBase64)
-      .then(response => response.json())
-      .then((json) => {
+        .then(response => response.json())
+        .then((json) => {
 
-        if (!json.error) {
-          setMaket(json.maket);
-        }
+          if (!json.error) {
+            setMaket(json.maket);
+          }
 
-      })
+        })
 
-      .catch((err) => {
-      //  setMaket({});
-      });
+        .catch((err) => {
+          //  setMaket({});
+        });
 
     })
-        .catch(err => {
-            console.log(err);
-        });
-      }
-    
-  
+      .catch(err => {
+        console.log(err);
+      });
+  }
 
 
-
- 
 
   if (maket != null && maket.code) {
 
@@ -217,7 +230,7 @@ const MaketCard = (props) => {
 
                   <Tab label="Файлы" {...a11yProps(0)} />
                   <Tab label="Цвета" {...a11yProps(1)} />
-                 
+
 
 
                 </Tabs>
@@ -229,8 +242,8 @@ const MaketCard = (props) => {
               >
 
 
-              <TabPanel value={value} index={0} dir={theme.direction}>
-                  <FilesTable files={maket.files} macetCode={maket.code} handleChangeFile={handleChangeFile}/>
+                <TabPanel value={value} index={0} dir={theme.direction}>
+                  <FilesTable files={maket.files} macetCode={maket.code} handleChangeFile={handleChangeFile} />
                 </TabPanel>
 
 
@@ -239,7 +252,7 @@ const MaketCard = (props) => {
                 </TabPanel>
 
 
-                
+
               </SwipeableViews >
             </div>
 
