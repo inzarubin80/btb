@@ -116,9 +116,6 @@ const MaketCard = (props) => {
 
   const [stateFile, setStateFile] = React.useState({opens:[], loading:[], upLoading:[]});
 
-
-  console.log(stateFile);
-
   const hendlerStateFile = (fileName, type, add) => {
     setStateFile( (prevState)=>{
       let state =  {...prevState};  
