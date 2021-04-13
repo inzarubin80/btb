@@ -3,14 +3,14 @@ import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
-import { getMaket } from '../../api/dataService1c';
+import { getMaket, saveFileСonfirmation } from '../../api/dataService1c';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Box from '@material-ui/core/Box';
 import PropTypes from 'prop-types';
 import SwipeableViews from 'react-swipeable-views';
-import { Descriptions} from 'antd';
+import { Descriptions } from 'antd';
 import FilesTable from './FilesTable'
 import ColorsTable from './ColorsTable'
 
@@ -43,6 +43,29 @@ const useStyles = makeStyles((theme) => ({
   }
 
 }));
+
+
+const getBase64 = (file) => {
+  return new Promise(resolve => {
+      let fileInfo;
+      let baseURL = "";
+      // Make new FileReader
+      let reader = new FileReader();
+
+      // Convert the file to base64 text
+      reader.readAsDataURL(file);
+
+      // on reader load somthing...
+      reader.onload = () => {
+          // Make a fileInfo Object
+          console.log("Called", reader);
+          baseURL = reader.result;
+          //console.log(baseURL);
+          resolve(baseURL);
+      };
+      console.log(fileInfo);
+  });
+};
 
 
 function TabPanel(props) {
@@ -99,23 +122,42 @@ const MaketCard = (props) => {
 
 
   React.useEffect(() => {
+     getMaketHendler()
+  }, []);
 
+
+  const getMaketHendler = () => {
     getMaket(props.match.params.id)
       .then(response => response.json())
       .then((json) => {
 
-        setMaket(json);
-     
+        if (!json.error) {
+          setMaket(json.maket);
+        }
+
       })
       .catch((err) => {
-
         setMaket({});
-
       });
+  }
 
-  }, []);
 
+  const handleChangeFile = (macetCode, file, fileName, shortfileName) => {
+       
+
+    getBase64(file).then(fileBase64 => {
+        console.log('result');
+        saveFileСonfirmation(macetCode,fileName,shortfileName, fileBase64);
+    })
+        .catch(err => {
+            console.log(err);
+        });
+      }
+    
   
+
+
+
   console.log('maket', maket);
 
 
@@ -175,7 +217,7 @@ const MaketCard = (props) => {
                   <ColorsTable colors={maket.colors} />
                 </TabPanel>
                 <TabPanel value={value} index={1} dir={theme.direction}>
-                  <FilesTable files={maket.files} macetCode={maket.code} />
+                  <FilesTable files={maket.files} macetCode={maket.code} handleChangeFile={handleChangeFile}/>
                 </TabPanel>
 
               </SwipeableViews >

@@ -34,32 +34,12 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-const getBase64 = (file) => {
-    return new Promise(resolve => {
-        let fileInfo;
-        let baseURL = "";
-        // Make new FileReader
-        let reader = new FileReader();
-
-        // Convert the file to base64 text
-        reader.readAsDataURL(file);
-
-        // on reader load somthing...
-        reader.onload = () => {
-            // Make a fileInfo Object
-            console.log("Called", reader);
-            baseURL = reader.result;
-            //console.log(baseURL);
-            resolve(baseURL);
-        };
-        console.log(fileInfo);
-    });
-};
 
 
 
 
-const FilesTable = ({ files, macetCode }) => {
+
+const FilesTable = ({ files, macetCode, handleChangeFile}) => {
 
     const classes = useStyles();
 
@@ -76,23 +56,7 @@ const FilesTable = ({ files, macetCode }) => {
         setOpen(false);
     };
 
-    const handleChangeFile = (event, fileName, shortfileName) => {
-       
-        const  file = event.target.files[0];
-
-        console.log('fileName',fileName);
-        console.log('shortfileName',shortfileName);
-        
-
-        getBase64(file).then(fileBase64 => {
-            console.log('result');
-            saveFileСonfirmation(macetCode,fileName,shortfileName, fileBase64);
-        })
-            .catch(err => {
-                console.log(err);
-            });
-          }
-
+   
 
     const UploadButtons = ({fileName, shortfileName}) => {
 
@@ -169,25 +133,25 @@ const FilesTable = ({ files, macetCode }) => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {files.map((row) => (
-                            <TableRow key={row.id}>
+                        {files.map((file) => (
+                            <TableRow key={file.id}>
 
 
                                 <TableCell align="right">
-                                    <IconButton aria-label="delete" color="primary" onClick={() => { handleOpen(row) }}>
+                                    <IconButton aria-label="delete" color="primary" onClick={() => { handleOpen(file) }}>
                                         <SearchIcon />
                                     </IconButton>
                                 </TableCell>
 
 
-                                <TableCell component="th" scope="row" >
-                                    {row.shortfileName}
+                                <TableCell component="th" scope="file" >
+                                    {file.shortfileName}
                                 </TableCell>
 
 
 
                                 <TableCell align="right"  >
-                                    <IconButton aria-label="delete" color="primary" onClick={() => { handleDownload(row) }}>
+                                    <IconButton aria-label="delete" color="primary" onClick={() => { handleDownload(file) }}>
                                         <SaveIcon />
                                     </IconButton>
                                 </TableCell>
@@ -201,10 +165,10 @@ const FilesTable = ({ files, macetCode }) => {
                                 </TableCell>
 
 
-                                <TableCell align="right">{row.shortfileNameСonfirmation}</TableCell>
+                                <TableCell align="right">{file.shortfileNameСonfirmation}</TableCell>
 
 
-                                <TableCell align="right"><UploadButtons shortfileName = {row.shortfileName} fileName = {row.fileName}/> </TableCell>
+                                <TableCell align="right"><UploadButtons file = {file}/> </TableCell>
 
                             </TableRow>
                         ))}

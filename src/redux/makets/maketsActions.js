@@ -60,7 +60,7 @@ export const setMaketsStatus = (status) => {
           dispatch(logOut())
           return dispatch({type: MAKETS_FAILURE});
         }else {
-            return dispatch({type: MAKETS_SUCCESS, payload: {status, makets:data}});
+            return dispatch({type: MAKETS_SUCCESS, payload: {status, makets:data.makets}});
         } 
       })
       .catch((err) => {
