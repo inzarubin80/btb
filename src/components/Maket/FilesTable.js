@@ -13,7 +13,7 @@ import IconButton from '@material-ui/core/IconButton';
 import SearchIcon from '@material-ui/icons/Search';
 import Modal from '@material-ui/core/Modal';
 import PictureView from './PictureView';
-import {getImgMaket, saveFileСonfirmation} from '../../api/dataService1c';
+import { getImgMaket, saveFileСonfirmation } from '../../api/dataService1c';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
 
 
 
-const FilesTable = ({ files, macetCode, handleChangeFile}) => {
+const FilesTable = ({ files, macetCode, handleChangeFile }) => {
 
     const classes = useStyles();
 
@@ -56,20 +56,24 @@ const FilesTable = ({ files, macetCode, handleChangeFile}) => {
         setOpen(false);
     };
 
-   
 
-    const UploadButtons = ({fileName, shortfileName}) => {
+
+    const UploadButtons = (props) => {
+
+        console.log(props.fileName);
 
         return (
             <div className={classes.rootButton}>
                 <input
-                
-                accept="image/*"
-                className={classes.inputButton}
-                id="contained-button-file"
-                type="file"
-                onChange={(e)=>{handleChangeFile(e, fileName, shortfileName)}}
-                
+
+                    accept="image/*"
+                    className={classes.inputButton}
+                    id="contained-button-file"
+                    type="file"
+
+
+                    onChange={(e) => handleChangeFile(props.code, e.target.files[0], props.fileName, props.shortfileName)}
+
                 />
                 <label htmlFor="contained-button-file">
 
@@ -90,7 +94,7 @@ const FilesTable = ({ files, macetCode, handleChangeFile}) => {
 
 
 
-                const linkSource = `data:image/jpeg;base64,${json.imgBase64}`;
+                const linkSource = `data:image/jpeg;base64,${json.file.imgBase64}`;
                 const downloadLink = document.createElement("a");
                 downloadLink.href = linkSource;
                 downloadLink.download = shortfileName;
@@ -168,7 +172,28 @@ const FilesTable = ({ files, macetCode, handleChangeFile}) => {
                                 <TableCell align="right">{file.shortfileNameСonfirmation}</TableCell>
 
 
-                                <TableCell align="right"><UploadButtons file = {file}/> </TableCell>
+                                <TableCell align="right">
+
+                                    <div className={classes.rootButton}>
+                                        <input
+
+                                            accept="image/*"
+                                            className={classes.inputButton}
+                                            id={"contained-button-file"+file.id} 
+                                            type="file"
+
+
+                                            onChange={(e) => handleChangeFile(file.code, e.target.files[0], file.fileName, file.shortfileName)}
+
+                                        />
+                                        <label htmlFor={"contained-button-file"+file.id}>
+                                            <IconButton aria-label="download" variant="contained" color="primary" component="span">
+                                                <BackupIcon />
+                                            </IconButton>
+                                        </label>
+                                    </div>
+
+                                </TableCell>
 
                             </TableRow>
                         ))}

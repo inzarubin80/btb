@@ -1,7 +1,7 @@
 import './App.css';
 import { BrowserRouter as Router, Route, Switch, Redirect, useLocation } from 'react-router-dom'
 
-import Login from './components/LoginPage/LoginPage';
+import Login from './components/loginPage/LoginPage.js';
 import Heder from './components/Heder/Heder.js';
 import Makets from './components/Maket/Makets.js';
 import MaketCard from './components/Maket/MaketCard';

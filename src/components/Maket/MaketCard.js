@@ -58,12 +58,11 @@ const getBase64 = (file) => {
       // on reader load somthing...
       reader.onload = () => {
           // Make a fileInfo Object
-          console.log("Called", reader);
           baseURL = reader.result;
           //console.log(baseURL);
           resolve(baseURL);
       };
-      console.log(fileInfo);
+     
   });
 };
 
@@ -142,12 +141,26 @@ const MaketCard = (props) => {
   }
 
 
+
   const handleChangeFile = (macetCode, file, fileName, shortfileName) => {
        
-
+    
     getBase64(file).then(fileBase64 => {
-        console.log('result');
-        saveFileСonfirmation(macetCode,fileName,shortfileName, fileBase64);
+        
+      saveFileСonfirmation(macetCode, fileName, shortfileName, fileBase64)
+      .then(response => response.json())
+      .then((json) => {
+
+        if (!json.error) {
+          setMaket(json.maket);
+        }
+
+      })
+
+      .catch((err) => {
+      //  setMaket({});
+      });
+
     })
         .catch(err => {
             console.log(err);
@@ -158,8 +171,7 @@ const MaketCard = (props) => {
 
 
 
-  console.log('maket', maket);
-
+ 
 
   if (maket != null && maket.code) {
 
@@ -202,8 +214,10 @@ const MaketCard = (props) => {
                   variant="fullWidth"
                   aria-label="full width tabs example"
                 >
-                  <Tab label="Цвета" {...a11yProps(0)} />
-                  <Tab label="Файлы" {...a11yProps(1)} />
+
+                  <Tab label="Файлы" {...a11yProps(0)} />
+                  <Tab label="Цвета" {...a11yProps(1)} />
+                 
 
 
                 </Tabs>
@@ -213,13 +227,19 @@ const MaketCard = (props) => {
                 index={value}
                 onChangeIndex={handleChangeIndex}
               >
-                <TabPanel value={value} index={0} dir={theme.direction}>
-                  <ColorsTable colors={maket.colors} />
-                </TabPanel>
-                <TabPanel value={value} index={1} dir={theme.direction}>
+
+
+              <TabPanel value={value} index={0} dir={theme.direction}>
                   <FilesTable files={maket.files} macetCode={maket.code} handleChangeFile={handleChangeFile}/>
                 </TabPanel>
 
+
+                <TabPanel value={value} index={1} dir={theme.direction}>
+                  <ColorsTable colors={maket.colors} />
+                </TabPanel>
+
+
+                
               </SwipeableViews >
             </div>
 
