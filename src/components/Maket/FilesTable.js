@@ -15,6 +15,8 @@ import Modal from '@material-ui/core/Modal';
 import PictureView from './PictureView';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
+import {approval} from './statuses'
+
 
 const useStyles = makeStyles((theme) => ({
 
@@ -39,7 +41,7 @@ const useStyles = makeStyles((theme) => ({
 
 
 
-const FilesTable = ({files, macetCode, handleChangeFile, handleDownload, hendlerStateFile, stateFile}) => {
+const FilesTable = ({maket, handleChangeFile, handleDownload, hendlerStateFile, stateFile}) => {
 
     const classes = useStyles();
 
@@ -87,7 +89,7 @@ const FilesTable = ({files, macetCode, handleChangeFile, handleDownload, hendler
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {files.map((file) => (
+                        {maket.files.map((file) => (
                             <TableRow key={file.id}>
 
 
@@ -140,7 +142,7 @@ const FilesTable = ({files, macetCode, handleChangeFile, handleDownload, hendler
 
 
                                 <TableCell align="right">
-                                    {!stateFile.upLoading.find(fileName => fileName == file.fileName) &&   <div className={classes.rootButton}>
+                                    {!stateFile.upLoading.find(fileName => fileName == file.fileName) && approval==maket.status &&  <div className={classes.rootButton}>
                                         <input
 
                                             accept="image/*"
