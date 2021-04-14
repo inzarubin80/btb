@@ -13,7 +13,7 @@ import IconButton from '@material-ui/core/IconButton';
 import SearchIcon from '@material-ui/icons/Search';
 import Modal from '@material-ui/core/Modal';
 import PictureView from './PictureView';
-import { getImgMaket, saveFileСonfirmation } from '../../api/dataService1c';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
 
 
 
-const FilesTable = ({ files, macetCode, handleChangeFile }) => {
+const FilesTable = ({files, macetCode, handleChangeFile, handleDownload, hendlerStateFile, stateFile}) => {
 
     const classes = useStyles();
 
@@ -47,42 +47,20 @@ const FilesTable = ({ files, macetCode, handleChangeFile }) => {
     const [file, setFile] = React.useState({});
 
 
-    const handleOpen = (file) => {
+    const handleOpen = (code, fileName, shortfileName) => {
         setOpen(true);
-        setFile(file);
+        setFile({code, fileName, shortfileName});
     };
 
     const handleClose = () => {
         setOpen(false);
     };
 
-    const handleDownload = ({ fileName, shortfileName }) => {
-
-        getImgMaket(macetCode, fileName)
-            .then(response => response.json())
-            .then((json) => {
-
-
-
-                const linkSource = `data:image/jpeg;base64,${json.file.imgBase64}`;
-                const downloadLink = document.createElement("a");
-                downloadLink.href = linkSource;
-                downloadLink.download = shortfileName;
-                downloadLink.click();
-
-
-            })
-            .catch((err) => {
-
-            });
-    }
-
-
-
+    
     const body = () => {
         return (
             <div >
-                <PictureView fileName={file.fileName} shortfileName={file.shortfileName} macetCode={macetCode} handleClose={handleClose} />
+                <PictureView fileName={file.fileName} hendlerStateFile = {hendlerStateFile} shortfileName={file.shortfileName} macetCode={file.code} handleClose={handleClose} />
             </div>
         );
     }
@@ -95,14 +73,16 @@ const FilesTable = ({ files, macetCode, handleChangeFile }) => {
                     <TableHead>
                         <TableRow>
 
-                            <TableCell></TableCell>
-                            <TableCell>Файл</TableCell>
-                            <TableCell></TableCell>
 
-                            <TableCell></TableCell>
+                            <TableCell>Файл</TableCell>
+
+                            <TableCell/>
+                            <TableCell/>
 
                             <TableCell>Файл подтверждения</TableCell>
-                            <TableCell></TableCell>
+                            
+                            <TableCell/>
+                            <TableCell/>
 
                         </TableRow>
                     </TableHead>
@@ -111,40 +91,56 @@ const FilesTable = ({ files, macetCode, handleChangeFile }) => {
                             <TableRow key={file.id}>
 
 
-                                <TableCell align="right">
-                                    <IconButton aria-label="delete" color="primary" onClick={() => { handleOpen(file) }}>
-                                        <SearchIcon />
-                                    </IconButton>
-                                </TableCell>
-
 
                                 <TableCell component="th" scope="file" >
                                     {file.shortfileName}
                                 </TableCell>
 
 
+                                <TableCell align="right">
+                                    
+                                    {!stateFile.opens.find(fileName => fileName == file.fileName) &&
+                                    <IconButton aria-label="delete" color="primary" onClick={() => {handleOpen(file.code, file.fileName, file.shortfileName) }}>
+                                        <SearchIcon />
+                                    </IconButton>}
+                                     
+                                     {stateFile.opens.find(fileName => fileName == file.fileName) && 
+                                     <CircularProgress /> }
+
+                                </TableCell>
+
 
                                 <TableCell align="right"  >
-                                    <IconButton aria-label="delete" color="primary" onClick={() => { handleDownload(file) }}>
+
+                                   {!stateFile.loading.find(fileName => fileName == file.fileName) && <IconButton aria-label="delete" color="primary" onClick={() => { handleDownload(file) }}>
                                         <SaveIcon />
-                                    </IconButton>
-                                </TableCell>
+                                    </IconButton>}
+
+                                     {stateFile.loading.find(fileName => fileName == file.fileName) && 
+                                     <CircularProgress /> }
+                                
+                                 </TableCell>
 
 
 
-                                <TableCell align="right">
-                                    <IconButton aria-label="delete" color="primary">
+                                 <TableCell align="right">{file.shortfileNameСonfirmation}</TableCell>
+
+
+                                 <TableCell align="right">
+                                    
+                                    {!stateFile.opens.find(fileName => fileName == file.fileNameСonfirmation) && file.fileNameСonfirmation &&
+                                    <IconButton aria-label="delete" color="primary" onClick={() => {handleOpen(file.code, file.fileNameСonfirmation, file.shortfileNameСonfirmation) }}>
                                         <SearchIcon />
-                                    </IconButton>
+                                    </IconButton>}
+                                     
+                                     {stateFile.opens.find(fileName => fileName == file.fileNameСonfirmation) && 
+                                     <CircularProgress /> }
+
                                 </TableCell>
 
 
-                                <TableCell align="right">{file.shortfileNameСonfirmation}</TableCell>
-
-
                                 <TableCell align="right">
-
-                                    <div className={classes.rootButton}>
+                                    {!stateFile.upLoading.find(fileName => fileName == file.fileName) &&   <div className={classes.rootButton}>
                                         <input
 
                                             accept="image/*"
@@ -161,9 +157,15 @@ const FilesTable = ({ files, macetCode, handleChangeFile }) => {
                                                 <BackupIcon />
                                             </IconButton>
                                         </label>
-                                    </div>
+                                    </div>}
+
+
+                                    {stateFile.upLoading.find(fileName => fileName == file.fileName) && 
+                                     <CircularProgress /> }
+                                    
 
                                 </TableCell>
+
 
                             </TableRow>
                         ))}

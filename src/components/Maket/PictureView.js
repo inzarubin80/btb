@@ -13,22 +13,29 @@ const useStyles = makeStyles((theme) => ({
 
 }));
 
-const ImgFromBase64 = ({ data }) => <img  src={`data:image/jpeg;base64,${data}`} style={{ height: 630, width: 'auto' }} />
 const PictureView = (props) => {
+
   const [imgData, seIimgData] = React.useState(null);
 
+  
   React.useEffect(() => {
+
+    props.hendlerStateFile(props.fileName, 'opens', true);
 
     getImgMaket(props.macetCode, props.fileName)
       .then(response => response.json())
       .then((json) => {
 
-        seIimgData(json);
+        props.hendlerStateFile(props.fileName, 'opens', false);
+        seIimgData(json.file);
 
       })
       .catch((err) => {
 
+        props.hendlerStateFile(props.fileName, 'opens', false);
+
         seIimgData(null);
+
 
       });
 
@@ -36,17 +43,15 @@ const PictureView = (props) => {
 
 
 
-
-  
+//  console.log('imgData', imgData);
 
   const classes = useStyles();
 
   return (
-    <div style={{ backgroundSize: 'cover%'}}>
+    <div style={{ backgroundSize: 'cover%' }}>
 
       {imgData && <IconButton aria-label="close" color="primary" onClick={() => { props.handleClose() }} />}
-      {!imgData && <CircularProgress />}
-      {imgData && <img  src={`data:image/jpeg;base64,${imgData.imgBase64}`} style={{backgroundSize: 'cover', height: 639, width: 'auto'}} />}
+      {imgData && <img src={`data:image/jpeg;base64,${imgData.imgBase64}`} style={{ backgroundSize: 'cover', height: 639, width: 'auto' }} />}
 
     </div>
   );
