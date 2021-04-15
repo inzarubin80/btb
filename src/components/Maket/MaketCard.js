@@ -14,18 +14,18 @@ import { Descriptions } from 'antd';
 import FilesTable from './FilesTable'
 import ColorsTable from './ColorsTable'
 import ParameterTable from './ParameterTable'
+
 import Button from '@material-ui/core/Button';
+import { green, blue, pink } from '@material-ui/core/colors';
 import { approval } from './statuses'
-
 import 'antd/dist/antd.css';
-
-
-
+import CircularProgress from '@material-ui/core/CircularProgress';
 import {
   withRouter
 } from "react-router-dom";
 
-
+import DoneIcon from '@material-ui/icons/Done';
+import BorderColorIcon from '@material-ui/icons/BorderColor';
 const useStyles = makeStyles((theme) => ({
   root: {
     minWidth: 120
@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme) => ({
     transform: 'scale(0.8)',
   },
   title: {
-    fontSize: 14,
+    //fontSize: 14,
   },
   pos: {
     marginBottom: 12,
@@ -46,15 +46,39 @@ const useStyles = makeStyles((theme) => ({
     minWidth: 10,
   },
 
-  buttonApproval: {
-    margin: theme.spacing(1),
-    float: 'right'
-  },
 
   buttonReject: {
     margin: theme.spacing(1),
     float: 'left'
   },
+
+  wrapperApproval: {
+    margin: theme.spacing(1),
+    position: 'relative',
+    float: 'right'
+  },
+  buttonApproval: {
+    backgroundColor: green[500],
+    '&:hover': {
+      backgroundColor: green[700],
+    },
+  },
+
+
+  wrapperReject: {
+    margin: theme.spacing(1),
+    position: 'relative',
+    float: 'left'
+  },
+
+  buttonReject: {
+    backgroundColor: blue,
+    '&:hover': {
+      backgroundColor: pink,
+    },
+  },
+
+
 
 }));
 
@@ -120,7 +144,7 @@ const MaketCard = (props) => {
     setValue(newValue);
   };
 
-  const [stateLoadingButton, setStateLoadingButton] = React.useState({loading: []});
+  const [stateLoadingButton, setStateLoadingButton] = React.useState({ loading: [] });
 
 
   const hendlerStateLoadingButton = (buttonId, add) => {
@@ -139,17 +163,21 @@ const MaketCard = (props) => {
   }
 
 
+  const isload = (buttonId) => {
+    return stateLoadingButton.loading.find((id) => { return id == buttonId })
+  }
+
   const handleChangeIndex = (index) => {
     setValue(index);
   };
 
 
-  const handleDownload = ({ code, fileName, shortfileName}) => {
+  const handleDownload = ({ code, fileName, shortfileName }) => {
 
 
     const idButton = fileName + 'save';
 
-    hendlerStateLoadingButton (idButton, true);
+    hendlerStateLoadingButton(idButton, true);
 
     getImgMaket(code, fileName)
       .then(response => response.json())
@@ -162,12 +190,12 @@ const MaketCard = (props) => {
         downloadLink.download = shortfileName;
         downloadLink.click();
 
-        hendlerStateLoadingButton (idButton,  false);
+        hendlerStateLoadingButton(idButton, false);
 
 
       })
       .catch((err) => {
-        hendlerStateLoadingButton (idButton,  false);
+        hendlerStateLoadingButton(idButton, false);
 
       });
   }
@@ -205,13 +233,13 @@ const MaketCard = (props) => {
             setMaket(json.responseMaket.maket);
           }
 
-          hendlerStateLoadingButton (idButton,  false);
+          hendlerStateLoadingButton(idButton, false);
 
         })
 
         .catch((err) => {
-         
-          hendlerStateLoadingButton(idButton,  false);
+
+          hendlerStateLoadingButton(idButton, false);
 
         });
 
@@ -223,11 +251,15 @@ const MaketCard = (props) => {
 
   const hendlerConfirmationMaket = () => {
 
-    console.log('hendlerConfirmationMaket');
+    const idButton = 'confirmationButton';
+
+    hendlerStateLoadingButton(idButton, true);
 
     сonfirmationMaket(maket.code)
       .then(response => response.json())
       .then((json) => {
+
+        hendlerStateLoadingButton(idButton, false);
 
         if (json.responseMaket.maket) {
           setMaket(json.responseMaket.maket);
@@ -237,7 +269,7 @@ const MaketCard = (props) => {
 
       .catch((err) => {
         //  setMaket({});
-
+        hendlerStateLoadingButton(idButton, false);
 
       });
 
@@ -252,19 +284,57 @@ const MaketCard = (props) => {
       <div style={{ textAlign: 'center', maxWidth: '50%', margin: 'auto', marginTop: 30 }}>
         <Card className={classes.root}>
           <CardContent>
-            <Typography className={classes.title} color="textSecondary" gutterBottom>
+            <Typography variant="h6" className={classes.title} color="textSecondary" gutterBottom>
 
 
 
-              {approval == maket.status && <Button variant="outlined" color="secondary" className={classes.buttonReject}>
-                Отклонить
-              </Button>}
+              {approval == maket.status &&
+
+
+                <div className={classes.wrapperReject}>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    className={classes.buttonReject}
+                    disabled={isload('buttonReject')}
+                    onClick={() => { console.log('Reject') }}
+
+                    startIcon={<BorderColorIcon />}
+                  >
+                    Доработка
+        </Button>
+                  {isload('buttonReject') && <CircularProgress size={24} className={classes.buttonProgress} />}
+                </div>
+
+
+              }
 
               Макет №{maket.code + " "}
 
-              {approval == maket.status && <Button variant="outlined" color="primary" className={classes.buttonApproval} onClick={() => hendlerConfirmationMaket()}>
-                Согласовать
-              </Button>}
+              {approval == maket.status &&
+
+
+
+                <div className={classes.wrapperApproval}>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    className={classes.buttonApproval}
+                    disabled={isload('confirmationButton')}
+                    onClick={() => hendlerConfirmationMaket()}
+
+                    startIcon={<DoneIcon />}
+                  >
+                    Согласовать
+            </Button>
+                  {isload('confirmationButton') && <CircularProgress size={24} className={classes.buttonProgress} />}
+                </div>
+
+
+              }
+
+
+
 
             </Typography>
 
@@ -308,7 +378,7 @@ const MaketCard = (props) => {
 
 
                 <TabPanel value={value} index={1} dir={theme.direction}>
-                  <FilesTable maket={maket} handleChangeFile={handleChangeFile} handleDownload={handleDownload} hendlerStateLoadingButton={hendlerStateLoadingButton} stateLoadingButton={stateLoadingButton} />
+                  <FilesTable maket={maket} handleChangeFile={handleChangeFile} handleDownload={handleDownload} hendlerStateLoadingButton={hendlerStateLoadingButton} isload={isload} />
                 </TabPanel>
 
 

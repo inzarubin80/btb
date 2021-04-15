@@ -41,12 +41,11 @@ const useStyles = makeStyles((theme) => ({
 
 
 
-const FilesTable = ({maket, handleChangeFile, handleDownload, hendlerStateLoadingButton, stateLoadingButton}) => {
+const FilesTable = ({maket, handleChangeFile, handleDownload, hendlerStateLoadingButton,isload}) => {
 
 
 
-    console.log("FilesTablestateLoadingButton", stateLoadingButton);
-
+   
     const classes = useStyles();
 
     const [open, setOpen] = React.useState(false);
@@ -104,12 +103,12 @@ const FilesTable = ({maket, handleChangeFile, handleDownload, hendlerStateLoadin
 
                                 <TableCell align="right">
                                     
-                                    {!stateLoadingButton.loading.find((fileName) => {return fileName == (file.fileName + 'open')}) &&
+                                    {!isload(file.fileName +'open') &&
                                     <IconButton aria-label="delete" color="primary" onClick={() => {handleOpen(file.code, file.fileName, file.shortfileName) }}>
                                         <SearchIcon />
                                     </IconButton>}
                                      
-                                     {stateLoadingButton.loading.find(fileName => fileName == (file.fileName + 'open')) && 
+                                     {isload(file.fileName +'open') && 
                                      <CircularProgress /> }
 
                                 </TableCell>
@@ -117,11 +116,11 @@ const FilesTable = ({maket, handleChangeFile, handleDownload, hendlerStateLoadin
 
                                 <TableCell align="right"  >
 
-                                   {!stateLoadingButton.loading.find(fileName => fileName == (file.fileName+'save')) && <IconButton aria-label="delete" color="primary" onClick={() => { handleDownload(file) }}>
+                                   {!isload(file.fileName+'save') && <IconButton aria-label="delete" color="primary" onClick={() => { handleDownload(file) }}>
                                         <SaveIcon />
                                     </IconButton>}
 
-                                     {stateLoadingButton.loading.find(fileName => fileName == (file.fileName+'save')) && 
+                                     {isload(file.fileName+'save')  && 
                                      <CircularProgress /> }
                                 
                                  </TableCell>
@@ -133,19 +132,19 @@ const FilesTable = ({maket, handleChangeFile, handleDownload, hendlerStateLoadin
 
                                  <TableCell align="right">
                                     
-                                    {!stateLoadingButton.loading.find(fileName => fileName == (file.fileNameСonfirmation+'open')) && file.fileNameСonfirmation &&
+                                    {!isload(file.fileNameСonfirmation+'open')  && file.fileNameСonfirmation &&
                                     <IconButton aria-label="delete" color="primary" onClick={() => {handleOpen(file.code, file.fileNameСonfirmation, file.shortfileNameСonfirmation) }}>
                                         <SearchIcon />
                                     </IconButton>}
                                      
-                                     {stateLoadingButton.loading.find(fileName => fileName == (file.fileNameСonfirmation+'open')) && 
+                                     {isload(file.fileNameСonfirmation+'open') && 
                                      <CircularProgress /> }
 
                                 </TableCell>
 
 
                                 <TableCell align="right">
-                                    {!stateLoadingButton.loading.find(fileName => fileName == (file.fileName+'upload')) && approval==maket.status &&  <div className={classes.rootButton}>
+                                    {! isload(file.fileName +'upload') && approval==maket.status &&  <div className={classes.rootButton}>
                                         <input
 
                                             accept="image/*"
@@ -165,7 +164,7 @@ const FilesTable = ({maket, handleChangeFile, handleDownload, hendlerStateLoadin
                                     </div>}
 
 
-                                    {stateLoadingButton.loading.find(fileName => fileName == (file.fileName+'upload')) && 
+                                    {isload(file.fileName +'upload') && 
                                      <CircularProgress /> }
                                     
 
