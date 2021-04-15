@@ -131,6 +131,9 @@ const MaketCard = (props) => {
       } else {
         state.loading = state.loading.filter((buttonIdInState) => { return (buttonIdInState != buttonId) })
       }
+
+      console.log(state);
+
       return state;
     })
   }
@@ -141,8 +144,10 @@ const MaketCard = (props) => {
   };
 
 
-  const handleDownload = ({ code, fileName, shortfileName, idButton}) => {
+  const handleDownload = ({ code, fileName, shortfileName}) => {
 
+
+    const idButton = fileName + 'save';
 
     hendlerStateLoadingButton (idButton, true);
 
@@ -184,7 +189,9 @@ const MaketCard = (props) => {
       });
   }, []);
 
-  const handleChangeFile = (macetCode, file, fileName, shortfileName, idButton) => {
+  const handleChangeFile = (macetCode, file, fileName, shortfileName) => {
+
+    const idButton = fileName + 'upload';
 
     hendlerStateLoadingButton(idButton, true);
 

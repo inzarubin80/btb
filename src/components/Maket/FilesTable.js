@@ -41,13 +41,16 @@ const useStyles = makeStyles((theme) => ({
 
 
 
-const FilesTable = ({maket, handleChangeFile, handleDownload, setStateLoadingButton, stateLoadingButton}) => {
+const FilesTable = ({maket, handleChangeFile, handleDownload, hendlerStateLoadingButton, stateLoadingButton}) => {
+
+
+
+    console.log("FilesTablestateLoadingButton", stateLoadingButton);
 
     const classes = useStyles();
 
     const [open, setOpen] = React.useState(false);
     const [file, setFile] = React.useState({});
-
 
     const handleOpen = (code, fileName, shortfileName) => {
         setOpen(true);
@@ -62,7 +65,7 @@ const FilesTable = ({maket, handleChangeFile, handleDownload, setStateLoadingBut
     const body = () => {
         return (
             <div >
-                <PictureView fileName={file.fileName} setStateLoadingButton = {setStateLoadingButton} shortfileName={file.shortfileName} macetCode={file.code} handleClose={handleClose} />
+                <PictureView fileName={file.fileName} hendlerStateLoadingButton = {hendlerStateLoadingButton} shortfileName={file.shortfileName} macetCode={file.code} handleClose={handleClose} />
             </div>
         );
     }
@@ -101,12 +104,12 @@ const FilesTable = ({maket, handleChangeFile, handleDownload, setStateLoadingBut
 
                                 <TableCell align="right">
                                     
-                                    {!stateLoadingButton.opens.find(fileName => fileName == file.fileName) &&
+                                    {!stateLoadingButton.loading.find((fileName) => {return fileName == (file.fileName + 'open')}) &&
                                     <IconButton aria-label="delete" color="primary" onClick={() => {handleOpen(file.code, file.fileName, file.shortfileName) }}>
                                         <SearchIcon />
                                     </IconButton>}
                                      
-                                     {stateLoadingButton.opens.find(fileName => fileName == file.fileName) && 
+                                     {stateLoadingButton.loading.find(fileName => fileName == (file.fileName + 'open')) && 
                                      <CircularProgress /> }
 
                                 </TableCell>
@@ -114,11 +117,11 @@ const FilesTable = ({maket, handleChangeFile, handleDownload, setStateLoadingBut
 
                                 <TableCell align="right"  >
 
-                                   {!stateLoadingButton.loading.find(fileName => fileName == file.fileName) && <IconButton aria-label="delete" color="primary" onClick={() => { handleDownload(file) }}>
+                                   {!stateLoadingButton.loading.find(fileName => fileName == (file.fileName+'save')) && <IconButton aria-label="delete" color="primary" onClick={() => { handleDownload(file) }}>
                                         <SaveIcon />
                                     </IconButton>}
 
-                                     {stateLoadingButton.loading.find(fileName => fileName == file.fileName) && 
+                                     {stateLoadingButton.loading.find(fileName => fileName == (file.fileName+'save')) && 
                                      <CircularProgress /> }
                                 
                                  </TableCell>
@@ -130,19 +133,19 @@ const FilesTable = ({maket, handleChangeFile, handleDownload, setStateLoadingBut
 
                                  <TableCell align="right">
                                     
-                                    {!stateLoadingButton.opens.find(fileName => fileName == file.fileNameСonfirmation) && file.fileNameСonfirmation &&
+                                    {!stateLoadingButton.loading.find(fileName => fileName == (file.fileNameСonfirmation+'open')) && file.fileNameСonfirmation &&
                                     <IconButton aria-label="delete" color="primary" onClick={() => {handleOpen(file.code, file.fileNameСonfirmation, file.shortfileNameСonfirmation) }}>
                                         <SearchIcon />
                                     </IconButton>}
                                      
-                                     {stateLoadingButton.opens.find(fileName => fileName == file.fileNameСonfirmation) && 
+                                     {stateLoadingButton.loading.find(fileName => fileName == (file.fileNameСonfirmation+'open')) && 
                                      <CircularProgress /> }
 
                                 </TableCell>
 
 
                                 <TableCell align="right">
-                                    {!stateLoadingButton.upLoading.find(fileName => fileName == file.fileName) && approval==maket.status &&  <div className={classes.rootButton}>
+                                    {!stateLoadingButton.loading.find(fileName => fileName == (file.fileName+'upload')) && approval==maket.status &&  <div className={classes.rootButton}>
                                         <input
 
                                             accept="image/*"
@@ -162,7 +165,7 @@ const FilesTable = ({maket, handleChangeFile, handleDownload, setStateLoadingBut
                                     </div>}
 
 
-                                    {stateLoadingButton.upLoading.find(fileName => fileName == file.fileName) && 
+                                    {stateLoadingButton.loading.find(fileName => fileName == (file.fileName+'upload')) && 
                                      <CircularProgress /> }
                                     
 

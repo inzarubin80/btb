@@ -20,19 +20,21 @@ const PictureView = (props) => {
   
   React.useEffect(() => {
 
-    props.setStateLoadingButton(props.fileName + 'opens', true);
+    const idButton = props.fileName  + 'open';
+
+    props.hendlerStateLoadingButton(idButton, true);
 
     getImgMaket(props.macetCode, props.fileName)
       .then(response => response.json())
       .then((json) => {
 
-        props.setStateLoadingButton(props.fileName + 'opens', false);
+        props.hendlerStateLoadingButton(idButton, false);
         seIimgData(json.file);
 
       })
       .catch((err) => {
 
-        props.setStateLoadingButton(props.fileName + 'opens', false);
+        props.hendlerStateLoadingButton(idButton, false);
 
         seIimgData(null);
 
