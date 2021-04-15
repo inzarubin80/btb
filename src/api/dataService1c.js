@@ -18,9 +18,6 @@ export const executeAuthenticationService = (token) => {
 }
 
 export const getMakets = (status) => {
-    
-    console.log('getMakets');
-
     const config = getConfig('get')
     return fetch(`${API_URL}/?typerequest=getMakets&status=${status}`, config);
 }
@@ -29,6 +26,14 @@ export const getMaket = (id) => {
     const config = getConfig('get')
     return fetch(`${API_URL}/?typerequest=getMaket&id=${id}`, config);
 }
+
+export const сonfirmationMaket = (id) => {
+    const config = getConfig('post');
+    config.body = JSON.stringify({});
+    return fetch(`${API_URL}/?typerequest=confirmationMaket&id=${id}`, config);
+}
+
+
 
 export const getImgMaket = (id, fileName) => {
     const config = getConfig('get')

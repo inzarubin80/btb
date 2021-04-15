@@ -3,7 +3,7 @@ import { makeStyles, useTheme, ThemeProvider } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
-import { getMaket, getImgMaket, saveFileСonfirmation } from '../../api/dataService1c';
+import { getMaket, getImgMaket, saveFileСonfirmation, сonfirmationMaket } from '../../api/dataService1c';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
@@ -14,12 +14,11 @@ import { Descriptions } from 'antd';
 import FilesTable from './FilesTable'
 import ColorsTable from './ColorsTable'
 import ParameterTable from './ParameterTable'
-
 import Button from '@material-ui/core/Button';
-
-
+import { approval } from './statuses'
 
 import 'antd/dist/antd.css';
+
 
 
 import {
@@ -121,42 +120,31 @@ const MaketCard = (props) => {
     setValue(newValue);
   };
 
-  const [stateFile, setStateFile] = React.useState({ opens: [], loading: [], upLoading: [] });
-
-  const hendlerStateFile = (fileName, type, add) => {
-
-    console.log('hendlerStateFile');
-    console.log('fileName', fileName);
-    console.log('type', type);
-    console.log('add', add);
+  const [stateLoadingButton, setStateLoadingButton] = React.useState({loading: []});
 
 
-    setStateFile((prevState) => {
+  const hendlerStateLoadingButton = (buttonId, add) => {
+    setStateLoadingButton((prevState) => {
       let state = { ...prevState };
-
-      console.log('начальное состояние ', state);
-
-
       if (add) {
-        state[type] = [...state[type], fileName]
+        state.loading = [...state.loading, buttonId]
       } else {
-        state[type] = state[type].filter((fileNameAr) => { return (fileNameAr != fileName) })
+        state.loading = state.loading.filter((buttonIdInState) => { return (buttonIdInState != buttonId) })
       }
-
-      console.log('конечное состояние', state);
-
       return state;
     })
   }
+
 
   const handleChangeIndex = (index) => {
     setValue(index);
   };
 
 
-  const handleDownload = ({ code, fileName, shortfileName }) => {
+  const handleDownload = ({ code, fileName, shortfileName, idButton}) => {
 
-    hendlerStateFile(fileName, 'loading', true);
+
+    hendlerStateLoadingButton (idButton, true);
 
     getImgMaket(code, fileName)
       .then(response => response.json())
@@ -169,12 +157,12 @@ const MaketCard = (props) => {
         downloadLink.download = shortfileName;
         downloadLink.click();
 
-        hendlerStateFile(fileName, 'loading', false);
+        hendlerStateLoadingButton (idButton,  false);
 
 
       })
       .catch((err) => {
-        hendlerStateFile(fileName, 'loading', false);
+        hendlerStateLoadingButton (idButton,  false);
 
       });
   }
@@ -196,9 +184,9 @@ const MaketCard = (props) => {
       });
   }, []);
 
-  const handleChangeFile = (macetCode, file, fileName, shortfileName) => {
+  const handleChangeFile = (macetCode, file, fileName, shortfileName, idButton) => {
 
-    hendlerStateFile(fileName, 'upLoading', true);
+    hendlerStateLoadingButton(idButton, true);
 
     getBase64(file).then(fileBase64 => {
 
@@ -206,18 +194,17 @@ const MaketCard = (props) => {
         .then(response => response.json())
         .then((json) => {
 
-          if (!json.error) {
-            setMaket(json.maket);
+          if (json.responseMaket.maket) {
+            setMaket(json.responseMaket.maket);
           }
 
-          hendlerStateFile(fileName, 'upLoading', false);
+          hendlerStateLoadingButton (idButton,  false);
 
         })
 
         .catch((err) => {
-          //  setMaket({});
-
-          hendlerStateFile(fileName, 'upLoading', false);
+         
+          hendlerStateLoadingButton(idButton,  false);
 
         });
 
@@ -225,6 +212,29 @@ const MaketCard = (props) => {
       .catch(err => {
         console.log(err);
       });
+  }
+
+  const hendlerConfirmationMaket = () => {
+
+    console.log('hendlerConfirmationMaket');
+
+    сonfirmationMaket(maket.code)
+      .then(response => response.json())
+      .then((json) => {
+
+        if (json.responseMaket.maket) {
+          setMaket(json.responseMaket.maket);
+        }
+
+      })
+
+      .catch((err) => {
+        //  setMaket({});
+
+
+      });
+
+
   }
 
 
@@ -239,20 +249,17 @@ const MaketCard = (props) => {
 
 
 
-              <Button variant="outlined" color="secondary" className={classes.buttonReject}>
+              {approval == maket.status && <Button variant="outlined" color="secondary" className={classes.buttonReject}>
                 Отклонить
-              </Button>
+              </Button>}
 
               Макет №{maket.code + " "}
 
-              <Button variant="outlined" color="primary" className={classes.buttonApproval}>
+              {approval == maket.status && <Button variant="outlined" color="primary" className={classes.buttonApproval} onClick={() => hendlerConfirmationMaket()}>
                 Согласовать
-              </Button>
+              </Button>}
 
             </Typography>
-
-
-
 
             <Descriptions layout="vertical" bordered >
 
@@ -289,12 +296,12 @@ const MaketCard = (props) => {
 
 
                 <TabPanel value={value} index={0} dir={theme.direction}>
-                    <ParameterTable maket={maket}/>
+                  <ParameterTable maket={maket} />
                 </TabPanel>
 
 
                 <TabPanel value={value} index={1} dir={theme.direction}>
-                  <FilesTable maket={maket} handleChangeFile={handleChangeFile} handleDownload={handleDownload} hendlerStateFile={hendlerStateFile} stateFile={stateFile} />
+                  <FilesTable maket={maket} handleChangeFile={handleChangeFile} handleDownload={handleDownload} hendlerStateLoadingButton={hendlerStateLoadingButton} stateLoadingButton={stateLoadingButton} />
                 </TabPanel>
 
 

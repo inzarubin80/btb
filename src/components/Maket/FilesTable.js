@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme) => ({
 
 
 
-const FilesTable = ({maket, handleChangeFile, handleDownload, hendlerStateFile, stateFile}) => {
+const FilesTable = ({maket, handleChangeFile, handleDownload, setStateLoadingButton, stateLoadingButton}) => {
 
     const classes = useStyles();
 
@@ -62,7 +62,7 @@ const FilesTable = ({maket, handleChangeFile, handleDownload, hendlerStateFile, 
     const body = () => {
         return (
             <div >
-                <PictureView fileName={file.fileName} hendlerStateFile = {hendlerStateFile} shortfileName={file.shortfileName} macetCode={file.code} handleClose={handleClose} />
+                <PictureView fileName={file.fileName} setStateLoadingButton = {setStateLoadingButton} shortfileName={file.shortfileName} macetCode={file.code} handleClose={handleClose} />
             </div>
         );
     }
@@ -101,12 +101,12 @@ const FilesTable = ({maket, handleChangeFile, handleDownload, hendlerStateFile, 
 
                                 <TableCell align="right">
                                     
-                                    {!stateFile.opens.find(fileName => fileName == file.fileName) &&
+                                    {!stateLoadingButton.opens.find(fileName => fileName == file.fileName) &&
                                     <IconButton aria-label="delete" color="primary" onClick={() => {handleOpen(file.code, file.fileName, file.shortfileName) }}>
                                         <SearchIcon />
                                     </IconButton>}
                                      
-                                     {stateFile.opens.find(fileName => fileName == file.fileName) && 
+                                     {stateLoadingButton.opens.find(fileName => fileName == file.fileName) && 
                                      <CircularProgress /> }
 
                                 </TableCell>
@@ -114,11 +114,11 @@ const FilesTable = ({maket, handleChangeFile, handleDownload, hendlerStateFile, 
 
                                 <TableCell align="right"  >
 
-                                   {!stateFile.loading.find(fileName => fileName == file.fileName) && <IconButton aria-label="delete" color="primary" onClick={() => { handleDownload(file) }}>
+                                   {!stateLoadingButton.loading.find(fileName => fileName == file.fileName) && <IconButton aria-label="delete" color="primary" onClick={() => { handleDownload(file) }}>
                                         <SaveIcon />
                                     </IconButton>}
 
-                                     {stateFile.loading.find(fileName => fileName == file.fileName) && 
+                                     {stateLoadingButton.loading.find(fileName => fileName == file.fileName) && 
                                      <CircularProgress /> }
                                 
                                  </TableCell>
@@ -130,19 +130,19 @@ const FilesTable = ({maket, handleChangeFile, handleDownload, hendlerStateFile, 
 
                                  <TableCell align="right">
                                     
-                                    {!stateFile.opens.find(fileName => fileName == file.fileNameСonfirmation) && file.fileNameСonfirmation &&
+                                    {!stateLoadingButton.opens.find(fileName => fileName == file.fileNameСonfirmation) && file.fileNameСonfirmation &&
                                     <IconButton aria-label="delete" color="primary" onClick={() => {handleOpen(file.code, file.fileNameСonfirmation, file.shortfileNameСonfirmation) }}>
                                         <SearchIcon />
                                     </IconButton>}
                                      
-                                     {stateFile.opens.find(fileName => fileName == file.fileNameСonfirmation) && 
+                                     {stateLoadingButton.opens.find(fileName => fileName == file.fileNameСonfirmation) && 
                                      <CircularProgress /> }
 
                                 </TableCell>
 
 
                                 <TableCell align="right">
-                                    {!stateFile.upLoading.find(fileName => fileName == file.fileName) && approval==maket.status &&  <div className={classes.rootButton}>
+                                    {!stateLoadingButton.upLoading.find(fileName => fileName == file.fileName) && approval==maket.status &&  <div className={classes.rootButton}>
                                         <input
 
                                             accept="image/*"
@@ -162,7 +162,7 @@ const FilesTable = ({maket, handleChangeFile, handleDownload, hendlerStateFile, 
                                     </div>}
 
 
-                                    {stateFile.upLoading.find(fileName => fileName == file.fileName) && 
+                                    {stateLoadingButton.upLoading.find(fileName => fileName == file.fileName) && 
                                      <CircularProgress /> }
                                     
 
