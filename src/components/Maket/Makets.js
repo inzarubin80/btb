@@ -46,7 +46,7 @@ const columns = [
 
   { field: 'product', headerName: 'Продукт', width: 450, type: 'string' },
   { field: 'finalBuyer', headerName: 'Конечный покупатель', width: 200, type: 'string' },
-  { field: 'Shell', headerName: 'Вид оболочки', width: 150, type: 'string' },
+  { field: 'Shell', headerName: 'Вид продукции', width: 150, type: 'string' },
   { field: 'shellType', headerName: 'Тип оболочки', width: 200, type: 'string' },
   { field: 'shellСolor', headerName: 'Цвет оболочки', width: 150, type: 'string' },
   //  { field: 'dateAgreement', headerName: 'Дата согласования', width: 200, type: 'date' },
@@ -54,11 +54,7 @@ const columns = [
   { field: 'caliber', headerName: 'Калибр', width: 120, type: 'number' },
   { field: 'typPrinting', headerName: 'Тип печати', width: 200, type: 'string' },
 
-
-
 ];
-
-
 
 export default function Makets() {
 

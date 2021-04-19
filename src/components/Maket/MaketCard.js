@@ -15,6 +15,8 @@ import FilesTable from './FilesTable'
 import ColorsTable from './ColorsTable'
 import ParameterTable from './ParameterTable'
 
+import Tasks from './Tasks'
+
 import Button from '@material-ui/core/Button';
 import { green, blue, pink } from '@material-ui/core/colors';
 import { approval } from './statuses'
@@ -217,6 +219,8 @@ const MaketCard = (props) => {
       });
   }, []);
 
+
+
   const handleChangeFile = (macetCode, file, fileName, shortfileName) => {
 
     const idButton = fileName + 'upload';
@@ -302,7 +306,7 @@ const MaketCard = (props) => {
                     startIcon={<BorderColorIcon />}
                   >
                     Доработка
-        </Button>
+              </Button>
                   {isload('buttonReject') && <CircularProgress size={24} className={classes.buttonProgress} />}
                 </div>
 
@@ -326,7 +330,7 @@ const MaketCard = (props) => {
                     startIcon={<DoneIcon />}
                   >
                     Согласовать
-            </Button>
+                </Button>
                   {isload('confirmationButton') && <CircularProgress size={24} className={classes.buttonProgress} />}
                 </div>
 
@@ -360,7 +364,11 @@ const MaketCard = (props) => {
 
                   <Tab label="Основные данные" {...a11yProps(0)} />
                   <Tab label="Файлы" {...a11yProps(1)} />
-                  <Tab label="Цвета" {...a11yProps(2)} />
+
+
+                  <Tab label="Требования" {...a11yProps(2)} />
+                  <Tab label="Цвета" {...a11yProps(3)} />
+
 
 
                 </Tabs>
@@ -381,8 +389,12 @@ const MaketCard = (props) => {
                   <FilesTable maket={maket} handleChangeFile={handleChangeFile} handleDownload={handleDownload} hendlerStateLoadingButton={hendlerStateLoadingButton} isload={isload} />
                 </TabPanel>
 
-
                 <TabPanel value={value} index={2} dir={theme.direction}>
+                  <Tasks aket={maket} />
+                </TabPanel>
+
+
+                <TabPanel value={value} index={3} dir={theme.direction}>
                   <ColorsTable colors={maket.colors} />
                 </TabPanel>
 

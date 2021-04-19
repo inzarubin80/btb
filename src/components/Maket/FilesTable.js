@@ -15,13 +15,13 @@ import Modal from '@material-ui/core/Modal';
 import PictureView from './PictureView';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
-import {approval} from './statuses'
+import { approval } from './statuses'
 
 
 const useStyles = makeStyles((theme) => ({
 
     table: {
-        minWidth: 10,
+      minWidth: 10,
     },
 
 
@@ -33,19 +33,14 @@ const useStyles = makeStyles((theme) => ({
     inputButton: {
         display: 'none',
     },
+
+    
+
 }));
 
 
+const FilesTable = ({ maket, handleChangeFile, handleDownload, hendlerStateLoadingButton, isload }) => {
 
-
-
-
-
-const FilesTable = ({maket, handleChangeFile, handleDownload, hendlerStateLoadingButton,isload}) => {
-
-
-
-   
     const classes = useStyles();
 
     const [open, setOpen] = React.useState(false);
@@ -53,18 +48,18 @@ const FilesTable = ({maket, handleChangeFile, handleDownload, hendlerStateLoadin
 
     const handleOpen = (code, fileName, shortfileName) => {
         setOpen(true);
-        setFile({code, fileName, shortfileName});
+        setFile({ code, fileName, shortfileName });
     };
 
     const handleClose = () => {
         setOpen(false);
     };
 
-    
+
     const body = () => {
         return (
             <div >
-                <PictureView fileName={file.fileName} hendlerStateLoadingButton = {hendlerStateLoadingButton} shortfileName={file.shortfileName} macetCode={file.code} handleClose={handleClose} />
+                <PictureView fileName={file.fileName} hendlerStateLoadingButton={hendlerStateLoadingButton} shortfileName={file.shortfileName} macetCode={file.code} handleClose={handleClose} />
             </div>
         );
     }
@@ -80,13 +75,11 @@ const FilesTable = ({maket, handleChangeFile, handleDownload, hendlerStateLoadin
 
                             <TableCell>Файл</TableCell>
 
-                            <TableCell/>
-                            <TableCell/>
+                            <TableCell />
 
                             <TableCell>Файл подтверждения</TableCell>
-                            
-                            <TableCell/>
-                            <TableCell/>
+
+                            <TableCell />
 
                         </TableRow>
                     </TableHead>
@@ -101,62 +94,57 @@ const FilesTable = ({maket, handleChangeFile, handleDownload, hendlerStateLoadin
                                 </TableCell>
 
 
-                                <TableCell align="right">
-                                    
-                                    {!isload(file.fileName +'open') &&
-                                    <IconButton aria-label="delete" color="primary" onClick={() => {handleOpen(file.code, file.fileName, file.shortfileName) }}>
-                                        <SearchIcon />
-                                    </IconButton>}
-                                     
-                                     {isload(file.fileName +'open') && 
-                                     <CircularProgress /> }
+                                <TableCell   align="right" >
 
-                                </TableCell>
+                                    {!isload(file.fileName + 'open') &&
+                                        <IconButton style={{'float': 'left'}} style={{'display': 'inlineBlock'}} aria-label="delete" color="primary" onClick={() => { handleOpen(file.code, file.fileName, file.shortfileName) }}>
+                                            <SearchIcon />
+                                        </IconButton>}
+
+                                    {isload(file.fileName + 'open') &&
+                                        <CircularProgress style={{'display': 'inlineBlock'}} />}
 
 
-                                <TableCell align="right"  >
-
-                                   {!isload(file.fileName+'save') && <IconButton aria-label="delete" color="primary" onClick={() => { handleDownload(file) }}>
+                                    {!isload(file.fileName + 'save') && <IconButton style={{'display': 'inlineBlock'}} aria-label="delete" color="primary" onClick={() => { handleDownload(file) }}>
                                         <SaveIcon />
                                     </IconButton>}
 
-                                     {isload(file.fileName+'save')  && 
-                                     <CircularProgress /> }
-                                
-                                 </TableCell>
-
-
-
-                                 <TableCell align="right">{file.shortfileNameСonfirmation}</TableCell>
-
-
-                                 <TableCell align="right">
-                                    
-                                    {!isload(file.fileNameСonfirmation+'open')  && file.fileNameСonfirmation &&
-                                    <IconButton aria-label="delete" color="primary" onClick={() => {handleOpen(file.code, file.fileNameСonfirmation, file.shortfileNameСonfirmation) }}>
-                                        <SearchIcon />
-                                    </IconButton>}
-                                     
-                                     {isload(file.fileNameСonfirmation+'open') && 
-                                     <CircularProgress /> }
+                                    {isload(file.fileName + 'save') &&
+                                        <CircularProgress style={{'display': 'inlineBlock'}}/>}
 
                                 </TableCell>
 
 
+
+
+                                <TableCell align="right">{file.shortfileNameСonfirmation}</TableCell>
+
+
                                 <TableCell align="right">
-                                    {! isload(file.fileName +'upload') && approval==maket.status &&  <div className={classes.rootButton}>
+
+                                    {!isload(file.fileNameСonfirmation + 'open') && file.fileNameСonfirmation &&
+                                        <IconButton aria-label="delete" color="primary" onClick={() => { handleOpen(file.code, file.fileNameСonfirmation, file.shortfileNameСonfirmation) }}>
+                                            <SearchIcon />
+                                        </IconButton>}
+
+                                    {isload(file.fileNameСonfirmation + 'open') &&
+                                        <CircularProgress />}
+
+
+
+                                    {!isload(file.fileName + 'upload') && approval == maket.status && <div className={classes.rootButton}>
                                         <input
 
                                             accept="image/*"
                                             className={classes.inputButton}
-                                            id={"contained-button-file"+file.id} 
+                                            id={"contained-button-file" + file.id}
                                             type="file"
 
 
                                             onChange={(e) => handleChangeFile(file.code, e.target.files[0], file.fileName, file.shortfileName)}
 
                                         />
-                                        <label htmlFor={"contained-button-file"+file.id}>
+                                        <label htmlFor={"contained-button-file" + file.id}>
                                             <IconButton aria-label="download" variant="contained" color="primary" component="span">
                                                 <BackupIcon />
                                             </IconButton>
@@ -164,11 +152,11 @@ const FilesTable = ({maket, handleChangeFile, handleDownload, hendlerStateLoadin
                                     </div>}
 
 
-                                    {isload(file.fileName +'upload') && 
-                                     <CircularProgress /> }
-                                    
+                                    {isload(file.fileName + 'upload') &&
+                                        <CircularProgress />}
 
                                 </TableCell>
+
 
 
                             </TableRow>
