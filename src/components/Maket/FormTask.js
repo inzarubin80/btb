@@ -48,7 +48,7 @@ const FormTask = (props) => {
     <div className={classes.taskСhanges}>
 
       <Typography variant="h6" className={classes.title}>
-        Требование {' *'}
+        Задание {' *'}
       </Typography>
 
       <TextField style={{ 'width': '100%' }}
@@ -108,7 +108,7 @@ const FormTask = (props) => {
       </div>
 
       <Button style={{ 'marginTop': 10 }} variant="contained" color="primary" onClick={()=>{props.setidTask(null)}}>
-        Записать требование
+        Записать задание
       </Button>
 
     </div>
