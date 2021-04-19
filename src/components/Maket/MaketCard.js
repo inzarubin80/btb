@@ -377,11 +377,9 @@ const MaketCard = (props) => {
                 >
 
                   <Tab label="Основные данные" {...a11yProps(0)} />
-                  <Tab label="Файлы" {...a11yProps(1)} />
-
-
-                  <Tab label="Требования" {...a11yProps(2)} />
-                  <Tab label="Цвета" {...a11yProps(3)} />
+                  <Tab label={"Файлы (" + maket.files.length  + ")" } {...a11yProps(1)} />
+                  <Tab label={"Задания (" + maket.tasks.length  +")"} {...a11yProps(2)} />
+                  <Tab label={"Цвета (" + maket.colors.length  +")"} {...a11yProps(3)} />
 
 
 
