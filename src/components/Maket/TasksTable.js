@@ -6,58 +6,77 @@ import TableHead from '@material-ui/core/TableHead';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
 import 'antd/dist/antd.css';
-
-
+import Button from '@material-ui/core/Button';
 
 const useStyles = makeStyles((theme) => ({
   table: {
     minWidth: 10,
+    margin: theme.spacing(4, 0, 2),
+  },
+
+  title: {
+    marginTop: 25
+  },
+
+
+  listFiles: {
+    marginTop: 25
+  },
+
+  taskСhanges: {
+    borderWidth: '1px',
+    borderStyle: 'solid',
+    //border:5,
+    //borderWidth: 10,
+    borderСolor: '#777',
+    padding: '7px'
+
+  },
+
+  input: {
+    display: 'none',
   }
-  
+
 }));
 
 
-const Tasks  = () => {
+const TasksTable = (props) => {
 
   const classes = useStyles();
 
   return (
+
+    <div>
+    
+    <Button variant="contained" color="primary" disableElevation onClick={()=>{props.setidTask(-1)}}>
+     Добавить требование
+   </Button>
+
+
     <TableContainer component={Paper}>
+
       <Table className={classes.table} size="small" aria-label="a dense table">
         <TableHead>
           <TableRow>
-            
+
             <TableCell>Содержание</TableCell>
             <TableCell>Статус</TableCell>
             <TableCell></TableCell>
-            
-         
 
           </TableRow>
         </TableHead>
-        
-     {/*   <TableBody>
-          {colors.map((row) => (
-            <TableRow key={row.id}>
-
-              <TableCell component="th" scope="row" >
-                {row.color}
-              </TableCell>
-              <TableCell align="right" style={{ background: `rgb(${row.rgb})` }}></TableCell>
-              <TableCell align="right">{row.turnover}</TableCell>
-
-            </TableRow>
-          ))}
-        </TableBody>
-          */}
-
       </Table>
+
     </TableContainer>
+
+    </div>
+
+
+
   );
 
 }
 
 
-export default Tasks 
+export default TasksTable

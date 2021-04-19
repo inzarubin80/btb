@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { makeStyles, useTheme, ThemeProvider } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
@@ -15,7 +16,9 @@ import FilesTable from './FilesTable'
 import ColorsTable from './ColorsTable'
 import ParameterTable from './ParameterTable'
 
-import Tasks from './Tasks'
+import TasksTable from './TasksTable'
+import FormTask from './FormTask'
+
 
 import Button from '@material-ui/core/Button';
 import { green, blue, pink } from '@material-ui/core/colors';
@@ -28,6 +31,8 @@ import {
 
 import DoneIcon from '@material-ui/icons/Done';
 import BorderColorIcon from '@material-ui/icons/BorderColor';
+
+
 const useStyles = makeStyles((theme) => ({
   root: {
     minWidth: 120
@@ -142,6 +147,16 @@ const MaketCard = (props) => {
 
   const [value, setValue] = React.useState(0);
 
+
+  const [idTask, setidTask] = React.useState(null);
+
+  const [taskTextValue, setTaskTextValue] = React.useState('');
+
+
+  const handleChangeTaskTextValue = (event) => {
+    setTaskTextValue(event.target.value);
+  };
+
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -218,7 +233,6 @@ const MaketCard = (props) => {
         setMaket({});
       });
   }, []);
-
 
 
   const handleChangeFile = (macetCode, file, fileName, shortfileName) => {
@@ -379,7 +393,6 @@ const MaketCard = (props) => {
                 onChangeIndex={handleChangeIndex}
               >
 
-
                 <TabPanel value={value} index={0} dir={theme.direction}>
                   <ParameterTable maket={maket} />
                 </TabPanel>
@@ -390,7 +403,13 @@ const MaketCard = (props) => {
                 </TabPanel>
 
                 <TabPanel value={value} index={2} dir={theme.direction}>
-                  <Tasks aket={maket} />
+                  
+                  
+                 {!idTask && <TasksTable maket={maket} setidTask={setidTask}/>}
+
+                 {idTask &&  <FormTask maket={maket} setidTask={setidTask} taskTextValue={taskTextValue} handleChangeTaskTextValue={handleChangeTaskTextValue} />}
+
+
                 </TabPanel>
 
 
