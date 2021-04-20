@@ -46,8 +46,15 @@ export const saveFileСonfirmation = (id, fileName,  shortfileName, fileBase64) 
     return fetch(`${API_URL}/?typerequest=saveFileСonfirmation&id=${id}&fileName=${fileName}&shortfileName=${shortfileName}`, config);
 }
 
+export const saveTask = (id, uid,  number, taskText) => {
+    let config = getConfig('post')
+    config.body = JSON.stringify({taskText:taskText, uid:uid, number:number});
+    return fetch(`${API_URL}/?typerequest=saveTask&id=${id}`, config);
+ }
+ 
 
 const getConfig = (method) => {
+    
     let token = localStorage.getItem('token') || null
     let config = {}
     if (!token) {

@@ -43,12 +43,15 @@ const useStyles = makeStyles((theme) => ({
 const FormTask = (props) => {
 
   const classes = useStyles();
+  
+  const task  = props.maket.tasks.find((task)=>task.uid==props.idTask);
+
 
   return (
     <div className={classes.taskСhanges}>
 
       <Typography variant="h6" className={classes.title}>
-        Задание {' *'}
+        Задание {(!task)?' *': "№ " + task.number}
       </Typography>
 
       <TextField style={{ 'width': '100%' }}
@@ -63,7 +66,7 @@ const FormTask = (props) => {
 
       <div className={classes.listFiles} >
 
-        <Typography variant="h7" className={classes.title}>
+        <Typography variant="h5" className={classes.title}>
           Прикрепленные файлы
           </Typography>
 
@@ -102,13 +105,10 @@ const FormTask = (props) => {
           </IconButton>
         </label>
 
-
-
-
       </div>
 
-      <Button style={{ 'marginTop': 10 }} variant="contained" color="primary" onClick={() => { props.setidTask(null) }}>
-        Записать задание
+      <Button style={{ 'marginTop': 10 }} variant="contained" color="primary" onClick={() => {props.handleSaveTask()}}>
+        {(!task)?'Добавить задание': "Обновить задание"}
       </Button>
 
     </div>

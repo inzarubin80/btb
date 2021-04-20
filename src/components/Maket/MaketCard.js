@@ -4,7 +4,7 @@ import { makeStyles, useTheme, ThemeProvider } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
-import { getMaket, getImgMaket, saveFileСonfirmation, сonfirmationMaket } from '../../api/dataService1c';
+import { getMaket, getImgMaket, saveFileСonfirmation, сonfirmationMaket,saveTask} from '../../api/dataService1c';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
@@ -144,24 +144,80 @@ const MaketCard = (props) => {
 
   const classes = useStyles();
   const [maket, setMaket] = React.useState();
-
   const [value, setValue] = React.useState(0);
-
-
   const [idTask, setidTask] = React.useState(null);
-
   const [taskTextValue, setTaskTextValue] = React.useState('');
+  const [stateLoadingButton, setStateLoadingButton] = React.useState({ loading: [] });
+
+
+  const theme = useTheme();
 
 
   const handleChangeTaskTextValue = (event) => {
     setTaskTextValue(event.target.value);
   };
 
+
+
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
-  const [stateLoadingButton, setStateLoadingButton] = React.useState({ loading: [] });
+
+  const handleChangeTask = (uid) => {
+
+    getMaket(props.match.params.id)
+      .then(response => response.json())
+      .then((json) => {
+
+        if (!json.error) {
+    
+          let task  = json.maket.tasks.find((task)=>task.uid==uid);
+
+          if (task) {
+
+            setTaskTextValue(task.text);
+            setidTask(uid);
+             
+          }
+          
+        }
+
+      })
+      .catch((err) => {
+    
+        //setMaket({});
+    
+      });
+  
+    
+  };
+
+  const handleSaveTask = () => {
+    const idButton = 'saveTask';
+    let number = 0;
+    if (idTask!='-1') {
+       number = maket.tasks.find((task)=>task.uid==idTask).number;
+    }
+    hendlerStateLoadingButton(idButton, true);
+
+    saveTask(maket.code, idTask, number, taskTextValue)
+      .then(response => response.json())
+      .then((json) => {
+        if (json.responseMaket.maket) {
+          setMaket(json.responseMaket.maket);
+        }
+        hendlerStateLoadingButton(idButton, false);
+        if  (!json.error){
+          setidTask(null);
+          setTaskTextValue(''); 
+        }
+      })
+      .catch((err) => {
+        hendlerStateLoadingButton(idButton, false);
+      });
+  };
+
 
 
   const hendlerStateLoadingButton = (buttonId, add) => {
@@ -179,23 +235,9 @@ const MaketCard = (props) => {
     })
   }
 
-
-  const isload = (buttonId) => {
-    return stateLoadingButton.loading.find((id) => { return id == buttonId })
-  }
-
-  const handleChangeIndex = (index) => {
-    setValue(index);
-  };
-
-
   const handleDownload = ({ code, fileName, shortfileName }) => {
-
-
     const idButton = fileName + 'save';
-
     hendlerStateLoadingButton(idButton, true);
-
     getImgMaket(code, fileName)
       .then(response => response.json())
       .then((json) => {
@@ -206,33 +248,13 @@ const MaketCard = (props) => {
         downloadLink.href = linkSource;
         downloadLink.download = shortfileName;
         downloadLink.click();
-
         hendlerStateLoadingButton(idButton, false);
-
 
       })
       .catch((err) => {
         hendlerStateLoadingButton(idButton, false);
-
       });
   }
-
-  const theme = useTheme();
-
-  React.useEffect(() => {
-    getMaket(props.match.params.id)
-      .then(response => response.json())
-      .then((json) => {
-
-        if (!json.error) {
-          setMaket(json.maket);
-        }
-
-      })
-      .catch((err) => {
-        setMaket({});
-      });
-  }, []);
 
 
   const handleChangeFile = (macetCode, file, fileName, shortfileName) => {
@@ -267,7 +289,7 @@ const MaketCard = (props) => {
       });
   }
 
-  const hendlerConfirmationMaket = () => {
+  const hendleConfirmationMaket = () => {
 
     const idButton = 'confirmationButton';
 
@@ -293,6 +315,32 @@ const MaketCard = (props) => {
 
 
   }
+ 
+
+  
+  const isload = (buttonId) => {
+    return stateLoadingButton.loading.find((id) => { return id == buttonId })
+  }
+
+  const handleChangeIndex = (index) => {
+    setValue(index);
+  };
+
+
+  React.useEffect(() => {
+    getMaket(props.match.params.id)
+      .then(response => response.json())
+      .then((json) => {
+
+        if (!json.error) {
+          setMaket(json.maket);
+        }
+
+      })
+      .catch((err) => {
+        setMaket({});
+      });
+  }, []);
 
 
 
@@ -339,7 +387,7 @@ const MaketCard = (props) => {
                     color="primary"
                     className={classes.buttonApproval}
                     disabled={isload('confirmationButton')}
-                    onClick={() => hendlerConfirmationMaket()}
+                    onClick={() => hendleConfirmationMaket()}
 
                     startIcon={<DoneIcon />}
                   >
@@ -403,9 +451,18 @@ const MaketCard = (props) => {
                 <TabPanel value={value} index={2} dir={theme.direction}>
                   
                   
-                 {!idTask && <TasksTable maket={maket} setidTask={setidTask}/>}
+                 {!idTask && <TasksTable maket={maket} setidTask={setidTask} handleChangeTask={handleChangeTask}/>}
 
-                 {idTask &&  <FormTask maket={maket} setidTask={setidTask} taskTextValue={taskTextValue} handleChangeTaskTextValue={handleChangeTaskTextValue} />}
+                 {idTask &&  <FormTask 
+                 maket={maket} 
+                 setidTask={setidTask} 
+                 taskTextValue={taskTextValue} 
+                 handleChangeTaskTextValue={handleChangeTaskTextValue} 
+                 handleSaveTask={handleSaveTask}
+                 idTask =    {idTask} 
+                 />
+              
+                 }
 
 
                 </TabPanel>

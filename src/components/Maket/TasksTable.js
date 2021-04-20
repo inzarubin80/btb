@@ -9,6 +9,8 @@ import Table from '@material-ui/core/Table';
 import 'antd/dist/antd.css';
 import Button from '@material-ui/core/Button';
 import TableBody from '@material-ui/core/TableBody';
+import IconButton from '@material-ui/core/IconButton';
+import EditIcon from '@material-ui/icons/Edit';
 
 import { Empty } from 'antd';
 
@@ -44,7 +46,6 @@ const useStyles = makeStyles((theme) => ({
 
 }));
 
-
 const TasksTable = (props) => {
 
   const classes = useStyles();
@@ -52,53 +53,58 @@ const TasksTable = (props) => {
   return (
 
     <div>
-    
-    <Button variant="contained" color="primary" disableElevation onClick={()=>{props.setidTask(-1)}}>
-     Добавить задание
+
+      <Button variant="contained" color="primary" disableElevation onClick={() => { props.setidTask(-1) }}>
+        Добавить задание
    </Button>
 
-
-   {!props.maket.tasks.lenght && <Empty className={classes.title} description = {(<h3>Нет заданий</h3>)}/>}
-
-
-    {props.maket.tasks.lenght && <TableContainer  component={Paper}>
-
-      <Table className={classes.table} size="small" aria-label="a dense table">
-        <TableHead>
-          
-          <TableRow>
-
-            <TableCell>Содержание</TableCell>
-            <TableCell>Статус</TableCell>
-            <TableCell></TableCell>
-
-          </TableRow
-          
-          >
-        </TableHead>
+      {!props.maket.tasks.length && <Empty className={classes.title} description={(<h3>Нет заданий</h3>)} />}
 
 
-        <TableBody>
-          {props.maket.tasks.map((row) => (
-            <TableRow key={row.uid}>
+      {props.maket.tasks.length && <TableContainer component={Paper}>
 
-              <TableCell component="th" scope="row" >
-              
-              <div dangerouslySetInnerHTML={{ __html: row.text}} />
+        <Table className={classes.table} size="small" aria-label="a dense table">
+          <TableHead>
 
-            
-              </TableCell>
-             
-              <TableCell align="right">{row.turnover}</TableCell>
+            <TableRow>
 
-            </TableRow>
-          ))}
-        </TableBody>
+              <TableCell>Содержание</TableCell>
+              <TableCell>Статус</TableCell>
+              <TableCell></TableCell>
+
+            </TableRow
+
+            >
+          </TableHead>
 
 
-      </Table>
+          <TableBody>
+            {props.maket.tasks.map((row) => (
+              <TableRow key={row.uid}>
 
-    </TableContainer>}
+                <TableCell component="th" scope="row" >
+                    <div dangerouslySetInnerHTML={{ __html: row.text }} />
+                  </TableCell>
+
+                  <TableCell align="center">{row.completed?'выполнено':'не выполнено'}</TableCell>
+
+                  <TableCell align="center">
+                    
+                              <IconButton  color="primary" onClick={() => {props.handleChangeTask(row.uid)}}>
+                                  <EditIcon />
+                              </IconButton>
+                  
+                  </TableCell>
+
+
+              </TableRow>
+            ))}
+          </TableBody>
+
+
+        </Table>
+
+      </TableContainer>}
 
     </div>
 
