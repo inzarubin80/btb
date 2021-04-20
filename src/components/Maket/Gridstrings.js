@@ -44,7 +44,7 @@ const Gridstrings: GridLocaleText = {
   filterPanelOperatorAnd: 'And',
   filterPanelOperatorOr: 'Or',
   filterPanelColumns: 'Колонка',//'Columns',
-  filterPanelInputLabel: 'Value',
+  filterPanelInputLabel: 'Значение',//'Value',
   filterPanelInputPlaceholder: 'Filter value',
 
   // Filter operators text
