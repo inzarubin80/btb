@@ -67,8 +67,8 @@ const FormTask = (props) => {
       <div className={classes.listFiles} >
 
         <Typography variant="h5" className={classes.title}>
-          Прикрепленные файлы
-          </Typography>
+            Прикрепленные файлы
+        </Typography>
 
         <div className={classes.demo}>
           <List dense={false}>

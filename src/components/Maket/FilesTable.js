@@ -14,14 +14,14 @@ import SearchIcon from '@material-ui/icons/Search';
 import Modal from '@material-ui/core/Modal';
 import PictureView from './PictureView';
 import CircularProgress from '@material-ui/core/CircularProgress';
-
+import CardActions from '@material-ui/core/CardActions';
 import { approval } from './statuses'
 
 
 const useStyles = makeStyles((theme) => ({
 
     table: {
-      minWidth: 10,
+        minWidth: 10,
     },
 
 
@@ -72,11 +72,9 @@ const FilesTable = ({ maket, handleChangeFile, handleDownload, hendlerStateLoadi
 
                             <TableCell>Файл</TableCell>
 
-                            <TableCell />
 
                             <TableCell>Файл подтверждения</TableCell>
 
-                            <TableCell />
 
                         </TableRow>
                     </TableHead>
@@ -87,72 +85,74 @@ const FilesTable = ({ maket, handleChangeFile, handleDownload, hendlerStateLoadi
 
 
                                 <TableCell component="th" scope="file" >
+
                                     {file.shortfileName}
-                                </TableCell>
+
+                                    <CardActions>
+
+                                        {!isload(file.fileName + 'open') &&
+                                            <IconButton style={{ 'float': 'left' }} style={{ 'display': 'inlineBlock' }} aria-label="delete" color="primary" onClick={() => { handleOpen(file.code, file.fileName, file.shortfileName) }}>
+                                                <SearchIcon />
+                                            </IconButton>}
+
+                                        {isload(file.fileName + 'open') &&
+                                            <CircularProgress style={{ 'display': 'inlineBlock' }} />}
 
 
-                                <TableCell   align="right" >
-
-                                    {!isload(file.fileName + 'open') &&
-                                        <IconButton style={{'float': 'left'}} style={{'display': 'inlineBlock'}} aria-label="delete" color="primary" onClick={() => { handleOpen(file.code, file.fileName, file.shortfileName) }}>
-                                            <SearchIcon />
+                                        {!isload(file.fileName + 'save') && <IconButton style={{ 'display': 'inlineBlock' }} aria-label="delete" color="primary" onClick={() => { handleDownload(file) }}>
+                                            <SaveIcon />
                                         </IconButton>}
 
-                                    {isload(file.fileName + 'open') &&
-                                        <CircularProgress style={{'display': 'inlineBlock'}} />}
-
-
-                                    {!isload(file.fileName + 'save') && <IconButton style={{'display': 'inlineBlock'}} aria-label="delete" color="primary" onClick={() => { handleDownload(file) }}>
-                                        <SaveIcon />
-                                    </IconButton>}
-
-                                    {isload(file.fileName + 'save') &&
-                                        <CircularProgress style={{'display': 'inlineBlock'}}/>}
+                                        {isload(file.fileName + 'save') &&
+                                            <CircularProgress style={{ 'display': 'inlineBlock' }} />}
+                                    </CardActions>
 
                                 </TableCell>
 
 
+                                <TableCell component="th">
 
 
-                                <TableCell align="right">{file.shortfileNameСonfirmation}</TableCell>
+                                    {file.shortfileNameСonfirmation}
+                                    <CardActions>
 
+                                        {!isload(file.fileNameСonfirmation + 'open') && file.fileNameСonfirmation &&
+                                            <IconButton aria-label="delete" color="primary" onClick={() => { handleOpen(file.code, file.fileNameСonfirmation, file.shortfileNameСonfirmation) }}>
+                                                <SearchIcon />
+                                            </IconButton>}
 
-                                <TableCell align="right">
-
-                                    {!isload(file.fileNameСonfirmation + 'open') && file.fileNameСonfirmation &&
-                                        <IconButton aria-label="delete" color="primary" onClick={() => { handleOpen(file.code, file.fileNameСonfirmation, file.shortfileNameСonfirmation) }}>
-                                            <SearchIcon />
-                                        </IconButton>}
-
-                                    {isload(file.fileNameСonfirmation + 'open') &&
-                                        <CircularProgress />}
+                                        {isload(file.fileNameСonfirmation + 'open') &&
+                                            <CircularProgress />}
 
 
 
-                                    {!isload(file.fileName + 'upload') && approval == maket.status && <div className={classes.rootButton}>
-                                        <input
+                                        {!isload(file.fileName + 'upload') && approval == maket.status && <div className={classes.rootButton}>
+                                            <input
 
-                                            accept="image/*"
-                                            className={classes.inputButton}
-                                            id={"contained-button-file" + file.id}
-                                            type="file"
-
-
-                                            onChange={(e) => handleChangeFile(file.code, e.target.files[0], file.fileName, file.shortfileName)}
-
-                                        />
-                                        <label htmlFor={"contained-button-file" + file.id}>
-                                            <IconButton aria-label="download" variant="contained" color="primary" component="span">
-                                                <BackupIcon />
-                                            </IconButton>
-                                        </label>
-                                    </div>}
+                                                accept="image/*"
+                                                className={classes.inputButton}
+                                                id={"contained-button-file" + file.id}
+                                                type="file"
 
 
-                                    {isload(file.fileName + 'upload') &&
-                                        <CircularProgress />}
+                                                onChange={(e) => handleChangeFile(file.code, e.target.files[0], file.fileName, file.shortfileName)}
+
+                                            />
+                                            <label htmlFor={"contained-button-file" + file.id}>
+                                                <IconButton aria-label="download" variant="contained" color="primary" component="span">
+                                                    <BackupIcon />
+                                                </IconButton>
+                                            </label>
+                                        </div>}
+
+
+                                        {isload(file.fileName + 'upload') &&
+                                            <CircularProgress />}
+                                    </CardActions>
 
                                 </TableCell>
+
+
 
 
 

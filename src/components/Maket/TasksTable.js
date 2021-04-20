@@ -11,8 +11,14 @@ import Button from '@material-ui/core/Button';
 import TableBody from '@material-ui/core/TableBody';
 import IconButton from '@material-ui/core/IconButton';
 import EditIcon from '@material-ui/icons/Edit';
+import DeleteIcon from '@material-ui/icons/Delete';
 
+import AddCircleIcon from '@material-ui/icons/AddCircle';
+
+import CardHeader from '@material-ui/core/CardHeader';
+import Typography from '@material-ui/core/Typography';
 import { Empty } from 'antd';
+import CardActions from '@material-ui/core/CardActions';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -54,9 +60,18 @@ const TasksTable = (props) => {
 
     <div>
 
-      <Button variant="contained" color="primary" disableElevation onClick={() => { props.setidTask(-1) }}>
-        Добавить задание
-   </Button>
+    
+
+      <Button
+        variant="contained"
+        color="primary"
+        className={classes.button}
+        endIcon={<AddCircleIcon/>}
+        onClick={() => { props.setidTask(-1) }}
+        >
+          Добавить
+      </Button>
+
 
       {!props.maket.tasks.length && <Empty className={classes.title} description={(<h3>Нет заданий</h3>)} />}
 
@@ -68,7 +83,7 @@ const TasksTable = (props) => {
 
             <TableRow>
 
-              <TableCell>Содержание</TableCell>
+              <TableCell>Задание</TableCell>
               <TableCell>Статус</TableCell>
               <TableCell></TableCell>
 
@@ -83,19 +98,39 @@ const TasksTable = (props) => {
               <TableRow key={row.uid}>
 
                 <TableCell component="th" scope="row" >
-                    <div dangerouslySetInnerHTML={{ __html: row.text }} />
-                  </TableCell>
 
-                  <TableCell align="center">{row.completed?'выполнено':'не выполнено'}</TableCell>
+                  <CardHeader
+                    title={"№" + row.number}
+                    subheader={row.documentDate}
+                  />
 
-                  <TableCell align="center">
-                    
-                              <IconButton  color="primary" onClick={() => {props.handleChangeTask(row.uid)}}>
-                                  <EditIcon />
-                              </IconButton>
+                  <Typography variant="body2" color="textSecondary" component="p">
+                    {row.text}
+                  </Typography>
+
+                  <CardHeader
                   
-                  </TableCell>
+                    subheader={row.uthor}
+                  />
 
+                  <CardActions>
+                    
+                  <IconButton color="primary" onClick={() => { props.handleChangeTask(row.uid) }}>
+                    <EditIcon />
+                  </IconButton>
+                    
+                  <IconButton color="primary" onClick={() => { }}>
+                    <DeleteIcon />
+                   </IconButton>
+                
+                  </CardActions>
+
+
+                </TableCell>
+
+                <TableCell align="center">{row.completed ? 'выполнено' : 'не выполнено'}</TableCell>
+
+                
 
               </TableRow>
             ))}
@@ -107,8 +142,6 @@ const TasksTable = (props) => {
       </TableContainer>}
 
     </div>
-
-
 
   );
 

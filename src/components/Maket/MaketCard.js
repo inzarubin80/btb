@@ -149,7 +149,6 @@ const MaketCard = (props) => {
   const [taskTextValue, setTaskTextValue] = React.useState('');
   const [stateLoadingButton, setStateLoadingButton] = React.useState({ loading: [] });
 
-
   const theme = useTheme();
 
 
@@ -158,11 +157,9 @@ const MaketCard = (props) => {
   };
 
 
-
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-
 
   const handleChangeTask = (uid) => {
 
