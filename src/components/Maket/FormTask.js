@@ -27,9 +27,9 @@ const useStyles = makeStyles((theme) => ({
   },
 
   taskСhanges: {
-  //  borderWidth: '1px',
+    //  borderWidth: '1px',
     //borderStyle: 'solid',
-   //  borderСolor: '#777',
+    //  borderСolor: '#777',
     //padding: '7px'
 
   },
@@ -64,7 +64,7 @@ const FormTask = (props) => {
       <div className={classes.listFiles} >
 
         <Typography variant="h7" className={classes.title}>
-           Прикрепленные файлы
+          Прикрепленные файлы
           </Typography>
 
         <div className={classes.demo}>
@@ -87,7 +87,7 @@ const FormTask = (props) => {
 
         <input
 
-        //  accept="image/*"
+          //  accept="image/*"
           className={classes.input}
           id={"contained-button-file"}
           type="file"
@@ -107,7 +107,7 @@ const FormTask = (props) => {
 
       </div>
 
-      <Button style={{ 'marginTop': 10 }} variant="contained" color="primary" onClick={()=>{props.setidTask(null)}}>
+      <Button style={{ 'marginTop': 10 }} variant="contained" color="primary" onClick={() => { props.setidTask(null) }}>
         Записать задание
       </Button>
 

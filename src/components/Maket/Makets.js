@@ -14,6 +14,11 @@ import {
 } from "react-router-dom";
 
 
+import Gridstrings from './Gridstrings'
+
+
+
+
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -111,7 +116,9 @@ export default function Makets() {
         onPageChange = {(GridPageChangeParams)=>{dispatch(сhangePageParams(GridPageChangeParams.pageSize, GridPageChangeParams.page))}}
         onFilterModelChange = {(GridFilterModelParams)=>{dispatch(сhangeFiltr(GridFilterModelParams.filterModel))}}
         onSortModelChange = {(GridSortModelParams)=>dispatch(сhangeSort(GridSortModelParams.sortModel))}
+      
 
+        localeText={Gridstrings}
 
        />
      
