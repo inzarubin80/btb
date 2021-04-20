@@ -116,7 +116,7 @@ export default function Makets() {
         onPageChange = {(GridPageChangeParams)=>{dispatch(сhangePageParams(GridPageChangeParams.pageSize, GridPageChangeParams.page))}}
         onFilterModelChange = {(GridFilterModelParams)=>{dispatch(сhangeFiltr(GridFilterModelParams.filterModel))}}
         onSortModelChange = {(GridSortModelParams)=>dispatch(сhangeSort(GridSortModelParams.sortModel))}
-      
+        labelRowsPerPage = {(<h1>Макетов на странице</h1>)}
 
         localeText={Gridstrings}
 

@@ -3,7 +3,7 @@ import { GridLocaleText} from '@material-ui/data-grid';
 const Gridstrings: GridLocaleText = {
   // Root
   rootGridLabel: 'grid',
-  noRowsLabel: 'No rows',
+  noRowsLabel: 'Нет макетов',
   errorOverlayDefaultLabel: 'An error occurred.',
 
   // Density selector toolbar button text
@@ -31,11 +31,11 @@ const Gridstrings: GridLocaleText = {
   toolbarExportCSV: 'Download as CSV',
 
   // Columns panel text
-  columnsPanelTextFieldLabel: 'Find column',
-  columnsPanelTextFieldPlaceholder: 'Column title',
+  columnsPanelTextFieldLabel: 'Найти колонку',//'Find column',
+  columnsPanelTextFieldPlaceholder: 'Название колонки',
   columnsPanelDragIconLabel: 'Reorder column',
-  columnsPanelShowAllButton: 'Show all',
-  columnsPanelHideAllButton: 'Hide all',
+  columnsPanelShowAllButton: 'Показать все',
+  columnsPanelHideAllButton: 'Скрыть  все',
 
   // Filter panel text
   filterPanelAddFilter: 'Add filter',
@@ -45,13 +45,13 @@ const Gridstrings: GridLocaleText = {
   filterPanelOperatorOr: 'Or',
   filterPanelColumns: 'Колонка',//'Columns',
   filterPanelInputLabel: 'Значение',//'Value',
-  filterPanelInputPlaceholder: 'Filter value',
+  filterPanelInputPlaceholder: 'Значение фильтра',
 
   // Filter operators text
   filterOperatorContains: 'содержит',
-  filterOperatorEquals: 'equals',
-  filterOperatorStartsWith: 'starts with',
-  filterOperatorEndsWith: 'ends with',
+  filterOperatorEquals: 'равно',//'equals',
+  filterOperatorStartsWith: 'начинается с',//'starts with',
+  filterOperatorEndsWith: 'заканчивается на',//'ends with',
   filterOperatorIs: 'is',
   filterOperatorNot: 'is not',
   filterOperatorAfter: 'is after',
@@ -66,12 +66,12 @@ const Gridstrings: GridLocaleText = {
 
   // Column menu text
   columnMenuLabel: 'Menu',
-  columnMenuShowColumns: 'Show columns',
-  columnMenuFilter: 'Filter',
-  columnMenuHideColumn: 'Hide',
-  columnMenuUnsort: 'Unsort',
-  columnMenuSortAsc: 'Sort by ASC',
-  columnMenuSortDesc: 'Sort by DESC',
+  columnMenuShowColumns: 'Настройки колонок',
+  columnMenuFilter: 'Фильтр',//'Filter',
+  columnMenuHideColumn: 'Скрыть колонку',
+  columnMenuUnsort: 'Отключить сортировку',
+  columnMenuSortAsc: 'Сортировать по возрастанию',
+  columnMenuSortDesc: 'Сортировать по убыванию',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>
