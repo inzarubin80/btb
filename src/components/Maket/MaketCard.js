@@ -32,6 +32,10 @@ import { EditorState, ContentState, convertToRaw } from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
 import htmlToDraft from 'html-to-draftjs';
 
+import Lightbox from 'react-image-lightbox';
+import 'react-image-lightbox/style.css';
+import Toolbar from '@material-ui/core/Toolbar';
+
 const useStyles = makeStyles((theme) => ({
   root: {
     minWidth: 120
@@ -70,6 +74,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
 
+  offset: theme.mixins.toolbar,
 
   wrapperReject: {
     margin: theme.spacing(1),
@@ -149,7 +154,8 @@ const MaketCard = (props) => {
   const [stateLoadingButton, setStateLoadingButton] = React.useState({ loading: [] });
   const [editorState, setEditorState] = React.useState(EditorState.createEmpty());
 
-
+  const [imgData, seIimgData] = React.useState(null);
+  const [isOpen, setIsOpen] = React.useState(false);
 
   const theme = useTheme();
 
@@ -198,6 +204,8 @@ const MaketCard = (props) => {
 
 
   };
+
+
 
   const handleSaveTask = () => {
     const idButton = 'saveTask';
@@ -262,6 +270,30 @@ const MaketCard = (props) => {
       })
       .catch((err) => {
         hendlerStateLoadingButton(idButton, false);
+      });
+  }
+
+
+  const handleOpenFile = (macetCode, fileName) => {
+
+    console.log('handleOpenFile');
+    const idButton = fileName  + 'open';
+    hendlerStateLoadingButton(idButton, true);
+
+    getImgMaket(macetCode, fileName)
+      .then(response => response.json())
+      .then((json) => {
+
+        hendlerStateLoadingButton(idButton, false);
+        seIimgData(json.file);
+        setIsOpen(true);
+
+      })
+      .catch((err) => {
+
+        hendlerStateLoadingButton(idButton, false);
+        seIimgData(null);
+
       });
   }
 
@@ -357,6 +389,24 @@ const MaketCard = (props) => {
 
     return (
       <div style={{ textAlign: 'center', maxWidth: '50%', margin: 'auto', marginTop: 30 }}>
+
+
+    {isOpen && (
+
+   
+
+
+          <Lightbox
+          className={classes.offset}
+          mainSrc={`data:image/jpeg;base64,${imgData.imgBase64}`}
+          nextSrc={`data:image/jpeg;base64,${imgData.imgBase64}`}
+          prevSrc={`data:image/jpeg;base64,${imgData.imgBase64}`}
+          onCloseRequest={() => setIsOpen(false)}
+          />
+
+ 
+      )}
+
         <Card className={classes.root}>
           <CardContent>
             <Typography variant="h6" className={classes.title} color="textSecondary" gutterBottom>
@@ -454,7 +504,7 @@ const MaketCard = (props) => {
 
 
                 <TabPanel value={value} index={1} dir={theme.direction}>
-                  <FilesTable maket={maket} handleChangeFile={handleChangeFile} handleDownload={handleDownload} hendlerStateLoadingButton={hendlerStateLoadingButton} isload={isload} />
+                  <FilesTable maket={maket} handleChangeFile={handleChangeFile} handleDownload={handleDownload} hendlerStateLoadingButton={hendlerStateLoadingButton} handleOpenFile = {handleOpenFile}  isload={isload} />
                 </TabPanel>
 
                 <TabPanel value={value} index={2} dir={theme.direction}>

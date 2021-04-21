@@ -7,6 +7,8 @@ import Makets from './components/Maket/Makets.js';
 import MaketCard from './components/Maket/MaketCard';
 
 
+
+
 import Reports from './components/Reports/Reports';
 import Start from './components/Start/Start';
 
@@ -46,6 +48,8 @@ function App() {
                             <MaketCard />
                         </PrivateRoute>
 
+                       
+                        
                         <PrivateRoute path="/reports">
                             <Reports />
                         </PrivateRoute>

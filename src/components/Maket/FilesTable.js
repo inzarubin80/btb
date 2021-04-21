@@ -11,8 +11,6 @@ import SaveIcon from '@material-ui/icons/Save';
 import BackupIcon from '@material-ui/icons/Backup';
 import IconButton from '@material-ui/core/IconButton';
 import SearchIcon from '@material-ui/icons/Search';
-import Modal from '@material-ui/core/Modal';
-import PictureView from './PictureView';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import CardActions from '@material-ui/core/CardActions';
 import { approval } from './statuses'
@@ -36,31 +34,10 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-const FilesTable = ({ maket, handleChangeFile, handleDownload, hendlerStateLoadingButton, isload }) => {
+const FilesTable = ({ maket, handleChangeFile, handleDownload,  isload, handleOpenFile }) => {
 
     const classes = useStyles();
-
-    const [open, setOpen] = React.useState(false);
-    const [file, setFile] = React.useState({});
-
-    const handleOpen = (code, fileName, shortfileName) => {
-        setOpen(true);
-        setFile({ code, fileName, shortfileName });
-    };
-
-    const handleClose = () => {
-        setOpen(false);
-    };
-
-
-    const body = () => {
-        return (
-            <div >
-                <PictureView fileName={file.fileName} hendlerStateLoadingButton={hendlerStateLoadingButton} shortfileName={file.shortfileName} macetCode={file.code} handleClose={handleClose} />
-            </div>
-        );
-    }
-
+    
 
     return (
         <div>
@@ -91,7 +68,7 @@ const FilesTable = ({ maket, handleChangeFile, handleDownload, hendlerStateLoadi
                                     <CardActions>
 
                                         {!isload(file.fileName + 'open') &&
-                                            <IconButton   aria-label="delete" color="primary" onClick={() => { handleOpen(file.code, file.fileName, file.shortfileName) }}>
+                                            <IconButton   aria-label="delete" color="primary" onClick={() => { handleOpenFile(file.code, file.fileName, file.shortfileName) }}>
                                                 <SearchIcon />
                                             </IconButton>}
 
@@ -117,7 +94,7 @@ const FilesTable = ({ maket, handleChangeFile, handleDownload, hendlerStateLoadi
                                     <CardActions>
 
                                         {!isload(file.fileNameСonfirmation + 'open') && file.fileNameСonfirmation &&
-                                            <IconButton aria-label="delete" color="primary" onClick={() => { handleOpen(file.code, file.fileNameСonfirmation, file.shortfileNameСonfirmation) }}>
+                                            <IconButton aria-label="delete" color="primary" onClick={() => { handleOpenFile(file.code, file.fileNameСonfirmation, file.shortfileNameСonfirmation) }}>
                                                 <SearchIcon />
                                             </IconButton>}
 
@@ -167,15 +144,7 @@ const FilesTable = ({ maket, handleChangeFile, handleDownload, hendlerStateLoadi
 
 
 
-            <Modal
-                open={open}
-                onClose={handleClose}
-                aria-labelledby="simple-modal-title"
-                aria-describedby="simple-modal-description"
-            >
-                {body()}
-
-            </Modal>
+           
 
         </div>
     );
