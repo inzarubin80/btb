@@ -10,6 +10,9 @@ import BackupIcon from '@material-ui/icons/Backup';
 import Typography from '@material-ui/core/Typography';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import IconButton from '@material-ui/core/IconButton';
+import HTMLEditor from './HTMLEditor'
+
+
 
 const useStyles = makeStyles((theme) => ({
   table: {
@@ -50,9 +53,13 @@ const FormTask = (props) => {
   return (
     <div className={classes.taskСhanges}>
 
+
       <Typography variant="h6" className={classes.title}>
         Задание {(!task)?' *': "№ " + task.number}
       </Typography>
+
+
+      {/*
 
       <TextField style={{ 'width': '100%' }}
         id="standard-multiline-flexible"
@@ -63,6 +70,9 @@ const FormTask = (props) => {
         onChange={(event) => { props.handleChangeTaskTextValue(event) }}
       />
 
+*/}
+      
+      <HTMLEditor editorState = {props.editorState} setEditorState={props.setEditorState}/>
 
       <div className={classes.listFiles} >
 
@@ -99,6 +109,7 @@ const FormTask = (props) => {
         //onChange={(e) => handleChangeFile(file.code, e.target.files[0], file.fileName, file.shortfileName)}
 
         />
+
         <label htmlFor={"contained-button-file"}>
           <IconButton aria-label="download" variant="contained" color="primary" component="span">
             <BackupIcon />

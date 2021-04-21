@@ -91,12 +91,12 @@ const FilesTable = ({ maket, handleChangeFile, handleDownload, hendlerStateLoadi
                                     <CardActions>
 
                                         {!isload(file.fileName + 'open') &&
-                                            <IconButton style={{ 'float': 'left' }} style={{ 'display': 'inlineBlock' }} aria-label="delete" color="primary" onClick={() => { handleOpen(file.code, file.fileName, file.shortfileName) }}>
+                                            <IconButton   aria-label="delete" color="primary" onClick={() => { handleOpen(file.code, file.fileName, file.shortfileName) }}>
                                                 <SearchIcon />
                                             </IconButton>}
 
                                         {isload(file.fileName + 'open') &&
-                                            <CircularProgress style={{ 'display': 'inlineBlock' }} />}
+                                            <CircularProgress />}
 
 
                                         {!isload(file.fileName + 'save') && <IconButton style={{ 'display': 'inlineBlock' }} aria-label="delete" color="primary" onClick={() => { handleDownload(file) }}>
@@ -104,7 +104,7 @@ const FilesTable = ({ maket, handleChangeFile, handleDownload, hendlerStateLoadi
                                         </IconButton>}
 
                                         {isload(file.fileName + 'save') &&
-                                            <CircularProgress style={{ 'display': 'inlineBlock' }} />}
+                                            <CircularProgress />}
                                     </CardActions>
 
                                 </TableCell>

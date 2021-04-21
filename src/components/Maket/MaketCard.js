@@ -4,7 +4,7 @@ import { makeStyles, useTheme, ThemeProvider } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
-import { getMaket, getImgMaket, saveFileСonfirmation, сonfirmationMaket,saveTask} from '../../api/dataService1c';
+import { getMaket, getImgMaket, saveFileСonfirmation, сonfirmationMaket, saveTask } from '../../api/dataService1c';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
@@ -15,11 +15,8 @@ import { Descriptions } from 'antd';
 import FilesTable from './FilesTable'
 import ColorsTable from './ColorsTable'
 import ParameterTable from './ParameterTable'
-
 import TasksTable from './TasksTable'
 import FormTask from './FormTask'
-
-
 import Button from '@material-ui/core/Button';
 import { green, blue, pink } from '@material-ui/core/colors';
 import { approval } from './statuses'
@@ -28,10 +25,12 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import {
   withRouter
 } from "react-router-dom";
-
 import DoneIcon from '@material-ui/icons/Done';
 import BorderColorIcon from '@material-ui/icons/BorderColor';
+import { EditorState, ContentState, convertToRaw } from 'draft-js';
 
+import draftToHtml from 'draftjs-to-html';
+import htmlToDraft from 'html-to-draftjs';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -148,13 +147,14 @@ const MaketCard = (props) => {
   const [idTask, setidTask] = React.useState(null);
   const [taskTextValue, setTaskTextValue] = React.useState('');
   const [stateLoadingButton, setStateLoadingButton] = React.useState({ loading: [] });
+  const [editorState, setEditorState] = React.useState(EditorState.createEmpty());
+
+
 
   const theme = useTheme();
 
 
-  const handleChangeTaskTextValue = (event) => {
-    setTaskTextValue(event.target.value);
-  };
+
 
 
   const handleChange = (event, newValue) => {
@@ -168,46 +168,58 @@ const MaketCard = (props) => {
       .then((json) => {
 
         if (!json.error) {
-    
-          let task  = json.maket.tasks.find((task)=>task.uid==uid);
+
+          let task = json.maket.tasks.find((task) => task.uid == uid);
 
           if (task) {
 
-            setTaskTextValue(task.text);
+
+            const contentBlock = htmlToDraft(task.text);
+            if (contentBlock) {
+
+              const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
+              const NewEditorState = EditorState.createWithContent(contentState);
+              setEditorState(NewEditorState);
+
+            };
+
             setidTask(uid);
-             
+
           }
-          
+
         }
 
       })
       .catch((err) => {
-    
+
         //setMaket({});
-    
+
       });
-  
-    
+
+
   };
 
   const handleSaveTask = () => {
     const idButton = 'saveTask';
     let number = 0;
-    if (idTask!='-1') {
-       number = maket.tasks.find((task)=>task.uid==idTask).number;
+    if (idTask != '-1') {
+      number = maket.tasks.find((task) => task.uid == idTask).number;
     }
+
+    const taskTextValueHTML = draftToHtml(convertToRaw(editorState.getCurrentContent()));
+
     hendlerStateLoadingButton(idButton, true);
 
-    saveTask(maket.code, idTask, number, taskTextValue)
+    saveTask(maket.code, idTask, number, taskTextValueHTML)
       .then(response => response.json())
       .then((json) => {
         if (json.responseMaket.maket) {
           setMaket(json.responseMaket.maket);
         }
         hendlerStateLoadingButton(idButton, false);
-        if  (!json.error){
+        if (!json.error) {
           setidTask(null);
-          setTaskTextValue(''); 
+          setEditorState(EditorState.createEmpty());
         }
       })
       .catch((err) => {
@@ -312,9 +324,9 @@ const MaketCard = (props) => {
 
 
   }
- 
 
-  
+
+
   const isload = (buttonId) => {
     return stateLoadingButton.loading.find((id) => { return id == buttonId })
   }
@@ -422,9 +434,9 @@ const MaketCard = (props) => {
                 >
 
                   <Tab label="Основные данные" {...a11yProps(0)} />
-                  <Tab label={"Файлы (" + maket.files.length  + ")" } {...a11yProps(1)} />
-                  <Tab label={"Задания (" + maket.tasks.length  +")"} {...a11yProps(2)} />
-                  <Tab label={"Цвета (" + maket.colors.length  +")"} {...a11yProps(3)} />
+                  <Tab label={"Файлы (" + maket.files.length + ")"} {...a11yProps(1)} />
+                  <Tab label={"Задания (" + maket.tasks.length + ")"} {...a11yProps(2)} />
+                  <Tab label={"Цвета (" + maket.colors.length + ")"} {...a11yProps(3)} />
 
 
 
@@ -446,20 +458,21 @@ const MaketCard = (props) => {
                 </TabPanel>
 
                 <TabPanel value={value} index={2} dir={theme.direction}>
-                  
-                  
-                 {!idTask && <TasksTable maket={maket} setidTask={setidTask} handleChangeTask={handleChangeTask}/>}
 
-                 {idTask &&  <FormTask 
-                 maket={maket} 
-                 setidTask={setidTask} 
-                 taskTextValue={taskTextValue} 
-                 handleChangeTaskTextValue={handleChangeTaskTextValue} 
-                 handleSaveTask={handleSaveTask}
-                 idTask =    {idTask} 
-                 />
-              
-                 }
+
+                  {!idTask && <TasksTable maket={maket} setidTask={setidTask} handleChangeTask={handleChangeTask} />}
+
+                  {idTask && <FormTask
+                    maket={maket}
+                    setidTask={setidTask}
+                    handleSaveTask={handleSaveTask}
+                    idTask={idTask}
+                    editorState={editorState}
+                    setEditorState={setEditorState}
+
+                  />
+
+                  }
 
 
                 </TabPanel>

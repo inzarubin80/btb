@@ -20,6 +20,19 @@ import Typography from '@material-ui/core/Typography';
 import { Empty } from 'antd';
 import CardActions from '@material-ui/core/CardActions';
 
+import ListSubheader from '@material-ui/core/ListSubheader';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import InboxIcon from '@material-ui/icons/MoveToInbox';
+import ExpandLess from '@material-ui/icons/ExpandLess';
+import ExpandMore from '@material-ui/icons/ExpandMore';
+import StarBorder from '@material-ui/icons/StarBorder';
+import Collapse from '@material-ui/core/Collapse';
+import SaveIcon from '@material-ui/icons/Save';
+import FolderIcon from '@material-ui/icons/Folder';
+import Divider from '@material-ui/core/Divider';
 
 const useStyles = makeStyles((theme) => ({
   table: {
@@ -56,90 +69,120 @@ const TasksTable = (props) => {
 
   const classes = useStyles();
 
+
+  const [open, setOpen] = React.useState(true);
+
+  const handleClick = () => {
+    setOpen(!open);
+  };
+
   return (
 
     <div>
 
-    
+
 
       <Button
         variant="contained"
         color="primary"
         className={classes.button}
-        endIcon={<AddCircleIcon/>}
+        endIcon={<AddCircleIcon />}
         onClick={() => { props.setidTask(-1) }}
-        >
-          Добавить
+      >
+        Добавить
       </Button>
 
 
-      {!props.maket.tasks.length && <Empty className={classes.title} description={(<h3>Нет заданий</h3>)} />}
+      {!props.maket.tasks.length &&
+        <Empty className={classes.title} description={(<h3>Нет заданий</h3>)} />}
 
 
-      {props.maket.tasks.length && <TableContainer component={Paper}>
+      {props.maket.tasks.length &&
 
-        <Table className={classes.table} size="small" aria-label="a dense table">
-          <TableHead>
-
-            <TableRow>
-
-              <TableCell>Задание</TableCell>
-              <TableCell>Статус</TableCell>
-              <TableCell></TableCell>
-
-            </TableRow
-
-            >
-          </TableHead>
+        <TableContainer component={Paper}>
 
 
-          <TableBody>
-            {props.maket.tasks.map((row) => (
-              <TableRow key={row.uid}>
+          <Table className={classes.table} size="small" aria-label="a dense table">
 
-                <TableCell component="th" scope="row" >
+            <TableHead>
 
-                  <CardHeader
-                    title={"№" + row.number}
-                    subheader={row.documentDate}
-                  />
+              <TableRow>
 
-                  <Typography variant="body2" color="textSecondary" component="p">
-                    {row.text}
-                  </Typography>
-
-                  <CardHeader
-                  
-                    subheader={row.uthor}
-                  />
-
-                  <CardActions>
-                    
-                  <IconButton color="primary" onClick={() => { props.handleChangeTask(row.uid) }}>
-                    <EditIcon />
-                  </IconButton>
-                    
-                  <IconButton color="primary" onClick={() => { }}>
-                    <DeleteIcon />
-                   </IconButton>
-                
-                  </CardActions>
-
-
-                </TableCell>
-
-                <TableCell align="center">{row.completed ? 'выполнено' : 'не выполнено'}</TableCell>
-
-                
+                <TableCell>Задания</TableCell>
 
               </TableRow>
-            ))}
-          </TableBody>
+            </TableHead>
+
+            <TableBody>
+              {props.maket.tasks.map((row) => (
+                <TableRow key={row.uid}>
+
+                  <TableCell component="th" scope="row" >
+
+                    <CardHeader
+                      title={"№" + row.number}
+                      subheader={row.documentDate}
+                    />
+
+                  
+
+                    <div dangerouslySetInnerHTML={{ __html: row.text }} style ={{backgroundColor: 'rgba(252, 252, 250)', minHeight:60 }}/>
 
 
-        </Table>
+                  
 
-      </TableContainer>}
+                    <List
+                      component="nav"
+                      aria-labelledby="nested-list-subheader"
+
+                      className={classes.root}
+                    >
+
+
+                      <ListItem button onClick={handleClick}>
+                        <ListItemIcon>
+                          <FolderIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="Вложения (1)" />
+                        {open ? <ExpandLess /> : <ExpandMore />}
+                      </ListItem>
+                      <Collapse in={open} timeout="auto" unmountOnExit>
+                        <List component="div" disablePadding>
+
+
+                          <ListItem button className={classes.nested}>
+
+                            <IconButton aria-label="delete" color="primary" onClick={() => { }}>
+                              <SaveIcon />
+                            </IconButton>
+
+                            <ListItemText primary="Колбаса.jpeg" />
+                          </ListItem>
+
+                        </List>
+                      </Collapse>
+                    </List>
+
+                    <CardHeader
+                      subheader={row.uthor}
+                    />
+                    <CardActions>
+
+                      <IconButton color="primary" onClick={() => { props.handleChangeTask(row.uid) }}>
+                        <EditIcon />
+                      </IconButton>
+
+                      <IconButton color="primary" onClick={() => { }}>
+                        <DeleteIcon />
+                      </IconButton>
+
+                    </CardActions>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>}
 
     </div>
 
