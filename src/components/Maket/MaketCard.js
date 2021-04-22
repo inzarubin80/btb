@@ -278,47 +278,17 @@ const MaketCard = (props) => {
     })
   }
 
-
   const handleDownloadFileTask = (uidTask, uidFile) => {
-
-  console.log('handleDownloadFileTask');
-  console.log('uidTask', uidTask);
-  console.log('uidFile', uidFile);
-
   const idButton = uidFile + 'save';
     hendlerStateLoadingButton(idButton, true);
     getFileTask(maket.code, uidTask, uidFile)
       .then(response => response.json())
       .then((json) => {
+        
         if (!json.error){
-         
-         
-          //let file = convertBase64ToFile(json.fileBase64, json.name);
-        //  saveAs(file, json.name);
-        
-        /*
-        decode(json.fileBase64, json.name, (err, output) => {
-          if (!err){
-            saveAs(output, json.name);
-          }
-          console.log('success');
-        });
-        */
-        
-        //triggerBase64Download(json.fileBase64, json.name);
-
-        //var decodedStringAtoB = atob(json.fileBase64);
-        
         const blob = b64toBlob(json.fileBase64, '');
-
-        //const res = decode(json.fileBase64);
-        saveAs(blob, json.name);
-        //console.log('ок', res);
-
-        
+        saveAs(blob, json.name); 
         }
-
-        console.log(json.error);
         hendlerStateLoadingButton(idButton, false);
 
       })
@@ -374,7 +344,6 @@ const MaketCard = (props) => {
 
       });
   }
-
 
   const handleChangeFile = (macetCode, file, fileName, shortfileName) => {
 
@@ -580,7 +549,9 @@ const MaketCard = (props) => {
                   {!idTask && <TasksTable maket={maket} 
                   setidTask={setidTask} 
                   handleChangeTask={handleChangeTask} 
-                  handleDownloadFileTask={handleDownloadFileTask}/>}
+                  handleDownloadFileTask={handleDownloadFileTask}
+                  isload = {isload}
+                  />}
 
                   {idTask && <FormTask
                     maket={maket}
@@ -590,9 +561,7 @@ const MaketCard = (props) => {
                     editorState={editorState}
                     setEditorState={setEditorState}
 
-                  />
-
-                  }
+                  />}
 
 
                 </TabPanel>

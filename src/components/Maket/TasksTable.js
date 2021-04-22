@@ -25,6 +25,7 @@ import ExpandMore from '@material-ui/icons/ExpandMore';
 import Collapse from '@material-ui/core/Collapse';
 import SaveIcon from '@material-ui/icons/Save';
 import FolderIcon from '@material-ui/icons/Folder';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const useStyles = makeStyles((theme) => ({
   table: {
@@ -140,9 +141,13 @@ const TasksTable = (props) => {
 
                           {row.files.map((file) => <ListItem key={file.uid} button className={classes.nested}>
 
-                            <IconButton aria-label="delete" color="primary" onClick={() => props.handleDownloadFileTask(row.uid, file.uid)}>
+                          {!props.isload(file.uid + 'save') && <IconButton aria-label="delete" color="primary" onClick={() => props.handleDownloadFileTask(row.uid, file.uid)}>
                               <SaveIcon />
-                            </IconButton>
+                            </IconButton>}
+
+                            {props.isload(file.uid + 'save') &&
+                                            <CircularProgress />}
+
 
                             <ListItemText primary={file.name} />
                           </ListItem>)}
