@@ -12,27 +12,19 @@ import TableBody from '@material-ui/core/TableBody';
 import IconButton from '@material-ui/core/IconButton';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
-
 import AddCircleIcon from '@material-ui/icons/AddCircle';
-
 import CardHeader from '@material-ui/core/CardHeader';
-import Typography from '@material-ui/core/Typography';
 import { Empty } from 'antd';
 import CardActions from '@material-ui/core/CardActions';
-
-import ListSubheader from '@material-ui/core/ListSubheader';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
-import StarBorder from '@material-ui/icons/StarBorder';
 import Collapse from '@material-ui/core/Collapse';
 import SaveIcon from '@material-ui/icons/Save';
 import FolderIcon from '@material-ui/icons/Folder';
-import Divider from '@material-ui/core/Divider';
 
 const useStyles = makeStyles((theme) => ({
   table: {
@@ -124,12 +116,7 @@ const TasksTable = (props) => {
                       subheader={row.documentDate}
                     />
 
-                  
-
-                    <div dangerouslySetInnerHTML={{ __html: row.text }} style ={{backgroundColor: 'rgba(252, 252, 250)', minHeight:60 }}/>
-
-
-                  
+                    <div dangerouslySetInnerHTML={{ __html: row.text }} style={{ backgroundColor: 'rgba(252, 252, 250)', minHeight: 60 }} />
 
                     <List
                       component="nav"
@@ -143,23 +130,26 @@ const TasksTable = (props) => {
                         <ListItemIcon>
                           <FolderIcon />
                         </ListItemIcon>
-                        <ListItemText primary="Вложения (1)" />
+                        <ListItemText primary={"Файлы (" + row.files.length + ")"} />
                         {open ? <ExpandLess /> : <ExpandMore />}
                       </ListItem>
                       <Collapse in={open} timeout="auto" unmountOnExit>
+
                         <List component="div" disablePadding>
 
 
-                          <ListItem button className={classes.nested}>
+                          {row.files.map((file) => <ListItem key={file.uid} button className={classes.nested}>
 
-                            <IconButton aria-label="delete" color="primary" onClick={() => { }}>
+                            <IconButton aria-label="delete" color="primary" onClick={() => props.handleDownloadFileTask(row.uid, file.uid)}>
                               <SaveIcon />
                             </IconButton>
 
-                            <ListItemText primary="Колбаса.jpeg" />
-                          </ListItem>
+                            <ListItemText primary={file.name} />
+                          </ListItem>)}
 
                         </List>
+
+
                       </Collapse>
                     </List>
 
@@ -168,7 +158,7 @@ const TasksTable = (props) => {
                     />
                     <CardActions>
 
-                      <IconButton color="primary" onClick={() => { props.handleChangeTask(row.uid) }}>
+                      <IconButton color="primary" onClick={() => {props.handleChangeTask(row.uid)}}>
                         <EditIcon />
                       </IconButton>
 

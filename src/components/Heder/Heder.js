@@ -126,9 +126,9 @@ export default function Heder(props) {
       <AppBar
         
         //position="fixed"
-        //position="static"
+        position="static"
 
-        position="sticky"
+        //position="sticky"
 
 
         className={clsx(classes.appBar, {

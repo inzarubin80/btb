@@ -33,11 +33,14 @@ export const сonfirmationMaket = (id) => {
     return fetch(`${API_URL}/?typerequest=confirmationMaket&id=${id}`, config);
 }
 
-
-
 export const getImgMaket = (id, fileName) => {
     const config = getConfig('get')
     return fetch(`${API_URL}/?typerequest=getImgMaket&id=${id}&fileName=${fileName}`, config);
+}
+
+export const getFileTask = (id, uidTask, uidFile) => {
+    const config = getConfig('get')
+    return fetch(`${API_URL}/?typerequest=getFileTask&id=${id}&uidTask=${uidTask}&uidFile=${uidFile}`, config);
 }
 
 export const saveFileСonfirmation = (id, fileName,  shortfileName, fileBase64) => {

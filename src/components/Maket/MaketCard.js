@@ -4,7 +4,7 @@ import { makeStyles, useTheme, ThemeProvider } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
-import { getMaket, getImgMaket, saveFileСonfirmation, сonfirmationMaket, saveTask } from '../../api/dataService1c';
+import { getMaket, getImgMaket, saveFileСonfirmation, сonfirmationMaket, saveTask,getFileTask} from '../../api/dataService1c';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
@@ -34,7 +34,11 @@ import htmlToDraft from 'html-to-draftjs';
 
 import Lightbox from 'react-image-lightbox';
 import 'react-image-lightbox/style.css';
-import Toolbar from '@material-ui/core/Toolbar';
+
+import { saveAs } from 'file-saver';
+
+//import { triggerBase64Download } from 'react-base64-downloader';
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -90,9 +94,31 @@ const useStyles = makeStyles((theme) => ({
   },
 
 
+  
+
 
 }));
 
+
+const b64toBlob = (b64Data, contentType='', sliceSize=512) => {
+  const byteCharacters = atob(b64Data);
+  const byteArrays = [];
+
+  for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+    const slice = byteCharacters.slice(offset, offset + sliceSize);
+
+    const byteNumbers = new Array(slice.length);
+    for (let i = 0; i < slice.length; i++) {
+      byteNumbers[i] = slice.charCodeAt(i);
+    }
+
+    const byteArray = new Uint8Array(byteNumbers);
+    byteArrays.push(byteArray);
+  }
+
+  const blob = new Blob(byteArrays, {type: contentType});
+  return blob;
+}
 
 const getBase64 = (file) => {
   return new Promise(resolve => {
@@ -252,6 +278,58 @@ const MaketCard = (props) => {
     })
   }
 
+
+  const handleDownloadFileTask = (uidTask, uidFile) => {
+
+  console.log('handleDownloadFileTask');
+  console.log('uidTask', uidTask);
+  console.log('uidFile', uidFile);
+
+  const idButton = uidFile + 'save';
+    hendlerStateLoadingButton(idButton, true);
+    getFileTask(maket.code, uidTask, uidFile)
+      .then(response => response.json())
+      .then((json) => {
+        if (!json.error){
+         
+         
+          //let file = convertBase64ToFile(json.fileBase64, json.name);
+        //  saveAs(file, json.name);
+        
+        /*
+        decode(json.fileBase64, json.name, (err, output) => {
+          if (!err){
+            saveAs(output, json.name);
+          }
+          console.log('success');
+        });
+        */
+        
+        //triggerBase64Download(json.fileBase64, json.name);
+
+        //var decodedStringAtoB = atob(json.fileBase64);
+        
+        const blob = b64toBlob(json.fileBase64, '');
+
+        //const res = decode(json.fileBase64);
+        saveAs(blob, json.name);
+        //console.log('ок', res);
+
+        
+        }
+
+        console.log(json.error);
+        hendlerStateLoadingButton(idButton, false);
+
+      })
+      .catch((err) => {
+        
+        console.log(err);
+        hendlerStateLoadingButton(idButton, false);
+      
+      });
+  }
+
   const handleDownload = ({ code, fileName, shortfileName }) => {
     const idButton = fileName + 'save';
     hendlerStateLoadingButton(idButton, true);
@@ -349,7 +427,7 @@ const MaketCard = (props) => {
       })
 
       .catch((err) => {
-        //  setMaket({});
+      
         hendlerStateLoadingButton(idButton, false);
 
       });
@@ -392,26 +470,19 @@ const MaketCard = (props) => {
 
 
     {isOpen && (
+      
+      <div style = {{ display: 'flex'}}>
 
-   
-
-
-          <Lightbox
-          className={classes.offset}
+      <Lightbox style = {{ margin: 'auto'}}
           mainSrc={`data:image/jpeg;base64,${imgData.imgBase64}`}
-          nextSrc={`data:image/jpeg;base64,${imgData.imgBase64}`}
-          prevSrc={`data:image/jpeg;base64,${imgData.imgBase64}`}
           onCloseRequest={() => setIsOpen(false)}
           />
-
- 
-      )}
+          </div>
+          )}
 
         <Card className={classes.root}>
           <CardContent>
             <Typography variant="h6" className={classes.title} color="textSecondary" gutterBottom>
-
-
 
               {approval == maket.status &&
 
@@ -427,6 +498,7 @@ const MaketCard = (props) => {
                     startIcon={<BorderColorIcon />}
                   >
                     Доработка
+              
               </Button>
                   {isload('buttonReject') && <CircularProgress size={24} className={classes.buttonProgress} />}
                 </div>
@@ -454,12 +526,7 @@ const MaketCard = (props) => {
                 </Button>
                   {isload('confirmationButton') && <CircularProgress size={24} className={classes.buttonProgress} />}
                 </div>
-
-
               }
-
-
-
 
             </Typography>
 
@@ -510,7 +577,10 @@ const MaketCard = (props) => {
                 <TabPanel value={value} index={2} dir={theme.direction}>
 
 
-                  {!idTask && <TasksTable maket={maket} setidTask={setidTask} handleChangeTask={handleChangeTask} />}
+                  {!idTask && <TasksTable maket={maket} 
+                  setidTask={setidTask} 
+                  handleChangeTask={handleChangeTask} 
+                  handleDownloadFileTask={handleDownloadFileTask}/>}
 
                   {idTask && <FormTask
                     maket={maket}
