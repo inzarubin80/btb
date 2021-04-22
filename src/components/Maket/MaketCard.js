@@ -182,13 +182,10 @@ const MaketCard = (props) => {
 
   const [imgData, seIimgData] = React.useState(null);
   const [isOpen, setIsOpen] = React.useState(false);
-
   const theme = useTheme();
 
 
-
-
-
+  
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -550,6 +547,7 @@ const MaketCard = (props) => {
                   setidTask={setidTask} 
                   handleChangeTask={handleChangeTask} 
                   handleDownloadFileTask={handleDownloadFileTask}
+                  hendlerStateLoadingButton={hendlerStateLoadingButton}
                   isload = {isload}
                   />}
 

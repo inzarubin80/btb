@@ -62,18 +62,19 @@ const TasksTable = (props) => {
 
   const classes = useStyles();
 
+  const handleClick = (idFolder) => {
 
-  const [open, setOpen] = React.useState(true);
+    if (props.isload(idFolder)) {
+      props.hendlerStateLoadingButton(idFolder, false);
+    } else {
+      props.hendlerStateLoadingButton(idFolder, true);
+    }
 
-  const handleClick = () => {
-    setOpen(!open);
   };
 
   return (
 
     <div>
-
-
 
       <Button
         variant="contained"
@@ -127,26 +128,27 @@ const TasksTable = (props) => {
                     >
 
 
-                      <ListItem button onClick={handleClick}>
+                      <ListItem button onClick={() => handleClick(row.uid + 'folderFilesIsOpen')}>
                         <ListItemIcon>
                           <FolderIcon />
                         </ListItemIcon>
                         <ListItemText primary={"Файлы (" + row.files.length + ")"} />
-                        {open ? <ExpandLess /> : <ExpandMore />}
+                        {props.isload(row.uid + 'folderFilesIsOpen') ? <ExpandLess /> : <ExpandMore />}
                       </ListItem>
-                      <Collapse in={open} timeout="auto" unmountOnExit>
+                      
+                      <Collapse in={props.isload(row.uid + 'folderFilesIsOpen')} timeout="auto" unmountOnExit>
 
                         <List component="div" disablePadding>
 
 
                           {row.files.map((file) => <ListItem key={file.uid} button className={classes.nested}>
 
-                          {!props.isload(file.uid + 'save') && <IconButton aria-label="delete" color="primary" onClick={() => props.handleDownloadFileTask(row.uid, file.uid)}>
+                            {!props.isload(file.uid + 'save') && <IconButton aria-label="delete" color="primary" onClick={() => props.handleDownloadFileTask(row.uid, file.uid)}>
                               <SaveIcon />
                             </IconButton>}
 
                             {props.isload(file.uid + 'save') &&
-                                            <CircularProgress />}
+                              <CircularProgress />}
 
 
                             <ListItemText primary={file.name} />
@@ -163,7 +165,7 @@ const TasksTable = (props) => {
                     />
                     <CardActions>
 
-                      <IconButton color="primary" onClick={() => {props.handleChangeTask(row.uid)}}>
+                      <IconButton color="primary" onClick={() => { props.handleChangeTask(row.uid) }}>
                         <EditIcon />
                       </IconButton>
 
