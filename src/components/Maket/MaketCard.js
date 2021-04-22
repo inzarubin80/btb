@@ -283,9 +283,15 @@ const MaketCard = (props) => {
       .then((json) => {
         
         if (!json.error){
+
+          var time = performance.now();
         const blob = b64toBlob(json.fileBase64, '');
+        time = performance.now() - time;
+        console.log('Время выполнения b64toBlob = ', time);
+
         saveAs(blob, json.name); 
         }
+
         hendlerStateLoadingButton(idButton, false);
 
       })
@@ -404,7 +410,13 @@ const MaketCard = (props) => {
 
 
   const isload = (buttonId) => {
-    return stateLoadingButton.loading.find((id) => { return id == buttonId })
+    if (stateLoadingButton.loading.find((id) => { return id == buttonId })){
+      return true
+    }
+    else {
+      return false
+    }
+
   }
 
   const handleChangeIndex = (index) => {
