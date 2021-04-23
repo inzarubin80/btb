@@ -295,7 +295,9 @@ const handleSaveTask = () => {
 
   hendlerStateLoadingButton(idButton, true);
 
-  const functionRequest = () => {return saveTask(maket.code, idTask, number, taskTextValueHTML)};
+  const functionRequest = () => {
+    return saveTask(maket.code, idTask, number, taskTextValueHTML)
+  };
     
   const exceptionHandlingFunction = () => {}
 
@@ -343,21 +345,34 @@ const handleDownloadFileTask = (uidTask, uidFile) => {
   };
     
 
+   console.log("handleDownloadFileTask");
+
 
   const responseHandlingFunction = (json) => {
     
     if (!json.error){
 
-      const time = performance.now();
+      console.log("!json.error");
+
+     // const time = performance.now();
       const blob = b64toBlob(json.fileBase64, '');
-      time = performance.now() - time;
+      //time = performance.now() - time;
      // console.log('Время выполнения b64toBlob = ', time);
+
+     console.log("saveAs");
+
       saveAs(blob, json.name); 
     }
+    
+       console.log("json.error");
+
       hendlerStateLoadingButton(idButton, false);
     };
 
-  const exceptionHandlingFunction = () => {
+  const exceptionHandlingFunction = (error) => {
+
+    console.log("exceptionHandlingFunction", error);
+
     hendlerStateLoadingButton(idButton, false);
   }
    executorRequests(functionRequest, responseHandlingFunction, exceptionHandlingFunction);
@@ -584,7 +599,7 @@ executorRequests(functionRequest, responseHandlingFunction, exceptionHandlingFun
 
             
       <Modal
-        open={messages.length}
+        open={messages.length>0}
         onClose={()=>{}}
         aria-labelledby="simple-modal-title"
         aria-describedby="simple-modal-description"
