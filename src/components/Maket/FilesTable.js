@@ -13,7 +13,7 @@ import IconButton from '@material-ui/core/IconButton';
 import SearchIcon from '@material-ui/icons/Search';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import CardActions from '@material-ui/core/CardActions';
-import { approval } from './statuses'
+import { approval } from './constants'
 
 
 const useStyles = makeStyles((theme) => ({

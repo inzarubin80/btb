@@ -4,7 +4,7 @@ import { makeStyles, useTheme, ThemeProvider } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
-import { getMaket, getImgMaket, saveFileСonfirmation, сonfirmationMaket, saveTask,getFileTask} from '../../api/dataService1c';
+import { executorRequests, getMaket, getImgMaket, saveFileСonfirmation, сonfirmationMaket, saveTask,getFileTask} from '../../api/dataService1c';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
@@ -19,7 +19,7 @@ import TasksTable from './TasksTable'
 import FormTask from './FormTask'
 import Button from '@material-ui/core/Button';
 import { green, blue, pink } from '@material-ui/core/colors';
-import { approval } from './statuses'
+import { approval } from './constants'
 import 'antd/dist/antd.css';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import {
@@ -37,8 +37,12 @@ import 'react-image-lightbox/style.css';
 
 import { saveAs } from 'file-saver';
 
-//import { triggerBase64Download } from 'react-base64-downloader';
+import MuiAlert from '@material-ui/lab/Alert';
 
+
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -76,6 +80,11 @@ const useStyles = makeStyles((theme) => ({
     '&:hover': {
       backgroundColor: green[700],
     },
+  },
+
+  allertBox:{
+    //margin: theme.spacing(2),
+    marginTop:20
   },
 
   offset: theme.mixins.toolbar,
@@ -176,58 +185,87 @@ const MaketCard = (props) => {
   const [maket, setMaket] = React.useState();
   const [value, setValue] = React.useState(0);
   const [idTask, setidTask] = React.useState(null);
-  const [taskTextValue, setTaskTextValue] = React.useState('');
   const [stateLoadingButton, setStateLoadingButton] = React.useState({ loading: [] });
   const [editorState, setEditorState] = React.useState(EditorState.createEmpty());
-
   const [imgData, seIimgData] = React.useState(null);
   const [isOpen, setIsOpen] = React.useState(false);
+  const [messages, setMessages] = React.useState([]);
+
+  const removeMessage = (idMessage) => {
+   let remove = false;
+    setMessages((prevState) => {
+      return prevState.filter((error)=>{
+      if  (error.idMessage!=idMessage || remove) {
+        return true;
+      } else {
+        remove = true;
+        return false;
+      }
+      })
+     }
+     )
+  }
+
+  const addMessage = (idMessage, typeMessage, text, timeOut=0) => {   
+    setMessages((prevState) => {
+     return [...prevState, {idMessage, typeMessage, text}]
+    }
+    )
+    if (timeOut) {
+      setTimeout(()=>removeMessage(idMessage),  timeOut)
+    }
+  }
+
+  const getUniqueMessages = () => {
+  
+    let uniqueMessages = [] 
+  
+  for (let i = messages.length-1; i>=0; i--){
+    
+    if (!uniqueMessages.find((message)=>message.idMessage==messages[i].idMessage)) {
+      uniqueMessages.push(messages[i])
+    }
+  }
+  return uniqueMessages;
+
+}
+
   const theme = useTheme();
 
 
-  
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
   const handleChangeTask = (uid) => {
-
-    getMaket(props.match.params.id)
-      .then(response => response.json())
-      .then((json) => {
-
-        if (!json.error) {
-
-          let task = json.maket.tasks.find((task) => task.uid == uid);
-
-          if (task) {
-
-
-            const contentBlock = htmlToDraft(task.text);
-            if (contentBlock) {
-
-              const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
-              const NewEditorState = EditorState.createWithContent(contentState);
-              setEditorState(NewEditorState);
-
-            };
-
-            setidTask(uid);
-
-          }
-
+    
+    const functionRequest = () => {
+      return getMaket(props.match.params.id)
+    };
+    
+    const responseHandlingFunction = (json)=> {
+      if (!json.error) {
+        let task = json.maket.tasks.find((task) => task.uid == uid);
+        if (task) {
+          const contentBlock = htmlToDraft(task.text);
+          if (contentBlock) {
+            const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
+            const NewEditorState = EditorState.createWithContent(contentState);
+            setEditorState(NewEditorState);
+          };
+          setidTask(uid);
         }
+      }
+    };
 
-      })
-      .catch((err) => {
-
-        //setMaket({});
-
-      });
-
+    const exceptionHandlingFunction = () => {};
+    
+    executorRequests(functionRequest, responseHandlingFunction, exceptionHandlingFunction);
 
   };
 
+
+  
 
 
   const handleSaveTask = () => {
@@ -396,10 +434,18 @@ const MaketCard = (props) => {
           setMaket(json.responseMaket.maket);
         }
 
+        if (json.error) {
+          addMessage(idButton,'warning', json.error, 3000);
+        } else {
+          addMessage(idButton,'success', 'Статус макета успешно изменен', 3000);
+        }
+
       })
 
       .catch((err) => {
       
+        addMessage(idButton,'error', "Что то пошло не так..." + err, 3000);
+
         hendlerStateLoadingButton(idButton, false);
 
       });
@@ -446,6 +492,8 @@ const MaketCard = (props) => {
     return (
       <div style={{ textAlign: 'center', maxWidth: '50%', margin: 'auto', marginTop: 30 }}>
 
+    
+           
 
     {isOpen && (
       
@@ -487,9 +535,6 @@ const MaketCard = (props) => {
               Макет №{maket.code + " "}
 
               {approval == maket.status &&
-
-
-
                 <div className={classes.wrapperApproval}>
                   <Button
                     variant="contained"
@@ -508,6 +553,11 @@ const MaketCard = (props) => {
 
             </Typography>
 
+            <div style={{marginTop:20}}>
+                {getUniqueMessages().map((message)=><Alert severity= {message.typeMessage}>{message.text}</Alert>)}
+            </div>
+
+            <Typography>
             <Descriptions layout="vertical" bordered >
 
               <Descriptions.Item label="Продукт">{maket.product}</Descriptions.Item>
@@ -515,7 +565,7 @@ const MaketCard = (props) => {
               <Descriptions.Item label="Статус">{maket.status}</Descriptions.Item>
 
             </Descriptions>
-
+            </Typography>
 
             <div className={classes.root}>
               <AppBar position="static" color="default">

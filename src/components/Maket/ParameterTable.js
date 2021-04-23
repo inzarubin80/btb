@@ -26,14 +26,10 @@ const ParameterTable = ({ maket }) => {
   return (
     <TableContainer component={Paper}>
       <Table className={classes.table} size="small" aria-label="a dense table">
-        <TableHead>
-          <TableRow>
-            <TableCell>Параметр</TableCell>
-            <TableCell>Значение</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
+        
+       
 
+        <TableBody>
           <TableRow >
             <TableCell component="th" scope="row" >
               Вид оболочки
