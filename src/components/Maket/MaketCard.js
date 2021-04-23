@@ -248,63 +248,65 @@ const MaketCard = (props) => {
 
 }
 
-  const theme = useTheme();
+const theme = useTheme();
 
 
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
+const handleChange = (event, newValue) => {
+  setValue(newValue);
+};
 
-  const handleChangeTask = (uid) => {
+const handleChangeTask = (uid) => {
+ 
+  const functionRequest = () => {
+   return getMaket(props.match.params.id)
+ };
     
-    const functionRequest = () => {
-      return getMaket(props.match.params.id)
-    };
-    
-    const responseHandlingFunction = (json)=> {
-      if (!json.error) {
-        let task = json.maket.tasks.find((task) => task.uid == uid);
-        if (task) {
-          const contentBlock = htmlToDraft(task.text);
-          if (contentBlock) {
-            const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
-            const NewEditorState = EditorState.createWithContent(contentState);
-            setEditorState(NewEditorState);
-          };
-          setidTask(uid);
-        }
+  const responseHandlingFunction = (json)=> {  
+   if (!json.error) {
+    let task = json.maket.tasks.find((task) => task.uid == uid);
+    if (task) {
+      const contentBlock = htmlToDraft(task.text);
+      if (contentBlock) {
+          const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
+          const NewEditorState = EditorState.createWithContent(contentState);
+          setEditorState(NewEditorState);
+        };
+        setidTask(uid);
       }
-    };
-    const exceptionHandlingFunction = () => {};
-    
-    executorRequests(functionRequest, responseHandlingFunction, exceptionHandlingFunction);
-
-  };
-
-
-
-  const handleSaveTask = () => {
-
-    const idButton = 'saveTask';
-    let number = 0;
-    if (idTask != '-1') {
-       number = maket.tasks.find((task) => task.uid == idTask).number;
     }
+  };
+  
+  const exceptionHandlingFunction = () => {};
+  executorRequests(functionRequest, responseHandlingFunction, exceptionHandlingFunction);
+  
+};
 
-    const taskTextValueHTML = draftToHtml(convertToRaw(editorState.getCurrentContent()));
 
-    hendlerStateLoadingButton(idButton, true);
 
-    const functionRequest = () => {return saveTask(maket.code, idTask, number, taskTextValueHTML)};
+const handleSaveTask = () => {
+
+  const idButton = 'saveTask';
+  let number = 0;
+  if (idTask != '-1') {
+   number = maket.tasks.find((task) => task.uid == idTask).number;
+  }
+
+  const taskTextValueHTML = draftToHtml(convertToRaw(editorState.getCurrentContent()));
+
+  hendlerStateLoadingButton(idButton, true);
+
+  const functionRequest = () => {return saveTask(maket.code, idTask, number, taskTextValueHTML)};
     
-    const exceptionHandlingFunction = () => {}
+  const exceptionHandlingFunction = () => {}
 
-    const responseHandlingFunction = (json) => {
-      if (json.responseMaket.maket) {
+  const responseHandlingFunction = (json) => {
+    if (json.responseMaket.maket) {
         setMaket(json.responseMaket.maket);
-      }
-      hendlerStateLoadingButton(idButton, false);
-      if (!json.error) {
+     }
+    
+     hendlerStateLoadingButton(idButton, false);
+    
+     if (!json.error) {
         setidTask(null);
         setEditorState(EditorState.createEmpty());
       } else {
@@ -331,88 +333,84 @@ const MaketCard = (props) => {
     })
   }
 
-  const handleDownloadFileTask = (uidTask, uidFile) => {
+const handleDownloadFileTask = (uidTask, uidFile) => {
+
   const idButton = uidFile + 'save';
-
-
-    hendlerStateLoadingButton(idButton, true);
-    getFileTask(maket.code, uidTask, uidFile)
-      .then(response => response.json())
-      .then((json) => {
-        
-        if (!json.error){
-
-        const time = performance.now();
-        const blob = b64toBlob(json.fileBase64, '');
-        time = performance.now() - time;
-        console.log('Время выполнения b64toBlob = ', time);
-
-        saveAs(blob, json.name); 
-        }
-
-        hendlerStateLoadingButton(idButton, false);
-
-      })
-      .catch((err) => {
-        
-        console.log(err);
-        hendlerStateLoadingButton(idButton, false);
-      
-      });
-  }
-
-  const handleDownload = ({ code, fileName}) => {
-    
+  hendlerStateLoadingButton(idButton, true);
   
-    const idButton = fileName + 'save';
-    hendlerStateLoadingButton(idButton, true);
-   
-    const functionRequest = () => {
-      return getImgMaket(code, fileName)
-    };
-
-    const responseHandlingFunction =  (json) => {
+  const functionRequest = () => {
+    return getFileTask(maket.code, uidTask, uidFile)
+  };
     
-      if (!json.error) {
-        const blob = b64toBlob(json.file.imgBase64, '');
-        saveAs(blob, json.file.shortName);  
-       }  
 
-       hendlerStateLoadingButton(idButton, false);
 
+  const responseHandlingFunction = (json) => {
+    
+    if (!json.error){
+
+      const time = performance.now();
+      const blob = b64toBlob(json.fileBase64, '');
+      time = performance.now() - time;
+     // console.log('Время выполнения b64toBlob = ', time);
+      saveAs(blob, json.name); 
     }
-
-    const exceptionHandlingFunction = () => { 
       hendlerStateLoadingButton(idButton, false);
     };
-    
-    executorRequests(functionRequest, responseHandlingFunction, exceptionHandlingFunction);
 
+  const exceptionHandlingFunction = () => {
+    hendlerStateLoadingButton(idButton, false);
+  }
+   executorRequests(functionRequest, responseHandlingFunction, exceptionHandlingFunction);
+}
+
+const handleDownload = ({ code, fileName}) => {
+     
+  const idButton = fileName + 'save';
+  hendlerStateLoadingButton(idButton, true);
+   
+  const functionRequest = () => {
+    return getImgMaket(code, fileName)
+  };
+
+  const responseHandlingFunction =  (json) => {
+    
+    if (!json.error) {
+      const blob = b64toBlob(json.file.imgBase64, '');
+      saveAs(blob, json.file.shortName);  
+      }  
+      hendlerStateLoadingButton(idButton, false);
+    }
+
+  const exceptionHandlingFunction = () => { 
+    hendlerStateLoadingButton(idButton, false);
+  };
+
+  executorRequests(functionRequest, responseHandlingFunction, exceptionHandlingFunction);
+}
+
+
+const handleOpenFile = (macetCode, fileName) => {
+
+  console.log('handleOpenFile');
+  const idButton = fileName  + 'open';
+  hendlerStateLoadingButton(idButton, true);
+
+  const  functionRequest = () => {
+    return getImgMaket(macetCode, fileName)
   }
 
+  const responseHandlingFunction = (json) => {
+    hendlerStateLoadingButton(idButton, false);
+    seIimgData(json.file);
+    setIsOpen(true);
+  }
 
-  const handleOpenFile = (macetCode, fileName) => {
-
-    console.log('handleOpenFile');
-    const idButton = fileName  + 'open';
-    hendlerStateLoadingButton(idButton, true);
-
-    const  functionRequest = () => {
-      return getImgMaket(macetCode, fileName)
-    }
-
-    const responseHandlingFunction = (json) => {
-      hendlerStateLoadingButton(idButton, false);
-      seIimgData(json.file);
-      setIsOpen(true);
-    }
-
-    const exceptionHandlingFunction = () => {
-      hendlerStateLoadingButton(idButton, false);
-      seIimgData(null);
-    };
+  const exceptionHandlingFunction = () => {
+    hendlerStateLoadingButton(idButton, false);
+    seIimgData(null);
+  };
     
-    executorRequests(functionRequest, responseHandlingFunction, exceptionHandlingFunction);
+  executorRequests(functionRequest, responseHandlingFunction, exceptionHandlingFunction);
 
   }
 
@@ -478,40 +476,41 @@ const MaketCard = (props) => {
     };
 
     executorRequests(functionRequest, responseHandlingFunction, exceptionHandlingFunction);
+
+  }
+
+
+
+const isload = (buttonId) => {
+  if (stateLoadingButton.loading.find((id) => { return id == buttonId })){
+    return true
+  } else {
+    return false
+  }
+}
+
+const handleChangeIndex = (index) => {
+  setValue(index);
+};
+
+
+React.useEffect(() => {
+
+const functionRequest = () => {
+  return getMaket(props.match.params.id)
+};
     
+const responseHandlingFunction = (json) => {
+    if (!json.error) {
+      setMaket(json.maket);
   }
+};
 
+const exceptionHandlingFunction = () => {setMaket({})}
+    
+executorRequests(functionRequest, responseHandlingFunction, exceptionHandlingFunction);      
 
-
-  const isload = (buttonId) => {
-    if (stateLoadingButton.loading.find((id) => { return id == buttonId })){
-      return true
-    }
-    else {
-      return false
-    }
-
-  }
-
-  const handleChangeIndex = (index) => {
-    setValue(index);
-  };
-
-
-  React.useEffect(() => {
-    getMaket(props.match.params.id)
-      .then(response => response.json())
-      .then((json) => {
-
-        if (!json.error) {
-          setMaket(json.maket);
-        }
-
-      })
-      .catch((err) => {
-        setMaket({});
-      });
-  }, []);
+}, []);
 
 
   const messageBox = ()  => {return (<div className={classes.messageBox}>
