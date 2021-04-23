@@ -238,8 +238,7 @@ const MaketCard = (props) => {
   const getUniqueMessages = () => {
   
     let uniqueMessages = [] 
-  
-  for (let i = messages.length-1; i>=0; i--){
+    for (let i = messages.length-1; i>=0; i--){
     
     if (!uniqueMessages.find((message)=>message.idMessage==messages[i].idMessage)) {
       uniqueMessages.push(messages[i])
@@ -343,7 +342,7 @@ const MaketCard = (props) => {
         
         if (!json.error){
 
-          var time = performance.now();
+        const time = performance.now();
         const blob = b64toBlob(json.fileBase64, '');
         time = performance.now() - time;
         console.log('Время выполнения b64toBlob = ', time);
@@ -362,25 +361,33 @@ const MaketCard = (props) => {
       });
   }
 
-  const handleDownload = ({ code, fileName, shortfileName }) => {
+  const handleDownload = ({ code, fileName}) => {
+    
+  
     const idButton = fileName + 'save';
     hendlerStateLoadingButton(idButton, true);
-    getImgMaket(code, fileName)
-      .then(response => response.json())
-      .then((json) => {
+   
+    const functionRequest = () => {
+      return getImgMaket(code, fileName)
+    };
 
+    const responseHandlingFunction =  (json) => {
+    
+      if (!json.error) {
+        const blob = b64toBlob(json.file.imgBase64, '');
+        saveAs(blob, json.file.shortName);  
+       }  
 
-        const linkSource = `data:image/jpeg;base64,${json.file.imgBase64}`;
-        const downloadLink = document.createElement("a");
-        downloadLink.href = linkSource;
-        downloadLink.download = shortfileName;
-        downloadLink.click();
-        hendlerStateLoadingButton(idButton, false);
+       hendlerStateLoadingButton(idButton, false);
 
-      })
-      .catch((err) => {
-        hendlerStateLoadingButton(idButton, false);
-      });
+    }
+
+    const exceptionHandlingFunction = () => { 
+      hendlerStateLoadingButton(idButton, false);
+    };
+    
+    executorRequests(functionRequest, responseHandlingFunction, exceptionHandlingFunction);
+
   }
 
 
@@ -390,21 +397,23 @@ const MaketCard = (props) => {
     const idButton = fileName  + 'open';
     hendlerStateLoadingButton(idButton, true);
 
-    getImgMaket(macetCode, fileName)
-      .then(response => response.json())
-      .then((json) => {
+    const  functionRequest = () => {
+      return getImgMaket(macetCode, fileName)
+    }
 
-        hendlerStateLoadingButton(idButton, false);
-        seIimgData(json.file);
-        setIsOpen(true);
+    const responseHandlingFunction = (json) => {
+      hendlerStateLoadingButton(idButton, false);
+      seIimgData(json.file);
+      setIsOpen(true);
+    }
 
-      })
-      .catch((err) => {
+    const exceptionHandlingFunction = () => {
+      hendlerStateLoadingButton(idButton, false);
+      seIimgData(null);
+    };
+    
+    executorRequests(functionRequest, responseHandlingFunction, exceptionHandlingFunction);
 
-        hendlerStateLoadingButton(idButton, false);
-        seIimgData(null);
-
-      });
   }
 
   const handleChangeFile = (macetCode, file, fileName, shortfileName) => {
@@ -415,25 +424,25 @@ const MaketCard = (props) => {
 
     getBase64(file).then(fileBase64 => {
 
-      saveFileСonfirmation(macetCode, fileName, shortfileName, fileBase64)
-        .then(response => response.json())
-        .then((json) => {
+        const functionRequest = () => {
+          return  saveFileСonfirmation(macetCode, fileName, shortfileName, fileBase64)
+        };
 
+        const responseHandlingFunction = (json)=> {
           if (json.responseMaket.maket) {
             setMaket(json.responseMaket.maket);
           }
-
           hendlerStateLoadingButton(idButton, false);
+        }
+        
+        const exceptionHandlingFunction = () => {
+          hendlerStateLoadingButton(idButton, false); 
+        };
 
-        })
+        executorRequests(functionRequest, responseHandlingFunction, exceptionHandlingFunction);
 
-        .catch((err) => {
-
-          hendlerStateLoadingButton(idButton, false);
-
-        });
-
-    })
+    }
+    )
       .catch(err => {
         console.log(err);
       });
@@ -445,12 +454,13 @@ const MaketCard = (props) => {
 
     hendlerStateLoadingButton(idButton, true);
 
+    const functionRequest = () => {
+      return   сonfirmationMaket(maket.code)
+    };
 
-    сonfirmationMaket(maket.code)
-      .then(response => response.json())
-      .then((json) => {
-
-        hendlerStateLoadingButton(idButton, false);
+    const responseHandlingFunction = (json)=> {
+    
+      hendlerStateLoadingButton(idButton, false);
 
         if (json.responseMaket.maket) {
           setMaket(json.responseMaket.maket);
@@ -461,18 +471,14 @@ const MaketCard = (props) => {
         } else {
           addMessage(idButton,'success', 'Статус макета успешно изменен', 3000);
         }
+    }
 
-      })
+    const exceptionHandlingFunction = () => {
+      hendlerStateLoadingButton(idButton, false); 
+    };
 
-      .catch((err) => {
-      
-        addMessage(idButton,'error', "Что то пошло не так..." + err, 3000);
-
-        hendlerStateLoadingButton(idButton, false);
-
-      });
-
-
+    executorRequests(functionRequest, responseHandlingFunction, exceptionHandlingFunction);
+    
   }
 
 
@@ -522,9 +528,6 @@ const MaketCard = (props) => {
 
     return (
       <div style={{ textAlign: 'center', maxWidth: '50%', margin: 'auto', marginTop: 30 }}>
-
-    
-           
 
     {isOpen && (
       
