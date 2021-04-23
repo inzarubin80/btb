@@ -85,8 +85,10 @@ const useStyles = makeStyles((theme) => ({
 
   messageBox:{
     //margin: theme.spacing(2),
-    position: 'absolute'
-
+   position: 'absolute',
+   top: '50%', 
+   left: '43%'
+    
   },
 
   imageBox:{
@@ -94,6 +96,10 @@ const useStyles = makeStyles((theme) => ({
    //position: 'absolute',
     //marginTop:80000
 
+  },
+
+  margin: {
+    marginTop: theme.spacing(1),
   },
   
   offset: theme.mixins.toolbar,
@@ -219,6 +225,7 @@ const MaketCard = (props) => {
   }
 
   const addMessage = (idMessage, typeMessage, text, timeOut=0) => {   
+   
     setMessages((prevState) => {
      return [...prevState, {idMessage, typeMessage, text}]
     }
@@ -328,7 +335,7 @@ const MaketCard = (props) => {
   const handleDownloadFileTask = (uidTask, uidFile) => {
   const idButton = uidFile + 'save';
 
-  
+
     hendlerStateLoadingButton(idButton, true);
     getFileTask(maket.code, uidTask, uidFile)
       .then(response => response.json())
@@ -502,7 +509,13 @@ const MaketCard = (props) => {
 
 
   const messageBox = ()  => {return (<div className={classes.messageBox}>
+    
     {getUniqueMessages().map((message)=><Alert key={message.idMessage} severity= {message.typeMessage}>{message.text}</Alert>)}
+
+    <Button onClick = {()=>setMessages([])} variant="outlined" size="medium" color="large" className={classes.margin}>
+          ок
+      </Button>
+
  </div>)}
 
   if (maket != null && maket.code) {
