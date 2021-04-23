@@ -39,6 +39,7 @@ import { saveAs } from 'file-saver';
 
 import MuiAlert from '@material-ui/lab/Alert';
 
+import Modal from '@material-ui/core/Modal';
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -82,11 +83,19 @@ const useStyles = makeStyles((theme) => ({
     },
   },
 
-  allertBox:{
+  messageBox:{
     //margin: theme.spacing(2),
-    marginTop:20
+    position: 'absolute'
+
   },
 
+  imageBox:{
+    //margin: theme.spacing(2),
+   //position: 'absolute',
+    //marginTop:80000
+
+  },
+  
   offset: theme.mixins.toolbar,
 
   wrapperReject: {
@@ -191,6 +200,9 @@ const MaketCard = (props) => {
   const [isOpen, setIsOpen] = React.useState(false);
   const [messages, setMessages] = React.useState([]);
 
+
+  
+
   const removeMessage = (idMessage) => {
    let remove = false;
     setMessages((prevState) => {
@@ -257,7 +269,6 @@ const MaketCard = (props) => {
         }
       }
     };
-
     const exceptionHandlingFunction = () => {};
     
     executorRequests(functionRequest, responseHandlingFunction, exceptionHandlingFunction);
@@ -265,38 +276,39 @@ const MaketCard = (props) => {
   };
 
 
-  
-
 
   const handleSaveTask = () => {
+
     const idButton = 'saveTask';
     let number = 0;
     if (idTask != '-1') {
-      number = maket.tasks.find((task) => task.uid == idTask).number;
+       number = maket.tasks.find((task) => task.uid == idTask).number;
     }
 
     const taskTextValueHTML = draftToHtml(convertToRaw(editorState.getCurrentContent()));
 
     hendlerStateLoadingButton(idButton, true);
 
-    saveTask(maket.code, idTask, number, taskTextValueHTML)
-      .then(response => response.json())
-      .then((json) => {
-        if (json.responseMaket.maket) {
-          setMaket(json.responseMaket.maket);
-        }
-        hendlerStateLoadingButton(idButton, false);
-        if (!json.error) {
-          setidTask(null);
-          setEditorState(EditorState.createEmpty());
-        }
-      })
-      .catch((err) => {
-        hendlerStateLoadingButton(idButton, false);
-      });
+    const functionRequest = () => {return saveTask(maket.code, idTask, number, taskTextValueHTML)};
+    
+    const exceptionHandlingFunction = () => {}
+
+    const responseHandlingFunction = (json) => {
+      if (json.responseMaket.maket) {
+        setMaket(json.responseMaket.maket);
+      }
+      hendlerStateLoadingButton(idButton, false);
+      if (!json.error) {
+        setidTask(null);
+        setEditorState(EditorState.createEmpty());
+      } else {
+        addMessage(idButton, 'warning', json.error, 3000); 
+      }
+    };
+    
+    executorRequests(functionRequest, responseHandlingFunction, exceptionHandlingFunction);
+
   };
-
-
 
   const hendlerStateLoadingButton = (buttonId, add) => {
     setStateLoadingButton((prevState) => {
@@ -315,6 +327,8 @@ const MaketCard = (props) => {
 
   const handleDownloadFileTask = (uidTask, uidFile) => {
   const idButton = uidFile + 'save';
+
+  
     hendlerStateLoadingButton(idButton, true);
     getFileTask(maket.code, uidTask, uidFile)
       .then(response => response.json())
@@ -424,6 +438,7 @@ const MaketCard = (props) => {
 
     hendlerStateLoadingButton(idButton, true);
 
+
     сonfirmationMaket(maket.code)
       .then(response => response.json())
       .then((json) => {
@@ -486,6 +501,9 @@ const MaketCard = (props) => {
   }, []);
 
 
+  const messageBox = ()  => {return (<div className={classes.messageBox}>
+    {getUniqueMessages().map((message)=><Alert key={message.idMessage} severity= {message.typeMessage}>{message.text}</Alert>)}
+ </div>)}
 
   if (maket != null && maket.code) {
 
@@ -497,19 +515,17 @@ const MaketCard = (props) => {
 
     {isOpen && (
       
-      <div style = {{ display: 'flex'}}>
-
-      <Lightbox style = {{ margin: 'auto'}}
+      <div className={classes.imageBox}>
+      <Lightbox 
           mainSrc={`data:image/jpeg;base64,${imgData.imgBase64}`}
           onCloseRequest={() => setIsOpen(false)}
+          
           />
-          </div>
-          )}
+          </div>)}
 
         <Card className={classes.root}>
           <CardContent>
-            <Typography variant="h6" className={classes.title} color="textSecondary" gutterBottom>
-
+           
               {approval == maket.status &&
 
 
@@ -551,22 +567,27 @@ const MaketCard = (props) => {
                 </div>
               }
 
-            </Typography>
+            
+      <Modal
+        open={messages.length}
+        onClose={()=>{}}
+        aria-labelledby="simple-modal-title"
+        aria-describedby="simple-modal-description"
+      >
+        {messageBox()}
+      </Modal>
 
-            <div style={{marginTop:20}}>
-                {getUniqueMessages().map((message)=><Alert severity= {message.typeMessage}>{message.text}</Alert>)}
-            </div>
 
-            <Typography>
-            <Descriptions layout="vertical" bordered >
+           
+
+<Descriptions layout="vertical" bordered >
 
               <Descriptions.Item label="Продукт">{maket.product}</Descriptions.Item>
               <Descriptions.Item label="Конечный потребитель">{maket.finalBuyer}</Descriptions.Item>
               <Descriptions.Item label="Статус">{maket.status}</Descriptions.Item>
 
             </Descriptions>
-            </Typography>
-
+          
             <div className={classes.root}>
               <AppBar position="static" color="default">
                 <Tabs
