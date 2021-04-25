@@ -17,7 +17,7 @@ const Gridstrings: GridLocaleText = {
   toolbarColumns: 'Columns',
   toolbarColumnsLabel: 'Select columns',
 
-  // Filters toolbar button text
+  // Filters toolbar button text--------------------
   toolbarFilters: 'Filters',
   toolbarFiltersLabel: 'Show filters',
   toolbarFiltersTooltipHide: 'Hide filters',

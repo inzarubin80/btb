@@ -352,14 +352,14 @@ const handleDownloadFileTask = (uidTask, uidFile) => {
     
     if (!json.error){
 
-      console.log("!json.error");
+   //   console.log("!json.error");
 
      // const time = performance.now();
       const blob = b64toBlob(json.fileBase64, '');
       //time = performance.now() - time;
      // console.log('Время выполнения b64toBlob = ', time);
 
-     console.log("saveAs");
+     //console.log("saveAs");
 
       saveAs(blob, json.name); 
     }
