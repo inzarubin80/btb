@@ -115,6 +115,7 @@ const FormTask = (props) => {
               props.hendlerStateLoadingButton('uploadTaskFile', true);
 
               const file = e.target.files[0];
+
               props.getBase64(file)
                 .then(base64 => {
 
@@ -145,9 +146,12 @@ const FormTask = (props) => {
 
       </div>
 
-      <Button style={{ 'marginTop': 10 }} variant="contained" color="primary" onClick={() => { props.handleSaveTask() }}>
+      {!props.isload('saveTask') && <Button style={{ 'marginTop': 10 }} variant="contained" color="primary" onClick={() => { props.handleSaveTask() }}>
         {(!task) ? 'Добавить задание' : "Обновить задание"}
-      </Button>
+      </Button>}
+      
+      {props.isload('saveTask') &&
+            <CircularProgress />}
 
     </div>
 
