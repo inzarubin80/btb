@@ -12,7 +12,7 @@ import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import IconButton from '@material-ui/core/IconButton';
 import HTMLEditor from './HTMLEditor'
 import { v4 as uuidv4 } from 'uuid';
-
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const useStyles = makeStyles((theme) => ({
   table: {
@@ -111,23 +111,36 @@ const FormTask = (props) => {
 
           onChange={(e) => {
             if (e.target.files) {
+
+              props.hendlerStateLoadingButton('uploadTaskFile', true);
+
               const file = e.target.files[0];
               props.getBase64(file)
                 .then(base64 => {
 
-                  const newFile = { name: file.name, uid: uuidv4(),fileBase64: base64};
+                  const newFile = { name: file.name, uid: uuidv4(), fileBase64: base64 };
                   props.setTaskFiles((prevState) => [...prevState, newFile])
+                  props.hendlerStateLoadingButton('uploadTaskFile', false);
 
-                })            
+
+                }).catch((err) => {
+                  props.hendlerStateLoadingButton('uploadTaskFile', false);
+                }
+                )
             }
           }
           }
         />
 
         <label htmlFor={"contained-button-file"}>
-          <IconButton aria-label="download" variant="contained" color="primary" component="span">
+
+          {!props.isload('uploadTaskFile') && <IconButton aria-label="download" variant="contained" color="primary" component="span">
             <BackupIcon />
-          </IconButton>
+          </IconButton>}
+
+          {props.isload('uploadTaskFile') &&
+            <CircularProgress />}
+
         </label>
 
       </div>
