@@ -3,7 +3,6 @@ import React from 'react';
 import { makeStyles, useTheme, ThemeProvider } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
-import Typography from '@material-ui/core/Typography';
 import { executorRequests, getMaket, getImgMaket, saveFileСonfirmation, сonfirmationMaket, saveTask,getFileTask} from '../../api/dataService1c';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
@@ -202,6 +201,8 @@ const MaketCard = (props) => {
   const [idTask, setidTask] = React.useState(null);
   const [stateLoadingButton, setStateLoadingButton] = React.useState({ loading: [] });
   const [editorState, setEditorState] = React.useState(EditorState.createEmpty());
+  const [taskFiles, setTaskFiles] = React.useState([]);
+  
   const [imgData, seIimgData] = React.useState(null);
   const [isOpen, setIsOpen] = React.useState(false);
   const [messages, setMessages] = React.useState([]);
@@ -264,6 +265,7 @@ const handleChangeTask = (uid) => {
   const responseHandlingFunction = (json)=> {  
    if (!json.error) {
     let task = json.maket.tasks.find((task) => task.uid == uid);
+    
     if (task) {
       const contentBlock = htmlToDraft(task.text);
       if (contentBlock) {
@@ -271,9 +273,19 @@ const handleChangeTask = (uid) => {
           const NewEditorState = EditorState.createWithContent(contentState);
           setEditorState(NewEditorState);
         };
+
+        setTaskFiles(task.files)
+
         setidTask(uid);
       }
+    } else {
+
+      setTaskFiles([])
+
     }
+
+   
+    
   };
   
   const exceptionHandlingFunction = () => {};
@@ -296,7 +308,7 @@ const handleSaveTask = () => {
   hendlerStateLoadingButton(idButton, true);
 
   const functionRequest = () => {
-    return saveTask(maket.code, idTask, number, taskTextValueHTML)
+    return saveTask(maket.code, idTask, number, taskTextValueHTML, taskFiles)
   };
     
   const exceptionHandlingFunction = () => {}
@@ -329,8 +341,6 @@ const handleSaveTask = () => {
         state.loading = state.loading.filter((buttonIdInState) => { return (buttonIdInState != buttonId) })
       }
 
-      console.log(state);
-
       return state;
     })
   }
@@ -345,8 +355,7 @@ const handleDownloadFileTask = (uidTask, uidFile) => {
   };
     
 
-   console.log("handleDownloadFileTask");
-
+   
 
   const responseHandlingFunction = (json) => {
     
@@ -359,20 +368,17 @@ const handleDownloadFileTask = (uidTask, uidFile) => {
       //time = performance.now() - time;
      // console.log('Время выполнения b64toBlob = ', time);
 
-     //console.log("saveAs");
-
+    
       saveAs(blob, json.name); 
     }
     
-       console.log("json.error");
-
+  
       hendlerStateLoadingButton(idButton, false);
     };
 
   const exceptionHandlingFunction = (error) => {
 
-    console.log("exceptionHandlingFunction", error);
-
+  
     hendlerStateLoadingButton(idButton, false);
   }
    executorRequests(functionRequest, responseHandlingFunction, exceptionHandlingFunction);
@@ -406,7 +412,6 @@ const handleDownload = ({ code, fileName}) => {
 
 const handleOpenFile = (macetCode, fileName) => {
 
-  console.log('handleOpenFile');
   const idButton = fileName  + 'open';
   hendlerStateLoadingButton(idButton, true);
 
@@ -662,7 +667,9 @@ executorRequests(functionRequest, responseHandlingFunction, exceptionHandlingFun
                   handleDownloadFileTask={handleDownloadFileTask}
                   hendlerStateLoadingButton={hendlerStateLoadingButton}
                   isload = {isload}
+                  
                   />}
+
 
                   {idTask && <FormTask
                     maket={maket}
@@ -671,6 +678,9 @@ executorRequests(functionRequest, responseHandlingFunction, exceptionHandlingFun
                     idTask={idTask}
                     editorState={editorState}
                     setEditorState={setEditorState}
+                    taskFiles={taskFiles}
+                    setTaskFiles = {setTaskFiles}
+                    getBase64 = {getBase64}
 
                   />}
 

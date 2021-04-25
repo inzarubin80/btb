@@ -49,9 +49,9 @@ export const saveFileСonfirmation = (id, fileName, shortfileName, fileBase64) =
     return fetch(`${API_URL}/?typerequest=saveFileСonfirmation&id=${id}&fileName=${fileName}&shortfileName=${shortfileName}`, config);
 }
 
-export const saveTask = (id, uid, number, taskText) => {
+export const saveTask = (id, uid, number, taskText,taskFiles) => {
     let config = getConfig('post')
-    config.body = JSON.stringify({ taskText: taskText, uid: uid, number: number });
+    config.body = JSON.stringify({ taskText,uid, number,taskFiles});
     return fetch(`${API_URL}/?typerequest=saveTask&id=${id}`, config);
 }
 

@@ -11,7 +11,7 @@ import Typography from '@material-ui/core/Typography';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import IconButton from '@material-ui/core/IconButton';
 import HTMLEditor from './HTMLEditor'
-
+import { v4 as uuidv4 } from 'uuid';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -46,8 +46,9 @@ const useStyles = makeStyles((theme) => ({
 const FormTask = (props) => {
 
   const classes = useStyles();
-  
-  const task  = props.maket.tasks.find((task)=>task.uid==props.idTask);
+
+  const task = props.maket.tasks.find((task) => task.uid == props.idTask);
+
 
 
   return (
@@ -55,7 +56,7 @@ const FormTask = (props) => {
 
 
       <Typography variant="h6" className={classes.title}>
-        Задание {(!task)?' *': "№ " + task.number}
+        Задание {(!task) ? ' *' : "№ " + task.number}
       </Typography>
 
 
@@ -71,43 +72,56 @@ const FormTask = (props) => {
       />
 
 */}
-      
-      <HTMLEditor editorState = {props.editorState} setEditorState={props.setEditorState}/>
+
+      <HTMLEditor editorState={props.editorState} setEditorState={props.setEditorState} />
 
       <div className={classes.listFiles} >
 
         <Typography variant="h5" className={classes.title}>
-            Прикрепленные файлы
+          Прикрепленные файлы
         </Typography>
 
         <div className={classes.demo}>
           <List dense={false}>
 
-            <ListItem>
+            {props.taskFiles.map((file) => (<ListItem key={file.uid}>
 
               <ListItemText
-                primary="Визитка художника.jpeg"
+                primary={file.name}
               //    secondary={true ? 'Secondary text' : null}
               />
               <ListItemSecondaryAction>
-                <IconButton edge="end" aria-label="delete">
+                <IconButton edge="end" aria-label="delete" onClick={() => {
+                  props.setTaskFiles((prevState) => prevState.filter((item) => item.uid != file.uid))
+                }}>
                   <DeleteIcon />
                 </IconButton>
               </ListItemSecondaryAction>
-            </ListItem>
+            </ListItem>))}
+
+
           </List>
         </div>
 
         <input
 
-          //  accept="image/*"
           className={classes.input}
           id={"contained-button-file"}
           type="file"
 
+          onChange={(e) => {
+            if (e.target.files) {
+              const file = e.target.files[0];
+              props.getBase64(file)
+                .then(base64 => {
 
-        //onChange={(e) => handleChangeFile(file.code, e.target.files[0], file.fileName, file.shortfileName)}
+                  const newFile = { name: file.name, uid: uuidv4(),fileBase64: base64};
+                  props.setTaskFiles((prevState) => [...prevState, newFile])
 
+                })            
+            }
+          }
+          }
         />
 
         <label htmlFor={"contained-button-file"}>
@@ -118,8 +132,8 @@ const FormTask = (props) => {
 
       </div>
 
-      <Button style={{ 'marginTop': 10 }} variant="contained" color="primary" onClick={() => {props.handleSaveTask()}}>
-        {(!task)?'Добавить задание': "Обновить задание"}
+      <Button style={{ 'marginTop': 10 }} variant="contained" color="primary" onClick={() => { props.handleSaveTask() }}>
+        {(!task) ? 'Добавить задание' : "Обновить задание"}
       </Button>
 
     </div>
