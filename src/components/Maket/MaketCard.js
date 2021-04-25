@@ -208,8 +208,6 @@ const MaketCard = (props) => {
   const [messages, setMessages] = React.useState([]);
 
 
-  
-
   const removeMessage = (idMessage) => {
    let remove = false;
     setMessages((prevState) => {
@@ -258,6 +256,9 @@ const handleChange = (event, newValue) => {
 
 const handleChangeTask = (uid) => {
  
+  const idButton = uid +'handleChangeTask';
+  hendlerStateLoadingButton(idButton, true);
+
   const functionRequest = () => {
    return getMaket(props.match.params.id)
  };
@@ -284,11 +285,16 @@ const handleChangeTask = (uid) => {
 
     }
 
+
+    hendlerStateLoadingButton(idButton, false);
+
    
     
   };
   
-  const exceptionHandlingFunction = () => {};
+  const exceptionHandlingFunction = () => {
+    hendlerStateLoadingButton(idButton, false);
+  };
   executorRequests(functionRequest, responseHandlingFunction, exceptionHandlingFunction);
   
 };
@@ -304,6 +310,13 @@ const handleSaveTask = () => {
   }
 
   const taskTextValueHTML = draftToHtml(convertToRaw(editorState.getCurrentContent()));
+  
+  if (!editorState.getCurrentContent().getPlainText()){
+    addMessage(idButton, 'warning', 'Заполните текст задания', 3000); 
+    return
+  }
+
+
 
   hendlerStateLoadingButton(idButton, true);
 
@@ -323,6 +336,8 @@ const handleSaveTask = () => {
      if (!json.error) {
         setidTask(null);
         setEditorState(EditorState.createEmpty());
+        setTaskFiles([])
+        addMessage(idButton, 'success','Задание успешно записано', 1500); 
       } else {
         addMessage(idButton, 'warning', json.error, 3000); 
       }
@@ -331,6 +346,15 @@ const handleSaveTask = () => {
     executorRequests(functionRequest, responseHandlingFunction, exceptionHandlingFunction);
 
   };
+
+
+  const handleCancelСhangeTask = () => {
+
+    setidTask(null);
+    setEditorState(EditorState.createEmpty());
+    setTaskFiles([])
+
+  }
 
   const hendlerStateLoadingButton = (buttonId, add) => {
     setStateLoadingButton((prevState) => {
@@ -537,7 +561,7 @@ executorRequests(functionRequest, responseHandlingFunction, exceptionHandlingFun
     
     {getUniqueMessages().map((message)=><Alert key={message.idMessage} severity= {message.typeMessage}>{message.text}</Alert>)}
 
-    <Button onClick = {()=>setMessages([])} variant="outlined" size="medium" color="large" className={classes.margin}>
+    <Button onClick = {()=>setMessages([])} variant="outlined" size="medium" color="inherit" className={classes.margin}>
           ок
       </Button>
 
@@ -683,6 +707,7 @@ executorRequests(functionRequest, responseHandlingFunction, exceptionHandlingFun
                     getBase64 = {getBase64}
                     hendlerStateLoadingButton={hendlerStateLoadingButton}
                     isload = {isload}
+                    handleCancelСhangeTask={handleCancelСhangeTask}
                   />}
 
 

@@ -1,6 +1,5 @@
 import React from 'react';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
-import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import ListItemText from '@material-ui/core/ListItemText';
 import List from '@material-ui/core/List';
@@ -39,7 +38,15 @@ const useStyles = makeStyles((theme) => ({
 
   input: {
     display: 'none',
-  }
+  },
+
+  buttonGroup: {
+    '& > *': {
+      margin: theme.spacing(1),
+    },
+  },
+
+
 
 }));
 
@@ -54,6 +61,21 @@ const FormTask = (props) => {
   return (
     <div className={classes.taskСhanges}>
 
+      <div className={classes.buttonGroup}>
+
+
+        <Button variant="contained" color="secondary"  onClick={() => { props.handleCancelСhangeTask() }}>Отмена</Button>
+
+
+        {!props.isload('saveTask') && <Button style={{ 'marginTop': 10 }} variant="contained" color="primary" onClick={() => { props.handleSaveTask() }}>
+          {(!task) ? 'Добавить задание' : "Обновить задание"}
+        </Button>}
+
+        {props.isload('saveTask') &&
+          <CircularProgress />}
+
+
+      </div>
 
       <Typography variant="h6" className={classes.title}>
         Задание {(!task) ? ' *' : "№ " + task.number}
@@ -78,7 +100,7 @@ const FormTask = (props) => {
       <div className={classes.listFiles} >
 
         <Typography variant="h5" className={classes.title}>
-          Прикрепленные файлы
+            Присоединенные файлы
         </Typography>
 
         <div className={classes.demo}>
@@ -146,12 +168,9 @@ const FormTask = (props) => {
 
       </div>
 
-      {!props.isload('saveTask') && <Button style={{ 'marginTop': 10 }} variant="contained" color="primary" onClick={() => { props.handleSaveTask() }}>
-        {(!task) ? 'Добавить задание' : "Обновить задание"}
-      </Button>}
-      
-      {props.isload('saveTask') &&
-            <CircularProgress />}
+
+
+
 
     </div>
 

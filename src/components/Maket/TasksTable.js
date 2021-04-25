@@ -132,7 +132,7 @@ const TasksTable = (props) => {
                         <ListItemIcon>
                           <FolderIcon />
                         </ListItemIcon>
-                        <ListItemText primary={"Файлы (" + row.files.length + ")"} />
+                        <ListItemText primary={"Присоединенные файлы (" + row.files.length + ")"} />
                         {props.isload(row.uid + 'folderFilesIsOpen') ? <ExpandLess /> : <ExpandMore />}
                       </ListItem>
                       
@@ -165,9 +165,13 @@ const TasksTable = (props) => {
                     />
                     <CardActions>
 
-                      <IconButton color="primary" onClick={() => { props.handleChangeTask(row.uid) }}>
+                    {!props.isload(row.uid + 'handleChangeTask') && <IconButton color="primary" onClick={() => { props.handleChangeTask(row.uid) }}>
                         <EditIcon />
-                      </IconButton>
+                      </IconButton>}
+
+                      {props.isload(row.uid  + 'handleChangeTask') &&
+                              <CircularProgress />}
+
 
                       <IconButton color="primary" onClick={() => { }}>
                         <DeleteIcon />
