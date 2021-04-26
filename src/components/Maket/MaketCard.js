@@ -1,9 +1,8 @@
-
 import React from 'react';
 import { makeStyles, useTheme, ThemeProvider } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
-import { executorRequests, getMaket, getImgMaket, saveFileСonfirmation, сonfirmationMaket, saveTask,getFileTask} from '../../api/dataService1c';
+import { executorRequests, getMaket, getImgMaket, saveFileСonfirmation,revisionMaket, сonfirmationMaket, saveTask,getFileTask} from '../../api/dataService1c';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
@@ -526,6 +525,38 @@ const handleOpenFile = (macetCode, fileName) => {
   }
 
 
+  const hendleRevisionMaket = () => {
+
+    const idButton = 'revisionButton';
+
+    hendlerStateLoadingButton(idButton, true);
+
+    const functionRequest = () => {
+      return   revisionMaket(maket.code)
+    };
+
+    const responseHandlingFunction = (json)=> {
+    
+      hendlerStateLoadingButton(idButton, false);
+
+        if (json.responseMaket.maket) {
+          setMaket(json.responseMaket.maket);
+        }
+
+        if (json.error) {
+          addMessage(idButton,'warning', json.error, 3000);
+        } else {
+          addMessage(idButton,'success', 'Статус макета успешно изменен', 3000);
+        }
+    }
+
+    const exceptionHandlingFunction = () => {
+      hendlerStateLoadingButton(idButton, false); 
+    };
+
+    executorRequests(functionRequest, responseHandlingFunction, exceptionHandlingFunction);
+
+  }
 
 const isload = (buttonId) => {
   if (stateLoadingButton.loading.find((id) => { return id == buttonId })){
@@ -563,7 +594,7 @@ executorRequests(functionRequest, responseHandlingFunction, exceptionHandlingFun
     
     {getUniqueMessages().map((message)=><Alert key={message.idMessage} severity= {message.typeMessage}>{message.text}</Alert>)}
 
-    <Button onClick = {()=>setMessages([])} variant="outlined" size="medium" color="inherit" className={classes.margin}>
+    <Button onClick = {()=>setMessages([])} variant="contained" size="medium" color="inherit" className={classes.margin}>
           ок
       </Button>
 
@@ -595,15 +626,15 @@ executorRequests(functionRequest, responseHandlingFunction, exceptionHandlingFun
                     variant="contained"
                     color="primary"
                     className={classes.buttonReject}
-                    disabled={isload('buttonReject')}
-                    onClick={() => { console.log('Reject') }}
+                    disabled={isload('revisionButton')}
+                    onClick={() => {hendleRevisionMaket()}}
 
                     startIcon={<BorderColorIcon />}
                   >
                     Доработка
               
               </Button>
-                  {isload('buttonReject') && <CircularProgress size={24} className={classes.buttonProgress} />}
+                  {isload('revisionButton') && <CircularProgress size={24} className={classes.buttonProgress} />}
                 </div>
 
 
@@ -637,12 +668,8 @@ executorRequests(functionRequest, responseHandlingFunction, exceptionHandlingFun
       >
         {messageBox()}
       </Modal>
-
-
-           
-
-<Descriptions layout="vertical" bordered >
-
+      
+              <Descriptions layout="vertical" bordered >
               <Descriptions.Item label="Продукт">{maket.product}</Descriptions.Item>
               <Descriptions.Item label="Конечный потребитель">{maket.finalBuyer}</Descriptions.Item>
               <Descriptions.Item label="Статус">{maket.status}</Descriptions.Item>

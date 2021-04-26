@@ -33,6 +33,13 @@ export const сonfirmationMaket = (id) => {
     return fetch(`${API_URL}/?typerequest=confirmationMaket&id=${id}`, config);
 }
 
+export const revisionMaket = (id) => {
+    const config = getConfig('post');
+    config.body = JSON.stringify({});
+    return fetch(`${API_URL}/?typerequest=revisionMaket&id=${id}`, config);
+}
+
+
 export const getImgMaket = (id, fileName) => {
     const config = getConfig('get')
     return fetch(`${API_URL}/?typerequest=getImgMaket&id=${id}&fileName=${fileName}`, config);
