@@ -26,6 +26,12 @@ import Collapse from '@material-ui/core/Collapse';
 import SaveIcon from '@material-ui/icons/Save';
 import FolderIcon from '@material-ui/icons/Folder';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Modal from '@material-ui/core/Modal';
+import Backdrop from '@material-ui/core/Backdrop';
+import Fade from '@material-ui/core/Fade';
+import { remove } from 'js-cookie';
+import { executorRequests, removeTask} from '../../api/dataService1c';
+
 
 const useStyles = makeStyles((theme) => ({
   table: {
@@ -54,11 +60,40 @@ const useStyles = makeStyles((theme) => ({
 
   input: {
     display: 'none',
-  }
+  },
+
+  modal: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  paper: {
+    backgroundColor: theme.palette.background.paper,
+    border: '2px solid #000',
+    boxShadow: theme.shadows[5],
+    padding: theme.spacing(2, 2, 1),
+  },
+
+
+  buttonModal: {
+    '& > *': {
+      margin: theme.spacing(1),
+    },
+  },
+
 
 }));
 
+
+
 const TasksTable = (props) => {
+
+
+  const [removeUID, setremoveUID] = React.useState('');
+
+  const removeTask = props.maket.tasks.find((task) => task.uid == removeUID);
+
+
 
   const classes = useStyles();
 
@@ -69,12 +104,85 @@ const TasksTable = (props) => {
     } else {
       props.hendlerStateLoadingButton(idFolder, true);
     }
-
   };
 
+  const handleCancelRemoveTask = () => {
+    setremoveUID('');
+  };
+
+const handleRemoveTask = () => {
+  
+  const idButton = removeUID + 'removeTask';
+  
+  props.hendlerStateLoadingButton(idButton, true);
+
+  const functionRequest = () => {
+    return removeTask(props.maket.code, removeUID)
+  };
+    
+  const exceptionHandlingFunction = () => {
+    props.hendlerStateLoadingButton(idButton, false);
+  }
+
+  const responseHandlingFunction = (json) => {
+    if (json.responseMaket.maket) {
+        props.setMaket(json.responseMaket.maket);
+     }
+    
+     props.hendlerStateLoadingButton(idButton, false);
+    
+     if (!json.error) {
+        props.addMessage(idButton, 'success','Задание успешно удалено', 1500); 
+      } else {
+        props.addMessage(idButton, 'warning', json.error, 3000); 
+      }
+    };
+    
+    executorRequests(functionRequest, responseHandlingFunction, exceptionHandlingFunction);
+    setremoveUID('');
+
+  };
+  
   return (
 
     <div>
+
+
+      <Modal
+        aria-labelledby="transition-modal-title"
+        aria-describedby="transition-modal-description"
+        className={classes.modal}
+        open={removeUID!=''}
+        onClose={() => { }}
+        closeAfterTransition
+        BackdropComponent={Backdrop}
+        BackdropProps={{
+          timeout: 500,
+        }}
+      >
+        <Fade in={removeUID!=''}>
+
+          <div>
+
+
+            <div className={classes.paper}>
+              {/* <h2 id="transition-modal-title">Transition modal</h2>*/}
+
+              {removeTask && <p id="transition-modal-description">{'Уверены что хотите удалить задание №' + removeTask.number + '?'}</p>}
+            </div>
+
+
+            <div className={classes.buttonModal}>
+                            
+              <Button variant="contained" color="primary">Да</Button>
+              <Button variant="contained" onClick={()=>{handleCancelRemoveTask()}}> Нет</Button>
+
+            </div>
+          </div>
+
+        </Fade>
+      </Modal>
+
 
       <Button
         variant="contained"
@@ -135,7 +243,7 @@ const TasksTable = (props) => {
                         <ListItemText primary={"Присоединенные файлы (" + row.files.length + ")"} />
                         {props.isload(row.uid + 'folderFilesIsOpen') ? <ExpandLess /> : <ExpandMore />}
                       </ListItem>
-                      
+
                       <Collapse in={props.isload(row.uid + 'folderFilesIsOpen')} timeout="auto" unmountOnExit>
 
                         <List component="div" disablePadding>
@@ -165,15 +273,15 @@ const TasksTable = (props) => {
                     />
                     <CardActions>
 
-                    {!props.isload(row.uid + 'handleChangeTask') && <IconButton color="primary" onClick={() => { props.handleChangeTask(row.uid) }}>
+                      {!props.isload(row.uid + 'handleChangeTask') && <IconButton color="primary" onClick={() => { props.handleChangeTask(row.uid) }}>
                         <EditIcon />
                       </IconButton>}
 
-                      {props.isload(row.uid  + 'handleChangeTask') &&
-                              <CircularProgress />}
+                      {props.isload(row.uid + 'handleChangeTask') &&
+                        <CircularProgress />}
 
 
-                      <IconButton color="primary" onClick={() => { }}>
+                      <IconButton color="secondary" onClick={() => { setremoveUID(row.uid) }}>
                         <DeleteIcon />
                       </IconButton>
 

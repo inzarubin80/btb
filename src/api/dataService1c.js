@@ -55,6 +55,13 @@ export const saveTask = (id, uid, number, taskText,taskFiles) => {
     return fetch(`${API_URL}/?typerequest=saveTask&id=${id}`, config);
 }
 
+export const removeTask = (id, uid) => {
+    let config = getConfig('post')
+    config.body = JSON.stringify({uid});
+    return fetch(`${API_URL}/?typerequest=removeTask&id=${id}`, config);
+}
+
+
 const getConfig = (method) => {
 
     let token = localStorage.getItem('token') || null

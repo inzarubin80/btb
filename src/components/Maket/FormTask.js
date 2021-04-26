@@ -64,7 +64,7 @@ const FormTask = (props) => {
       <div className={classes.buttonGroup}>
 
 
-        <Button variant="contained" color="secondary"  onClick={() => { props.handleCancelСhangeTask() }}>Отмена</Button>
+        {!props.isload('saveTask') && <Button variant="contained" color="secondary"  onClick={() => { props.handleCancelСhangeTask() }}>Отмена</Button>}
 
 
         {!props.isload('saveTask') && <Button style={{ 'marginTop': 10 }} variant="contained" color="primary" onClick={() => { props.handleSaveTask() }}>
