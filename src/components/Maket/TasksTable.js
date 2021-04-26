@@ -91,7 +91,7 @@ const TasksTable = (props) => {
 
   const [removeUID, setremoveUID] = React.useState('');
 
-  const removeTask = props.maket.tasks.find((task) => task.uid == removeUID);
+  const removeTask_ = props.maket.tasks.find((task) => task.uid == removeUID);
 
 
 
@@ -168,13 +168,13 @@ const handleRemoveTask = () => {
             <div className={classes.paper}>
               {/* <h2 id="transition-modal-title">Transition modal</h2>*/}
 
-              {removeTask && <p id="transition-modal-description">{'Уверены что хотите удалить задание №' + removeTask.number + '?'}</p>}
+              {removeTask_ && <p id="transition-modal-description">{'Уверены что хотите удалить задание №' + removeTask_.number + '?'}</p>}
             </div>
 
 
             <div className={classes.buttonModal}>
                             
-              <Button variant="contained" color="primary">Да</Button>
+              <Button variant="contained" color="primary" onClick={()=>handleRemoveTask()}>Да</Button>
               <Button variant="contained" onClick={()=>{handleCancelRemoveTask()}}> Нет</Button>
 
             </div>
@@ -273,17 +273,17 @@ const handleRemoveTask = () => {
                     />
                     <CardActions>
 
-                      {!props.isload(row.uid + 'handleChangeTask') && <IconButton color="primary" onClick={() => { props.handleChangeTask(row.uid) }}>
+                      {!(props.isload(row.uid + 'handleChangeTask') || props.isload(row.uid + 'removeTask')) && <IconButton color="primary" onClick={() => { props.handleChangeTask(row.uid) }}>
                         <EditIcon />
                       </IconButton>}
 
-                      {props.isload(row.uid + 'handleChangeTask') &&
+                      {(props.isload(row.uid + 'handleChangeTask') || props.isload(row.uid + 'removeTask')) &&
                         <CircularProgress />}
 
-
-                      <IconButton color="secondary" onClick={() => { setremoveUID(row.uid) }}>
+                    {!(props.isload(row.uid + 'handleChangeTask') || props.isload(row.uid + 'removeTask')) &&  <IconButton color="secondary" onClick={() => { setremoveUID(row.uid) }}>
                         <DeleteIcon />
-                      </IconButton>
+                      </IconButton>}
+
 
                     </CardActions>
                   </TableCell>

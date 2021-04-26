@@ -348,7 +348,7 @@ const handleSaveTask = () => {
   };
 
 
-  
+
 
   const handleCancelСhangeTask = () => {
 
@@ -693,6 +693,7 @@ executorRequests(functionRequest, responseHandlingFunction, exceptionHandlingFun
                   handleDownloadFileTask={handleDownloadFileTask}
                   hendlerStateLoadingButton={hendlerStateLoadingButton}
                   isload = {isload}
+                  setMaket = {setMaket}
                   
                   />}
 
