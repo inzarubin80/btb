@@ -2,7 +2,7 @@ import {
   CHANGE_MAKETS_STATUS, MAKETS_SGRID_PAGE_CHANGE_PARAMS, MAKETS_FILTER_CHANGE, MAKETS_SORT_CHANGE, MAKETS_SUCCESS, MAKETS_FAILURE
 } from '../types'
 
-import { getMakets } from '../../api/dataService1c';
+import { getMakets, executorRequests} from '../../api/dataService1c';
 import { logOut } from '../../redux/user/userActions';
 
 
@@ -44,11 +44,11 @@ export const setMaketsStatus = (status) => {
   
   return (dispatch) => {
 
-    return getMakets(status)
+    return getMakets(status).catch((err)=>console.log(err))
       .then(response => {
 
         if (response.status == 401){
-        return 401
+          return 401
         }
         else {
           return response.json()

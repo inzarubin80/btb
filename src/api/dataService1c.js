@@ -1,5 +1,6 @@
 import { API_URL } from '../Constants'
 import { encode } from 'base-64'
+import { logOut } from '../redux/user/userActions'
 
 export const getToken = (username, password) => {
     return 'Basic ' + encode(username + ":" + password);
@@ -56,15 +57,15 @@ export const saveFileСonfirmation = (id, fileName, shortfileName, fileBase64) =
     return fetch(`${API_URL}/?typerequest=saveFileСonfirmation&id=${id}&fileName=${fileName}&shortfileName=${shortfileName}`, config);
 }
 
-export const saveTask = (id, uid, number, taskText,taskFiles) => {
+export const saveTask = (id, uid, number, taskText, taskFiles) => {
     let config = getConfig('post')
-    config.body = JSON.stringify({ taskText,uid, number,taskFiles});
+    config.body = JSON.stringify({ taskText, uid, number, taskFiles });
     return fetch(`${API_URL}/?typerequest=saveTask&id=${id}`, config);
 }
 
 export const removeTask = (id, uid) => {
     let config = getConfig('post')
-    config.body = JSON.stringify({uid});
+    config.body = JSON.stringify({ uid });
     return fetch(`${API_URL}/?typerequest=removeTask&id=${id}`, config);
 }
 
@@ -88,10 +89,24 @@ const getConfig = (method) => {
     return config
 }
 
-export const executorRequests = (functionRequest, responseHandlingFunction, exceptionHandlingFunction) => {
-    
-   functionRequest().then(response => response.json())
-        .then((json) => responseHandlingFunction(json))
+export const executorRequests = (functionRequest, responseHandlingFunction, exceptionHandlingFunction, dispatch) => {
+
+    functionRequest().then(response => {
+
+        if (response.status == 401) {
+            return 401
+        }
+        else {
+            return response.json()
+        }
+    }
+    ).catch((err) => {exceptionHandlingFunction("Проблема соединения") })
+        .then((json) => {
+            if (json == 401) {
+                dispatch(logOut())
+            }
+            else { responseHandlingFunction(json)}
+        })
         .catch((err) => exceptionHandlingFunction(err))
 
 }

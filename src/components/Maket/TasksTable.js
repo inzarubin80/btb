@@ -29,9 +29,8 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
-import { remove } from 'js-cookie';
 import { executorRequests, removeTask} from '../../api/dataService1c';
-
+import {useDispatch} from 'react-redux';
 
 const useStyles = makeStyles((theme) => ({
   table: {
@@ -93,7 +92,7 @@ const TasksTable = (props) => {
 
   const removeTask_ = props.maket.tasks.find((task) => task.uid == removeUID);
 
-
+  const dispatch = useDispatch();
 
   const classes = useStyles();
 
@@ -138,7 +137,7 @@ const handleRemoveTask = () => {
       }
     };
     
-    executorRequests(functionRequest, responseHandlingFunction, exceptionHandlingFunction);
+    executorRequests(functionRequest, responseHandlingFunction, exceptionHandlingFunction, dispatch);
     setremoveUID('');
 
   };

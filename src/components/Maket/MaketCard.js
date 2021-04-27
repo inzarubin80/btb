@@ -39,6 +39,8 @@ import MuiAlert from '@material-ui/lab/Alert';
 
 import Modal from '@material-ui/core/Modal';
 
+import {useDispatch} from 'react-redux';
+
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
@@ -207,6 +209,8 @@ const MaketCard = (props) => {
   const [messages, setMessages] = React.useState([]);
 
 
+  const dispatch = useDispatch();
+
   const removeMessage = (idMessage) => {
    let remove = false;
     setMessages((prevState) => {
@@ -294,7 +298,7 @@ const handleChangeTask = (uid) => {
   const exceptionHandlingFunction = () => {
     hendlerStateLoadingButton(idButton, false);
   };
-  executorRequests(functionRequest, responseHandlingFunction, exceptionHandlingFunction);
+  executorRequests(functionRequest, responseHandlingFunction, exceptionHandlingFunction, dispatch);
   
 };
 
@@ -342,7 +346,7 @@ const handleSaveTask = () => {
       }
     };
     
-    executorRequests(functionRequest, responseHandlingFunction, exceptionHandlingFunction);
+    executorRequests(functionRequest, responseHandlingFunction, exceptionHandlingFunction, dispatch);
 
   };
 
@@ -406,7 +410,7 @@ const handleDownloadFileTask = (uidTask, uidFile) => {
   
     hendlerStateLoadingButton(idButton, false);
   }
-   executorRequests(functionRequest, responseHandlingFunction, exceptionHandlingFunction);
+   executorRequests(functionRequest, responseHandlingFunction, exceptionHandlingFunction, dispatch);
 }
 
 const handleDownload = ({ code, fileName}) => {
@@ -431,7 +435,7 @@ const handleDownload = ({ code, fileName}) => {
     hendlerStateLoadingButton(idButton, false);
   };
 
-  executorRequests(functionRequest, responseHandlingFunction, exceptionHandlingFunction);
+  executorRequests(functionRequest, responseHandlingFunction, exceptionHandlingFunction, dispatch);
 }
 
 
@@ -455,7 +459,7 @@ const handleOpenFile = (macetCode, fileName) => {
     seIimgData(null);
   };
     
-  executorRequests(functionRequest, responseHandlingFunction, exceptionHandlingFunction);
+  executorRequests(functionRequest, responseHandlingFunction, exceptionHandlingFunction, dispatch);
 
   }
 
@@ -482,7 +486,7 @@ const handleOpenFile = (macetCode, fileName) => {
           hendlerStateLoadingButton(idButton, false); 
         };
 
-        executorRequests(functionRequest, responseHandlingFunction, exceptionHandlingFunction);
+        executorRequests(functionRequest, responseHandlingFunction, exceptionHandlingFunction, dispatch);
 
     }
     )
@@ -518,9 +522,10 @@ const handleOpenFile = (macetCode, fileName) => {
 
     const exceptionHandlingFunction = () => {
       hendlerStateLoadingButton(idButton, false); 
+      addMessage(idButton,'warning', "Что то пошло не так...", 3000);
     };
 
-    executorRequests(functionRequest, responseHandlingFunction, exceptionHandlingFunction);
+    executorRequests(functionRequest, responseHandlingFunction, exceptionHandlingFunction, dispatch);
 
   }
 
@@ -554,7 +559,7 @@ const handleOpenFile = (macetCode, fileName) => {
       hendlerStateLoadingButton(idButton, false); 
     };
 
-    executorRequests(functionRequest, responseHandlingFunction, exceptionHandlingFunction);
+    executorRequests(functionRequest, responseHandlingFunction, exceptionHandlingFunction, dispatch);
 
   }
 
@@ -585,7 +590,7 @@ const responseHandlingFunction = (json) => {
 
 const exceptionHandlingFunction = () => {setMaket({})}
     
-executorRequests(functionRequest, responseHandlingFunction, exceptionHandlingFunction);      
+executorRequests(functionRequest, responseHandlingFunction, exceptionHandlingFunction,dispatch);      
 
 }, []);
 
@@ -721,6 +726,7 @@ executorRequests(functionRequest, responseHandlingFunction, exceptionHandlingFun
                   hendlerStateLoadingButton={hendlerStateLoadingButton}
                   isload = {isload}
                   setMaket = {setMaket}
+                  addMessage = {addMessage}
                   
                   />}
 
@@ -738,6 +744,7 @@ executorRequests(functionRequest, responseHandlingFunction, exceptionHandlingFun
                     hendlerStateLoadingButton={hendlerStateLoadingButton}
                     isload = {isload}
                     handleCancelСhangeTask={handleCancelСhangeTask}
+                    addMessage = {addMessage}
                   />}
 
 
