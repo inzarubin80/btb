@@ -1,14 +1,26 @@
 import {
 
-  
+
   LOGIN_SUCCESS,
   LOGIN_REQUEST,
   LOGIN_FAILURE,
   LOGIN_LOGOUT,
+  OPEN_INPUT_FORM_CONFIRMATION_CODE
 
 } from '../types'
 
 import { executeAuthenticationService} from '../../api/dataService1c';
+
+
+
+const openConformationCode = (userID, typeUserID) =>{
+  return {
+    type: OPEN_INPUT_FORM_CONFIRMATION_CODE,
+    payload: {userID, typeUserID},
+    
+  };
+}
+
 
 const setLoginSuccess = (loginData) => {
   return {
