@@ -1,6 +1,4 @@
 import {
-
-
   LOGIN_SUCCESS,
   LOGIN_REQUEST,
   LOGIN_FAILURE,
@@ -11,13 +9,12 @@ import {
 
 } from '../types'
 
-import { executorRequests, sendConformationCode } from '../../api/dataService1c';
+import { executorRequests, sendConformationCode, getAccessKey} from '../../api/dataService1c';
 import { v4 as uuidv4 } from 'uuid';
 
 const setLoginSuccess = (loginData) => {
   return {
-    type: LOGIN_SUCCESS,
-    payload: loginData,
+    type: LOGIN_SUCCESS
   };
 };
 
@@ -25,18 +22,17 @@ const setLoginSuccess = (loginData) => {
 
 
 
-const setLoginRequest = (loginData) => {
+const setLoginRequest = () => {
   return {
-    type: LOGIN_REQUEST,
-    payload: loginData,
+    type: LOGIN_REQUEST
   };
 };
 
-const setLoginFailure = (loginData) => {
+const setLoginFailure = (err) => {
 
   return {
     type: LOGIN_FAILURE,
-    payload: loginData,
+    payload: err,
   };
 };
 
@@ -86,8 +82,6 @@ export const sendConfirmationСode = (userID) => {
 
     const responseHandlingFunction = (json) => {
       
-      console.log('responseHandlingFunction***************');
-
       if (json.error) {
         dispatch(setConformationCodeFailure(json.error));
       } else {
@@ -101,59 +95,43 @@ export const sendConfirmationСode = (userID) => {
 
     executorRequests(functionRequest, responseHandlingFunction, exceptionHandlingFunction, dispatch);
 
+  };
+}
+
+export const login = (confirmationСode, cb) => {
 
 
+  return (dispatch, getState) => {
+
+
+    const state = getState()
+
+
+    dispatch(setLoginRequest());
+
+    const functionRequest = () => {
+      return getAccessKey(state.user.userID, state.user.requestKey, confirmationСode);
+    };
+
+    const responseHandlingFunction = (json) => {
+    
+      if (json.error) {
+        dispatch(setLoginFailure(json.error));
+      } else {
+        
+        dispatch(setLoginSuccess());
+        localStorage.setItem('token', json.key)
+        cb();
+
+      }
+    }
+
+    const exceptionHandlingFunction = (error) => {
+      dispatch(setLoginFailure(error));
+    };
+
+    executorRequests(functionRequest, responseHandlingFunction, exceptionHandlingFunction, dispatch);
 
   };
 }
 
-
-/*
-export const login = (token, cb) => {
-  return (dispatch) => {
-
-
-    let loginData = {token: token, err: ''};
-
-    dispatch(setLoginRequest(loginData));
-
-    return executeAuthenticationService(token)
-      .then(response => {
-
-        console.log(response.status);
-
-        if (response.status == 401){
-        console.log(response.status);
-          return {msg: 'Ошибка ввода имени или пароля'}
-        }
-        else {
-          return response.json()
-        }
-      })
-
-      .then((json) => {
-
-        if (json.msg === 'success') {
-
-          dispatch(setLoginSuccess(loginData));
-          localStorage.setItem('token', token)
-          cb();
-
-        } else {
-
-          loginData.err = json.msg;
-          dispatch(setLoginFailure(loginData));
-
-        }
-      })
-      .catch((err) => {
-
-        dispatch(setLoginFailure({ err:'Сервис недоступен, попробуйте позже'}));
-        console.log('Login Failed', 'Some error occurred, please retry');
-        console.log(err);
-      });
-  };
-}
-
-
-*/

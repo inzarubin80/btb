@@ -67,9 +67,14 @@ export const sendConformationCode = (userID, requestKey) => {
     return fetch(`${API_URL}/?typerequest=sendConformationCode`, config);
 }
 
-const getConfig = (method) => {
+export const getAccessKey = (userID, requestKey, confirmationСode) => {
+    let config = getConfig('post')
+    config.body = JSON.stringify({userID, requestKey, confirmationСode});
+    return fetch(`${API_URL}/?typerequest=getAccessKey`, config);
+}
 
-    
+const getConfig = (method) => {
+ 
     let config = {
             method: method,
             headers: new Headers({

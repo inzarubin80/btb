@@ -13,9 +13,8 @@ import Container from '@material-ui/core/Container';
 
 
 import { useDispatch, useSelector } from 'react-redux';
-import { sendConfirmationСode } from '../../redux/user/userActions';
+import { sendConfirmationСode, login } from '../../redux/user/userActions';
 
-import { getToken } from '../../api/dataService1c';
 
 import { Alert, AlertTitle } from '@material-ui/lab';
 
@@ -113,9 +112,9 @@ const LoginPage = () => {
     validationSchema: validationSchema,
     onSubmit: (values) => {
 
-     
+
       console.log('openConformationCode');
-       dispatch(sendConfirmationСode(values.email))
+      dispatch(sendConfirmationСode(values.email))
 
 
 
@@ -142,7 +141,7 @@ const LoginPage = () => {
       >
         <Fade in={confirmationСodeSent}>
           <div className={classes.paperModal}>
-           
+
             <TextField
               fullWidth
               id="confirmationСode"
@@ -150,12 +149,14 @@ const LoginPage = () => {
               label="Код подтверждения"
               value={confirmationСode}
               onChange={(event) => setConfirmationСode(event.target.value)}
+
+
             />
 
 
             <div className={classes.buttonConfirmationGroup}>
 
-              <Button className={classes.buttonConfirmation} color="primary" variant="contained" type="submit" >
+              <Button className={classes.buttonConfirmation} color="primary" variant="contained" type="submit" onClick={() => dispatch(login(confirmationСode, sb))}>
                 Подтвердить
               </Button>
 

@@ -51,7 +51,6 @@ export default (state = initialState, action) => {
             case LOGIN_REQUEST:
                 return {
                     ...state,
-                    ...action.payload,
                     loggingIn: true,
                     isLoggedIn: false,
     
@@ -64,13 +63,15 @@ export default (state = initialState, action) => {
                     ...action.payload,
                     loggingIn: false,
                     isLoggedIn: true,
+                    confirmationСodeSent:false,
+                    requestKey:''
                 };
     
         case LOGIN_FAILURE:
             return {
                 ...state,
 
-                ...action.payload,
+                err:action.payload,
 
                 loggingIn: false,
                 isLoggedIn: false,
