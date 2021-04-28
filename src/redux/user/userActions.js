@@ -5,22 +5,14 @@ import {
   LOGIN_REQUEST,
   LOGIN_FAILURE,
   LOGIN_LOGOUT,
-  OPEN_INPUT_FORM_CONFIRMATION_CODE
+  CONFIRMATION_CODE_REQUEST,
+  CONFIRMATION_CODE_FAILURE,
+  CONFIRMATION_CODE_SUCCESS
 
 } from '../types'
 
-import { executeAuthenticationService} from '../../api/dataService1c';
-
-
-
-const openConformationCode = (userID, typeUserID) =>{
-  return {
-    type: OPEN_INPUT_FORM_CONFIRMATION_CODE,
-    payload: {userID, typeUserID},
-    
-  };
-}
-
+import { executorRequests, sendConformationCode } from '../../api/dataService1c';
+import { v4 as uuidv4 } from 'uuid';
 
 const setLoginSuccess = (loginData) => {
   return {
@@ -28,6 +20,8 @@ const setLoginSuccess = (loginData) => {
     payload: loginData,
   };
 };
+
+
 
 
 
@@ -55,8 +49,63 @@ export const logOut = (loginData) => {
 };
 
 
+export const setConformationCodeRequest = (userID, requestKey) => {
+  return {
+    type: CONFIRMATION_CODE_REQUEST,
+    payload: { userID, requestKey }
+  };
+}
+
+export const setConformationCodeFailure = (err) => {
+  return {
+    type: CONFIRMATION_CODE_FAILURE,
+    payload: err
+  };
+}
+
+export const setConformationCodeSuccess = () => {
+  return {
+    type: CONFIRMATION_CODE_SUCCESS
+  };
+}
 
 
+export const sendConfirmationСode = (userID) => {
+
+
+  const requestKey = uuidv4();
+
+  return (dispatch) => {
+
+
+    dispatch(setConformationCodeRequest(userID, requestKey));
+
+    const functionRequest = () => {
+      sendConformationCode(userID, requestKey);
+    };
+
+    const responseHandlingFunction = (json) => {
+      if (json.error) {
+        dispatch(setConformationCodeFailure(json.error));
+      } else {
+        dispatch(setConformationCodeSuccess());
+      }
+    }
+
+    const exceptionHandlingFunction = (error) => {
+      dispatch(setConformationCodeFailure(error));
+    };
+
+    executorRequests(functionRequest, responseHandlingFunction, exceptionHandlingFunction, dispatch);
+
+
+
+
+  };
+}
+
+
+/*
 export const login = (token, cb) => {
   return (dispatch) => {
 
@@ -82,7 +131,7 @@ export const login = (token, cb) => {
       .then((json) => {
 
         if (json.msg === 'success') {
- 
+
           dispatch(setLoginSuccess(loginData));
           localStorage.setItem('token', token)
           cb();
@@ -95,7 +144,7 @@ export const login = (token, cb) => {
         }
       })
       .catch((err) => {
-               
+
         dispatch(setLoginFailure({ err:'Сервис недоступен, попробуйте позже'}));
         console.log('Login Failed', 'Some error occurred, please retry');
         console.log(err);
@@ -104,4 +153,4 @@ export const login = (token, cb) => {
 }
 
 
-
+*/

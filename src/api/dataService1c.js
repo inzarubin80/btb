@@ -1,91 +1,85 @@
-import { API_URL } from '../Constants'
+import { API_URL, username,  password} from '../Constants'
 import { encode } from 'base-64'
 import { logOut } from '../redux/user/userActions'
 
-export const getToken = (username, password) => {
+export const getToken = () => {
     return 'Basic ' + encode(username + ":" + password);
 }
 
-export const executeAuthenticationService = (token) => {
-    return fetch(`${API_URL}/?typerequest=authenticate`,
-        {
-            method: 'get',
-            headers: new Headers({
-                'Authorization': token,
-                'Content-Type': 'application/json',
-            })
-        })
-        ;
-}
-
 export const getMakets = (status) => {
-    const config = getConfig('get')
+    const config = getConfig('post')
+    config.body = JSON.stringify({key: localStorage.getItem('key')});
     return fetch(`${API_URL}/?typerequest=getMakets&status=${status}`, config);
 }
 
 export const getMaket = (id) => {
-    const config = getConfig('get')
+    const config = getConfig('post')
+    config.body = JSON.stringify({key: localStorage.getItem('key')});
     return fetch(`${API_URL}/?typerequest=getMaket&id=${id}`, config);
 }
 
 export const сonfirmationMaket = (id) => {
     const config = getConfig('post');
-    config.body = JSON.stringify({});
+    config.body = JSON.stringify({key: localStorage.getItem('key')});
     return fetch(`${API_URL}/?typerequest=confirmationMaket&id=${id}`, config);
 }
 
 export const revisionMaket = (id) => {
     const config = getConfig('post');
-    config.body = JSON.stringify({});
+    config.body = JSON.stringify({key: localStorage.getItem('key')});
     return fetch(`${API_URL}/?typerequest=revisionMaket&id=${id}`, config);
 }
 
 
 export const getImgMaket = (id, fileName) => {
-    const config = getConfig('get')
+    const config = getConfig('post')
+    config.body = JSON.stringify({key: localStorage.getItem('key')});
     return fetch(`${API_URL}/?typerequest=getImgMaket&id=${id}&fileName=${fileName}`, config);
 }
 
 export const getFileTask = (id, uidTask, uidFile) => {
-    const config = getConfig('get')
+    const config = getConfig('post')
+    config.body = JSON.stringify({key: localStorage.getItem('key')});
     return fetch(`${API_URL}/?typerequest=getFileTask&id=${id}&uidTask=${uidTask}&uidFile=${uidFile}`, config);
 }
 
 export const saveFileСonfirmation = (id, fileName, shortfileName, fileBase64) => {
     let config = getConfig('post')
-    config.body = JSON.stringify({ fileBase64: fileBase64 });
+    config.body = JSON.stringify({ fileBase64: fileBase64, key: localStorage.getItem('key') });
     return fetch(`${API_URL}/?typerequest=saveFileСonfirmation&id=${id}&fileName=${fileName}&shortfileName=${shortfileName}`, config);
 }
 
 export const saveTask = (id, uid, number, taskText, taskFiles) => {
     let config = getConfig('post')
-    config.body = JSON.stringify({ taskText, uid, number, taskFiles });
+    config.body = JSON.stringify({ taskText, uid, number, taskFiles, key: localStorage.getItem('key') });
     return fetch(`${API_URL}/?typerequest=saveTask&id=${id}`, config);
 }
 
 export const removeTask = (id, uid) => {
     let config = getConfig('post')
-    config.body = JSON.stringify({ uid });
+    config.body = JSON.stringify({ uid, key: localStorage.getItem('key')});
     return fetch(`${API_URL}/?typerequest=removeTask&id=${id}`, config);
 }
 
+export const sendConformationCode = (userID, requestKey) => {
+    let config = getConfig('post')
+    config.body = JSON.stringify({userID, requestKey});
+    return fetch(`${API_URL}/?typerequest=sendConformationCode`, config);
+}
 
 const getConfig = (method) => {
 
-    let token = localStorage.getItem('token') || null
-    let config = {}
-    if (!token) {
-        throw "No token saved!"
-    } else {
-        config = {
+    
+    let config = {
             method: method,
             headers: new Headers({
-                'Authorization': token,
+                'Authorization': getToken(),
                 'Content-Type': 'application/json'
             })
 
         }
-    }
+
+     
     return config
 }
 

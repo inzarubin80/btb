@@ -13,7 +13,7 @@ import Container from '@material-ui/core/Container';
 
 
 import { useDispatch, useSelector } from 'react-redux';
-import { login} from '../../redux/user/userActions';
+import { sendConfirmationСode} from '../../redux/user/userActions';
 
 import { getToken} from '../../api/dataService1c';
 
@@ -32,11 +32,10 @@ const validationSchema = yup.object({
     .string('Enter your email')
     .email('Enter a valid email')
     .required('Email is required'),
-  password: yup
-    .string('Enter your password')
-    .min(8, 'Password should be of minimum 8 characters length')
-    .required('Password is required'),
-});
+ 
+}
+
+);
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -64,9 +63,10 @@ const LoginPage = () => {
 
   const dispatch = useDispatch();
   const err = useSelector(state => state.user.err);
-
-
+  const userID = useSelector(state => state.user.userID);
   
+  
+
   let history = useHistory();
   let location = useLocation();
   
@@ -80,12 +80,19 @@ const LoginPage = () => {
   const formik = useFormik({
     initialValues: {
       email: '',
-      password: '',
+ 
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
 
-      dispatch(login(getToken(values.email, values.password), sb))
+      //dispatch(login(getToken(values.email, values.password), sb))
+
+
+      console.log('openConformationCode');
+
+      dispatch(sendConfirmationСode(values.email))
+
+      
 
       },
   });
@@ -121,17 +128,7 @@ const LoginPage = () => {
           error={formik.touched.email && Boolean(formik.errors.email)}
           helperText={formik.touched.email && formik.errors.email}
         />
-        <TextField
-          fullWidth
-          id="password"
-          name="password"
-          label="Password"
-          type="password"
-          value={formik.values.password}
-          onChange={formik.handleChange}
-          error={formik.touched.password && Boolean(formik.errors.password)}
-          helperText={formik.touched.password && formik.errors.password}
-        />
+     
         <Button color="primary" variant="contained" fullWidth type="submit">
           Войти
         </Button>
