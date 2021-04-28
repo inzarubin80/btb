@@ -13,13 +13,15 @@ import Container from '@material-ui/core/Container';
 
 
 import { useDispatch, useSelector } from 'react-redux';
-import { sendConfirmationСode} from '../../redux/user/userActions';
+import { sendConfirmationСode } from '../../redux/user/userActions';
 
-import { getToken} from '../../api/dataService1c';
+import { getToken } from '../../api/dataService1c';
 
-import { Alert, AlertTitle }  from '@material-ui/lab';
+import { Alert, AlertTitle } from '@material-ui/lab';
 
-
+import Modal from '@material-ui/core/Modal';
+import Backdrop from '@material-ui/core/Backdrop';
+import Fade from '@material-ui/core/Fade';
 
 
 import {
@@ -32,30 +34,55 @@ const validationSchema = yup.object({
     .string('Enter your email')
     .email('Enter a valid email')
     .required('Email is required'),
- 
+
 }
 
 );
 
 const useStyles = makeStyles((theme) => ({
-    paper: {
-      marginTop: theme.spacing(8),
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-    },
-    avatar: {
+  paper: {
+    marginTop: theme.spacing(8),
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  avatar: {
+    margin: theme.spacing(1),
+    backgroundColor: theme.palette.secondary.main,
+  },
+  form: {
+    width: '100%', // Fix IE 11 issue.
+    marginTop: theme.spacing(1),
+  },
+  submit: {
+    margin: theme.spacing(3, 0, 2),
+  },
+
+  modal: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  paperModal: {
+    backgroundColor: theme.palette.background.paper,
+    //border: '1px solid #000',
+    boxShadow: theme.shadows[5],
+    padding: theme.spacing(2, 4, 3),
+  },
+
+  buttonConfirmation: {
+    marginTop: theme.spacing(1),
+
+  },
+
+  buttonConfirmationGroup: {
+    '& > *': {
       margin: theme.spacing(1),
-      backgroundColor: theme.palette.secondary.main,
     },
-    form: {
-      width: '100%', // Fix IE 11 issue.
-      marginTop: theme.spacing(1),
-    },
-    submit: {
-      margin: theme.spacing(3, 0, 2),
-    },
-  }));
+  }
+
+
+}));
 
 
 const LoginPage = () => {
@@ -63,13 +90,14 @@ const LoginPage = () => {
 
   const dispatch = useDispatch();
   const err = useSelector(state => state.user.err);
-  const userID = useSelector(state => state.user.userID);
-  
-  
+  const confirmationСodeSent = useSelector(state => state.user.confirmationСodeSent);
+
+  const [confirmationСode, setConfirmationСode] = React.useState('');
+
 
   let history = useHistory();
   let location = useLocation();
-  
+
   let { from } = location.state || { from: { pathname: "/makets" } };
 
   const sb = () => {
@@ -80,67 +108,103 @@ const LoginPage = () => {
   const formik = useFormik({
     initialValues: {
       email: '',
- 
+
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
 
-      //dispatch(login(getToken(values.email, values.password), sb))
-
-
+     
       console.log('openConformationCode');
+       dispatch(sendConfirmationСode(values.email))
 
-      dispatch(sendConfirmationСode(values.email))
 
-      
 
-      },
+    },
   });
 
   const classes = useStyles();
 
 
   return (
-  
-    <Container component="main" maxWidth="xs">
-      <CssBaseline />
+    <div>
+
+      <Modal
+        aria-labelledby="transition-modal-title"
+        aria-describedby="transition-modal-description"
+        className={classes.modal}
+        open={confirmationСodeSent}
+        onClose={() => { }}
+        closeAfterTransition
+        BackdropComponent={Backdrop}
+        BackdropProps={{
+          timeout: 500,
+        }}
+      >
+        <Fade in={confirmationСodeSent}>
+          <div className={classes.paperModal}>
+           
+            <TextField
+              fullWidth
+              id="confirmationСode"
+              name="confirmationСode"
+              label="Код подтверждения"
+              value={confirmationСode}
+              onChange={(event) => setConfirmationСode(event.target.value)}
+            />
 
 
-      <div className={classes.paper}>
-       
-        <Avatar className={classes.avatar}>
-          <LockOutlinedIcon />
-        </Avatar>
-       
-        <Typography component="h1" variant="h5">
-          НПО СЛАВА
+            <div className={classes.buttonConfirmationGroup}>
+
+              <Button className={classes.buttonConfirmation} color="primary" variant="contained" type="submit" >
+                Подтвердить
+              </Button>
+
+              <Button variant="contained" color="secondary">
+                Отмена
+              </Button>
+            </div>
+
+          </div>
+        </Fade>
+      </Modal>
+
+
+      <Container component="main" maxWidth="xs">
+        <CssBaseline />
+        <div className={classes.paper}>
+
+          <Avatar className={classes.avatar}>
+            <LockOutlinedIcon />
+          </Avatar>
+
+          <Typography component="h1" variant="h5">
+            НПО СЛАВА
         </Typography>
 
+          <form onSubmit={formik.handleSubmit}>
+            <TextField
+              fullWidth
+              id="email"
+              name="email"
+              label="Email"
+              value={formik.values.email}
+              onChange={formik.handleChange}
+              error={formik.touched.email && Boolean(formik.errors.email)}
+              helperText={formik.touched.email && formik.errors.email}
+            />
 
-      <form onSubmit={formik.handleSubmit}>
-        <TextField
-          fullWidth
-          id="email"
-          name="email"
-          label="Email"
-          value={formik.values.email}
-          onChange={formik.handleChange}
-          error={formik.touched.email && Boolean(formik.errors.email)}
-          helperText={formik.touched.email && formik.errors.email}
-        />
-     
-        <Button color="primary" variant="contained" fullWidth type="submit">
-          Войти
-        </Button>
+            <Button color="primary" variant="contained" fullWidth type="submit">
+              Войти
+            </Button>
 
-        {err&&<Alert severity="error">
-         <AlertTitle>  {err}</AlertTitle>
-        </Alert>}
+            {err && <Alert severity="error">
+              <AlertTitle>  {err}</AlertTitle>
+            </Alert>}
 
-      </form>
-      </div>
-    </Container>
-
+          </form>
+        </div>
+      </Container>
+    </div>
   );
 };
 

@@ -9,10 +9,8 @@ const initialState = {
     loggingIn: false,
     err: '',
     requestKey: '',
-
     confirmationСodeSent: false,
     confirmationСodeRequested: false,
-    confirmationСodeErr: ''
 };
 
 export default (state = initialState, action) => {
@@ -25,7 +23,7 @@ export default (state = initialState, action) => {
                 return {
                     ...state,               
                     confirmationСodeRequested:false,
-                    confirmationСodeErr:'',
+                    err:'',
                     confirmationСodeSent:true,
                     
                 };
@@ -35,7 +33,7 @@ export default (state = initialState, action) => {
             return {
                 ...state,               
                 confirmationСodeRequested:false,
-                confirmationСodeErr:action.payload
+                err:action.payload
             };
 
 
@@ -46,7 +44,7 @@ export default (state = initialState, action) => {
                 confirmationСodeRequested:true,
                 loggingIn: false,
                 isLoggedIn: false,
-                confirmationСodeErr:'',
+                err:'',
                 confirmationСodeSent:false
             };
 

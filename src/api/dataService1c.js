@@ -96,6 +96,8 @@ export const executorRequests = (functionRequest, responseHandlingFunction, exce
     }
     ).catch((err) => {exceptionHandlingFunction("Проблема соединения") })
         .then((json) => {
+
+            console.log('executorRequests');
             if (json == 401) {
                 dispatch(logOut())
             }

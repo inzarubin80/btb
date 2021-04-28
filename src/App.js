@@ -5,20 +5,12 @@ import Login from './components/loginPage/LoginPage.js';
 import Heder from './components/Heder/Heder.js';
 import Makets from './components/Maket/Makets.js';
 import MaketCard from './components/Maket/MaketCard';
-
-
-
-
 import Reports from './components/Reports/Reports';
 import Start from './components/Start/Start';
-
-
-
 import { useSelector } from 'react-redux';
 
 
 function App() {
-
 
 
     return (

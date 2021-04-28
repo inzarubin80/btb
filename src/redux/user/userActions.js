@@ -81,10 +81,13 @@ export const sendConfirmationСode = (userID) => {
     dispatch(setConformationCodeRequest(userID, requestKey));
 
     const functionRequest = () => {
-      sendConformationCode(userID, requestKey);
+      return sendConformationCode(userID, requestKey);
     };
 
     const responseHandlingFunction = (json) => {
+      
+      console.log('responseHandlingFunction***************');
+
       if (json.error) {
         dispatch(setConformationCodeFailure(json.error));
       } else {
