@@ -1,9 +1,18 @@
 import { LOGIN_SUCCESS, LOGIN_REQUEST, LOGIN_FAILURE, LOGIN_LOGOUT} from '../types'
 
 const  initialState = {
+
+    
     isLoggedIn:  localStorage.getItem('token') ? true : false ,
     loggingIn:  false,
-    err:''
+    err:'',
+    keyAuthorizationRequest:'',
+    
+    openInputConfirmationСode:false,
+    confirmationСodeSent:false,
+    confirmationСodeRequested:false,
+    confirmationСodeErr:''
+
 };
 
 export default (state = initialState, action) => {
