@@ -152,7 +152,7 @@ export default function Heder(props) {
 
 
           <Typography variant="h6" className={classes.title} component={Link} to={"/"} style={{ color: '#FFF' }}>
-            НПО СЛАВА
+             SLAVA B2B
           </Typography>
 
 

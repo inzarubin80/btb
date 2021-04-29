@@ -177,7 +177,7 @@ const LoginPage = () => {
 
             <div className={classes.buttonConfirmationGroup}>
 
-              <Button disabled={loggingIn} className={classes.buttonConfirmation} color="primary" variant="contained" type="submit" onClick={() => dispatch(login(confirmationСode, sb))}>
+              <Button disabled={loggingIn} className={classes.buttonConfirmation} color="primary" variant="contained" type="submit" onClick={() => dispatch(login(confirmationСode.trim(), sb))}>
                 Подтвердить
               </Button>
 
