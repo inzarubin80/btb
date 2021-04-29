@@ -158,6 +158,7 @@ const LoginPage = () => {
               name="confirmationСode"
               label="Код подтверждения"
               value={confirmationСode}
+              autoComplete="off"
               onChange={(event) => {
 
                 setConfirmationСode(event.target.value);
