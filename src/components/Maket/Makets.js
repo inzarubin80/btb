@@ -84,7 +84,7 @@ export default function Makets() {
     if (status == '') {
       dispatch(setMaketsStatus('harmonization'))
     }
-  },[status]);
+  },[status, dispatch]);
 
 
   console.log("filterModel", filterModel)

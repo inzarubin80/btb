@@ -1,5 +1,5 @@
 import React from 'react';
-import { makeStyles, useTheme, ThemeProvider } from '@material-ui/core/styles';
+import { makeStyles, useTheme} from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import { executorRequests, getMaket, getImgMaket, saveFileСonfirmation,revisionMaket, сonfirmationMaket, saveTask,getFileTask} from '../../api/dataService1c';
@@ -63,12 +63,6 @@ const useStyles = makeStyles((theme) => ({
 
   table: {
     minWidth: 10,
-  },
-
-
-  buttonReject: {
-    margin: theme.spacing(1),
-    float: 'left'
   },
 
   wrapperApproval: {
@@ -166,7 +160,7 @@ function TabPanel(props) {
   return (
     <div
       role="tabpanel"
-      hidden={value !== index}
+      hidden={value != index}
       id={`full-width-tabpanel-${index}`}
       aria-labelledby={`full-width-tab-${index}`}
       {...other}
@@ -592,7 +586,7 @@ const exceptionHandlingFunction = () => {setMaket({})}
     
 executorRequests(functionRequest, responseHandlingFunction, exceptionHandlingFunction,dispatch);      
 
-}, []);
+}, [props.match.params.id,dispatch]);
 
 
   const messageBox = ()  => {return (<div className={classes.messageBox}>

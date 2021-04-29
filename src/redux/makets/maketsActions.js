@@ -2,8 +2,8 @@ import {
   CHANGE_MAKETS_STATUS, MAKETS_SGRID_PAGE_CHANGE_PARAMS, MAKETS_FILTER_CHANGE, MAKETS_SORT_CHANGE, MAKETS_SUCCESS, MAKETS_FAILURE
 } from '../types'
 
-import { getMakets, executorRequests} from '../../api/dataService1c';
-import { logOut } from '../../redux/user/userActions';
+import { getMakets, executorRequests } from '../../api/dataService1c';
+
 
 
 export const changeMaketsStatus = (status) => {
@@ -13,10 +13,10 @@ export const changeMaketsStatus = (status) => {
   };
 };
 
-export const сhangePageParams = (pageSize,  page) => {
+export const сhangePageParams = (pageSize, page) => {
   return {
     type: MAKETS_SGRID_PAGE_CHANGE_PARAMS,
-    payload: {pageSize, page}
+    payload: { pageSize, page }
   };
 };
 
@@ -41,38 +41,24 @@ export const failure = () => {
 };
 
 export const setMaketsStatus = (status) => {
-  
+
   return (dispatch) => {
 
-    return getMakets(status).catch((err)=>console.log(err))
-      .then(response => {
+    const functionRequest = () => {
+      return getMakets(status);
+    };
 
-        if (response.status == 401){
-          return 401
-        }
-        else {
-          return response.json()
-        }
-      })
+    const responseHandlingFunction = (data) => {
+      return dispatch({ type: MAKETS_SUCCESS, payload: { status, makets: data.makets } });
+    }
+    const exceptionHandlingFunction = (error) => {
+      return dispatch({ type: MAKETS_FAILURE });
+    };
 
-      .then((data) => {
-        if (data==401) {
-          dispatch(logOut())
-          return dispatch({type: MAKETS_FAILURE});
-        }else {
-            return dispatch({type: MAKETS_SUCCESS, payload: {status, makets:data.makets}});
-        } 
-      })
-      .catch((err) => {
-              
-        console.log('err', err);
-        //dispatch(setLoginFailure({ err:'Сервис недоступен, попробуйте позже'}));
-       
-      });
+    executorRequests(functionRequest, responseHandlingFunction, exceptionHandlingFunction, dispatch);
+
   };
 
-
-  
 }
 
 

@@ -1,4 +1,3 @@
-import { $CombinedState } from 'redux';
 import {CLEAR_ERROR,
      LOGIN_SUCCESS,
       LOGIN_REQUEST, 

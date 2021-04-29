@@ -1,7 +1,7 @@
 import { API_URL, username, password } from '../Constants'
 import { encode } from 'base-64'
 import { logOut } from '../redux/user/userActions'
-import { ContactsOutlined } from '@material-ui/icons';
+
 
 export const getToken = () => {
     return 'Basic ' + encode(username + ":" + password);

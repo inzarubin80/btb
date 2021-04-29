@@ -25,9 +25,7 @@ import { logOut } from '../../redux/user/userActions';
 
 
 import {
-  BrowserRouter as Router,
   Link,
-  useRouteMatch
 } from "react-router-dom";
 
 const drawerWidth = 240;
@@ -114,7 +112,7 @@ export default function Heder(props) {
 
   const isLoggedIn = useSelector(state => state.user.isLoggedIn);
 
-  let { path, url } = useRouteMatch();
+  //let { path, url } = useRouteMatch();
 
   const handleDrawerClose = () => {
     setOpen(false);
