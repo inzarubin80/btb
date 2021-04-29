@@ -80,9 +80,7 @@ export const  сlearError = ()=>{
 
 export const sendConfirmationСode = (userID) => {
 
-
   const requestKey = uuidv4();
-
   return (dispatch) => {
 
 

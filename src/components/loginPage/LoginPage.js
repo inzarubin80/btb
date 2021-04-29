@@ -98,12 +98,7 @@ const LoginPage = () => {
   const confirmationСodeSent = useSelector(state => state.user.confirmationСodeSent);
   const confirmationСodeRequested = useSelector(state => state.user.confirmationСodeRequested);
   const loggingIn = useSelector(state => state.user.loggingIn);
-
-
-
   const [confirmationСode, setConfirmationСode] = React.useState('');
-
-
   let history = useHistory();
   let location = useLocation();
 
@@ -112,7 +107,6 @@ const LoginPage = () => {
   const sb = () => {
     history.replace(from);
   }
-
 
   const formik = useFormik({
     initialValues: {
