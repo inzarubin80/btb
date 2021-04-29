@@ -105,8 +105,6 @@ export const executorRequests = (functionRequest, responseHandlingFunction, exce
         })
         .catch((e) => {
 
-            console.log(e);
-
             if (e.message == 'Failed to fetch') {
                 exceptionHandlingFunction("Проблема соединения")
             } else {
