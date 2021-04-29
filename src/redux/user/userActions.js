@@ -5,7 +5,9 @@ import {
   LOGIN_LOGOUT,
   CONFIRMATION_CODE_REQUEST,
   CONFIRMATION_CODE_FAILURE,
-  CONFIRMATION_CODE_SUCCESS
+  CONFIRMATION_CODE_SUCCESS,
+  CLEAR_ERROR,
+  CANCEL_CONFIRMATION
 
 } from '../types'
 
@@ -18,6 +20,11 @@ const setLoginSuccess = (loginData) => {
   };
 };
 
+export const cancelConformation = () => {
+  return {
+    type: CANCEL_CONFIRMATION
+  };
+};
 
 
 
@@ -38,7 +45,7 @@ const setLoginFailure = (err) => {
 
 
 export const logOut = (loginData) => {
-  localStorage.removeItem('token')
+  localStorage.removeItem('key')
   return {
     type: LOGIN_LOGOUT
   };
@@ -65,6 +72,11 @@ export const setConformationCodeSuccess = () => {
   };
 }
 
+export const  сlearError = ()=>{
+  return {
+    type: CLEAR_ERROR
+  };
+}
 
 export const sendConfirmationСode = (userID) => {
 
@@ -120,7 +132,9 @@ export const login = (confirmationСode, cb) => {
       } else {
         
         dispatch(setLoginSuccess());
-        localStorage.setItem('token', json.key)
+        localStorage.setItem('key', json.key)
+        localStorage.setItem('userID', state.user.userID)
+        
         cb();
 
       }

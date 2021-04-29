@@ -1,9 +1,17 @@
-import { LOGIN_SUCCESS, LOGIN_REQUEST, LOGIN_FAILURE, LOGIN_LOGOUT, CONFIRMATION_CODE_REQUEST, CONFIRMATION_CODE_SUCCESS, CONFIRMATION_CODE_FAILURE} from '../types'
+import {CLEAR_ERROR,
+     LOGIN_SUCCESS,
+      LOGIN_REQUEST, 
+      LOGIN_FAILURE, 
+      LOGIN_LOGOUT, 
+      CONFIRMATION_CODE_REQUEST,
+       CONFIRMATION_CODE_SUCCESS, 
+       CONFIRMATION_CODE_FAILURE, 
+       CANCEL_CONFIRMATION} from '../types'
 
 
 const initialState = {
 
-    isLoggedIn: localStorage.getItem('token') ? true : false,
+    isLoggedIn: localStorage.getItem('key') ? true : false,
     userID: localStorage.getItem('userID'),
     typeUserID: localStorage.getItem('typeUserID'),
     loggingIn: false,
@@ -19,6 +27,19 @@ export default (state = initialState, action) => {
       
 
 
+    case CLEAR_ERROR:
+                return {
+                    ...state,               
+                    err:''                 
+                };
+
+    case CANCEL_CONFIRMATION:
+                    return {
+                        ...state,               
+                        err:'',
+                        confirmationСodeSent:false               
+                    };
+    
       case CONFIRMATION_CODE_SUCCESS:
                 return {
                     ...state,               

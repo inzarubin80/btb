@@ -13,7 +13,7 @@ import Container from '@material-ui/core/Container';
 
 
 import { useDispatch, useSelector } from 'react-redux';
-import { sendConfirmationСode, login } from '../../redux/user/userActions';
+import { sendConfirmationСode, login, сlearError, cancelConformation } from '../../redux/user/userActions';
 
 
 import { Alert, AlertTitle } from '@material-ui/lab';
@@ -61,6 +61,7 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+
   },
   paperModal: {
     backgroundColor: theme.palette.background.paper,
@@ -78,6 +79,11 @@ const useStyles = makeStyles((theme) => ({
     '& > *': {
       margin: theme.spacing(1),
     },
+
+    alert: {
+      maxWidth: '12%'
+    }
+
   }
 
 
@@ -90,6 +96,10 @@ const LoginPage = () => {
   const dispatch = useDispatch();
   const err = useSelector(state => state.user.err);
   const confirmationСodeSent = useSelector(state => state.user.confirmationСodeSent);
+  const confirmationСodeRequested = useSelector(state => state.user.confirmationСodeRequested);
+  const loggingIn = useSelector(state => state.user.loggingIn);
+
+
 
   const [confirmationСode, setConfirmationСode] = React.useState('');
 
@@ -106,7 +116,7 @@ const LoginPage = () => {
 
   const formik = useFormik({
     initialValues: {
-      email: '',
+      email: localStorage.getItem('userID') || '',
 
     },
     validationSchema: validationSchema,
@@ -148,19 +158,29 @@ const LoginPage = () => {
               name="confirmationСode"
               label="Код подтверждения"
               value={confirmationСode}
-              onChange={(event) => setConfirmationСode(event.target.value)}
+              onChange={(event) => {
+
+                setConfirmationСode(event.target.value);
+                dispatch(сlearError());
+
+              }}
 
 
             />
 
+            {err && confirmationСodeSent && <Alert severity="error" className={classes.alert}>
+              <AlertTitle>  {err}</AlertTitle>
+            </Alert>}
+
+
 
             <div className={classes.buttonConfirmationGroup}>
 
-              <Button className={classes.buttonConfirmation} color="primary" variant="contained" type="submit" onClick={() => dispatch(login(confirmationСode, sb))}>
+              <Button disabled={loggingIn} className={classes.buttonConfirmation} color="primary" variant="contained" type="submit" onClick={() => dispatch(login(confirmationСode, sb))}>
                 Подтвердить
               </Button>
 
-              <Button variant="contained" color="secondary">
+              <Button disabled={loggingIn} variant="contained" color="secondary" onClick={() => { setConfirmationСode(''); dispatch(cancelConformation()) }}>
                 Отмена
               </Button>
             </div>
@@ -194,11 +214,12 @@ const LoginPage = () => {
               helperText={formik.touched.email && formik.errors.email}
             />
 
-            <Button color="primary" variant="contained" fullWidth type="submit">
+            <Button color="primary" variant="contained" fullWidth type="submit" disabled={confirmationСodeRequested}>
               Войти
             </Button>
 
-            {err && <Alert severity="error">
+
+            {err && !confirmationСodeSent && <Alert severity="error">
               <AlertTitle>  {err}</AlertTitle>
             </Alert>}
 
