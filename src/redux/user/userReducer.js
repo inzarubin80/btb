@@ -1,3 +1,4 @@
+import { $CombinedState } from 'redux';
 import {CLEAR_ERROR,
      LOGIN_SUCCESS,
       LOGIN_REQUEST, 
@@ -22,6 +23,9 @@ const initialState = {
 };
 
 export default (state = initialState, action) => {
+
+    
+
 
     switch (action.type) {
       

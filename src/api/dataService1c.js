@@ -1,4 +1,4 @@
-import { API_URL, username,  password} from '../Constants'
+import { API_URL, username, password } from '../Constants'
 import { encode } from 'base-64'
 import { logOut } from '../redux/user/userActions'
 
@@ -8,7 +8,7 @@ export const getToken = () => {
 
 export const getMakets = (status) => {
     const config = getConfig()
-  return fetch(`${API_URL}/?typerequest=getMakets&status=${status}`, config);
+    return fetch(`${API_URL}/?typerequest=getMakets&status=${status}`, config);
 }
 
 export const getMaket = (id) => {
@@ -48,40 +48,41 @@ export const saveTask = (id, uid, number, taskText, taskFiles) => {
 }
 
 export const removeTask = (id, uid) => {
-    let config = getConfig({ uid})
+    let config = getConfig({ uid })
     return fetch(`${API_URL}/?typerequest=removeTask&id=${id}`, config);
 }
 
 export const sendConformationCode = (userID, requestKey) => {
-    let config = getConfig({userID, requestKey})
+    let config = getConfig({ userID, requestKey })
     return fetch(`${API_URL}/?typerequest=sendConformationCode`, config);
 }
 
 export const getAccessKey = (userID, requestKey, confirmationСode) => {
-    let config = getConfig({userID, requestKey, confirmationСode})
+    let config = getConfig({ userID, requestKey, confirmationСode })
     return fetch(`${API_URL}/?typerequest=getAccessKey`, config);
 }
 
-const getConfig = (body={}) => {
- 
-    body.key = localStorage.getItem('key'); 
-    let config = {
-            method: 'post',
-            headers: new Headers({
-                'Authorization': getToken(),
-                'Content-Type': 'application/json'
-            }),
-            body : JSON.stringify(body)
-        }
+const getConfig = (body = {}) => {
 
-     
+    body.key = localStorage.getItem('key');
+    let config = {
+        method: 'post',
+        headers: new Headers({
+            'Authorization': getToken(),
+            'Content-Type': 'application/json'
+        }),
+        body: JSON.stringify(body)
+    }
+
+
     return config
 }
 
 
 export const executorRequests = (functionRequest, responseHandlingFunction, exceptionHandlingFunction, dispatch) => {
 
-    functionRequest().then(response => {
+    functionRequest()
+   .then(response => {
 
         if (response.status == 401) {
             return 401
@@ -90,15 +91,25 @@ export const executorRequests = (functionRequest, responseHandlingFunction, exce
             return response.json()
         }
     }
-    ).catch((err) => {exceptionHandlingFunction("Проблема соединения") })
-        .then((json) => {
+    ).then((json) => {
+        
+        console.log('json*******************', json);
 
-            console.log('executorRequests');
             if (json == 401) {
                 dispatch(logOut())
             }
-            else { responseHandlingFunction(json)}
+            else { responseHandlingFunction(json) }
         })
-        .catch((err) => exceptionHandlingFunction(err))
+        .catch((e) => {
+           
+            console.log("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",e);
+            if (e.message== 'Failed to fetch') {
+                exceptionHandlingFunction("Проблема соединения")   
+            } else {
+                exceptionHandlingFunction("Что то пошло нет так...")
+            }
+
+           
+        })
 
 }
