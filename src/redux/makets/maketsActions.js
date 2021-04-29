@@ -70,6 +70,9 @@ export const setMaketsStatus = (status) => {
        
       });
   };
+
+
+  
 }
 
 

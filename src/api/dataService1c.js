@@ -1,6 +1,7 @@
 import { API_URL, username, password } from '../Constants'
 import { encode } from 'base-64'
 import { logOut } from '../redux/user/userActions'
+import { ContactsOutlined } from '@material-ui/icons';
 
 export const getToken = () => {
     return 'Basic ' + encode(username + ":" + password);
@@ -80,34 +81,39 @@ const getConfig = (body = {}) => {
 
 
 export const executorRequests = (functionRequest, responseHandlingFunction, exceptionHandlingFunction, dispatch) => {
-
-    functionRequest()
-   .then(response => {
-
-        if (response.status == 401) {
-            return 401
-        }
-        else {
-            return response.json()
-        }
-    }
-    ).then((json) => {
-        
-     
-            if (json == 401) {
-                dispatch(logOut())
+    functionRequest().catch()
+        .then(response => {
+            if (response.status == 200) {
+                return response.json();
             }
-            else { responseHandlingFunction(json) }
+            else {
+                return response.status;
+            }
+        }
+        ).then((dataResponse) => {
+
+            if (Number.isInteger(dataResponse)) {
+                if (dataResponse == 401) {
+                    dispatch(logOut())
+                } else {
+                    exceptionHandlingFunction("Что то пошло нет так...")
+                }
+            } else {
+                responseHandlingFunction(dataResponse)
+            }
+
         })
         .catch((e) => {
-           
-            if (e.message== 'Failed to fetch') {
-                exceptionHandlingFunction("Проблема соединения")   
+
+            console.log(e);
+
+            if (e.message == 'Failed to fetch') {
+                exceptionHandlingFunction("Проблема соединения")
             } else {
                 exceptionHandlingFunction("Что то пошло нет так...")
             }
 
-           
+
         })
 
 }
