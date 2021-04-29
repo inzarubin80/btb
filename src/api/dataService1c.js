@@ -93,8 +93,7 @@ export const executorRequests = (functionRequest, responseHandlingFunction, exce
     }
     ).then((json) => {
         
-        console.log('json*******************', json);
-
+     
             if (json == 401) {
                 dispatch(logOut())
             }
@@ -102,7 +101,6 @@ export const executorRequests = (functionRequest, responseHandlingFunction, exce
         })
         .catch((e) => {
            
-            console.log("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",e);
             if (e.message== 'Failed to fetch') {
                 exceptionHandlingFunction("Проблема соединения")   
             } else {
