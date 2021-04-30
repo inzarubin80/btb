@@ -1,5 +1,5 @@
 import React from 'react';
-import { makeStyles} from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import ListItemText from '@material-ui/core/ListItemText';
 import List from '@material-ui/core/List';
@@ -12,6 +12,7 @@ import IconButton from '@material-ui/core/IconButton';
 import HTMLEditor from './HTMLEditor'
 import { v4 as uuidv4 } from 'uuid';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import { MaketCardContext } from '../../context/MaketCard/MaketCardContext';
 
 const useStyles = makeStyles((theme) => ({
   table: {
@@ -53,9 +54,8 @@ const useStyles = makeStyles((theme) => ({
 const FormTask = (props) => {
 
   const classes = useStyles();
-
-  const task = props.maket.tasks.find((task) => task.uid == props.idTask);
-
+  const { maket, idTaskChange, taskChangeFiles, editorState, removeTaskFile, addTaskFile,editingHtmlText} = React.useContext(MaketCardContext);
+  const task = maket.tasks.find((task) => task.uid == idTaskChange);
 
 
   return (
@@ -64,7 +64,7 @@ const FormTask = (props) => {
       <div className={classes.buttonGroup}>
 
 
-        {!props.isload('saveTask') && <Button variant="contained" color="secondary"  onClick={() => { props.handleCancelСhangeTask() }}>Отмена</Button>}
+        {!props.isload('saveTask') && <Button variant="contained" color="secondary" onClick={() => { props.handleCancelСhangeTask() }}>Отмена</Button>}
 
 
         {!props.isload('saveTask') && <Button style={{ 'marginTop': 10 }} variant="contained" color="primary" onClick={() => { props.handleSaveTask() }}>
@@ -82,31 +82,19 @@ const FormTask = (props) => {
       </Typography>
 
 
-      {/*
 
-      <TextField style={{ 'width': '100%' }}
-        id="standard-multiline-flexible"
-        label="Содержание"
-        multiline
-        //rowsMax={4}
-        value={props.taskTextValue}
-        onChange={(event) => { props.handleChangeTaskTextValue(event) }}
-      />
-
-*/}
-
-      <HTMLEditor editorState={props.editorState} setEditorState={props.setEditorState} />
+      <HTMLEditor editorState={editorState} setEditorState={editingHtmlText} />
 
       <div className={classes.listFiles} >
 
         <Typography variant="h5" className={classes.title}>
-            Присоединенные файлы
+          Присоединенные файлы
         </Typography>
 
         <div className={classes.demo}>
           <List dense={false}>
 
-            {props.taskFiles.map((file) => (<ListItem key={file.uid}>
+            {taskChangeFiles.map((file) => (<ListItem key={file.uid}>
 
               <ListItemText
                 primary={file.name}
@@ -114,7 +102,7 @@ const FormTask = (props) => {
               />
               <ListItemSecondaryAction>
                 <IconButton edge="end" aria-label="delete" onClick={() => {
-                  props.setTaskFiles((prevState) => prevState.filter((item) => item.uid != file.uid))
+                  removeTaskFile(file.uid)
                 }}>
                   <DeleteIcon />
                 </IconButton>
@@ -134,7 +122,7 @@ const FormTask = (props) => {
           onChange={(e) => {
             if (e.target.files) {
 
-              props.hendlerStateLoadingButton('uploadTaskFile', true);
+              //props.hendlerStateLoadingButton('uploadTaskFile', true);
 
               const file = e.target.files[0];
 
@@ -142,12 +130,11 @@ const FormTask = (props) => {
                 .then(base64 => {
 
                   const newFile = { name: file.name, uid: uuidv4(), fileBase64: base64 };
-                  props.setTaskFiles((prevState) => [...prevState, newFile])
-                  props.hendlerStateLoadingButton('uploadTaskFile', false);
+                  addTaskFile(newFile);
+
 
 
                 }).catch((err) => {
-                  props.hendlerStateLoadingButton('uploadTaskFile', false);
                 }
                 )
             }
@@ -163,15 +150,8 @@ const FormTask = (props) => {
 
           {props.isload('uploadTaskFile') &&
             <CircularProgress />}
-
         </label>
-
       </div>
-
-
-
-
-
     </div>
 
   );

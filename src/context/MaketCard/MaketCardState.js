@@ -7,7 +7,10 @@ import {
     OPEN_CARD_MAKET_REQUEST,
     OPEN_CARD_MAKET_FAILURE,
     OPEN_CARD_MAKET_SUCCESS,
-    SWITCH_TAB
+    SWITCH_TAB,
+    REMOVE_TASK_FILE,
+    ADD_TASK_FILE,
+    EDITING_HTML_TEXT
 
 } from '../types'
 import { MaketCardContext } from './MaketCardContext'
@@ -15,6 +18,7 @@ import { MaketCardReducer } from './MaketCardReducer'
 import { EditorState, ContentState, convertToRaw } from 'draft-js';
 import { executorRequests, getMaket, getImgMaket, saveFileСonfirmation, revisionMaket, сonfirmationMaket, saveTask, getFileTask } from '../../api/dataService1c';
 import htmlToDraft from 'html-to-draftjs';
+import {useDispatch} from 'react-redux';
 
 export const MaketCardState = ({ children }) => {
 
@@ -31,7 +35,7 @@ export const MaketCardState = ({ children }) => {
         cardOpens: false,
 
         //task open
-        editorState: React.useState(EditorState.createEmpty()),
+        editorState: EditorState.createEmpty(),
         idTaskChange: null,
         taskChangeFiles: [],
         taskEditingOpens: false,
@@ -42,14 +46,21 @@ export const MaketCardState = ({ children }) => {
     }
 
 
-
+    const dispatchRedux = useDispatch();
     
     const [state, dispatch] = useReducer(MaketCardReducer, initialState)
 
-    const switchTab = (indexСurrentTab) =>{
-        dispatch({ type: OPEN_EDIT_TASK_REQUEST, payload:{indexСurrentTab}})
+
+    const editingHtmlText = (newEditorState)  => {
+        dispatch({ type: EDITING_HTML_TEXT, payload:newEditorState})
     }
 
+
+    const switchTab = (indexСurrentTab) =>{
+        dispatch({ type: SWITCH_TAB, payload:{indexСurrentTab}})
+    }
+
+ 
 
     const requestEditTask = () => {
         dispatch({ type: OPEN_EDIT_TASK_REQUEST })
@@ -64,7 +75,7 @@ export const MaketCardState = ({ children }) => {
     };
 
     const requestEditSuccess = (maket, idTaskChange, taskChangeFiles, editorState) => {
-        dispatch({ type: OPEN_EDIT_TASK_SUCCESS, payload: { maket, idTaskChange, taskChangeFiles, editorState } })
+         dispatch({ type: OPEN_EDIT_TASK_SUCCESS, payload: { maket, idTaskChange, taskChangeFiles, editorState } })
     };
 
     const openCardMaketRequest = () => {
@@ -77,7 +88,7 @@ export const MaketCardState = ({ children }) => {
         dispatch({ type: OPEN_CARD_MAKET_SUCCESS, payload: { maket } })
     }
 
-    const openCard = (id, dispatchRedux) => {
+    const openCard = (id) => {
 
         openCardMaketRequest();
 
@@ -99,12 +110,12 @@ export const MaketCardState = ({ children }) => {
 
     }
 
-    const openChangeTask = (uid, id, dispatchRedux) => {
+    const openChangeTask = (uid) => {
 
         requestEditTask();
 
         const functionRequest = () => {
-            return getMaket(id)
+            return getMaket(state.maket.code)
         };
 
         const responseHandlingFunction = (json) => {
@@ -131,6 +142,14 @@ export const MaketCardState = ({ children }) => {
     }
 
 
+    const removeTaskFile = (uid) =>{
+        dispatch({type: REMOVE_TASK_FILE, payload: uid})
+    }
+
+    const addTaskFile=(file)=>{
+        dispatch({ type: ADD_TASK_FILE, payload:file})
+    }
+    
 
     return (
         <MaketCardContext.Provider value={{
@@ -143,6 +162,9 @@ export const MaketCardState = ({ children }) => {
             openCard,
             openChangeTask,
             switchTab,
+            removeTaskFile,
+            addTaskFile,
+            editingHtmlText
 
         }}>{children}</MaketCardContext.Provider>)
 
