@@ -3,12 +3,15 @@ import { Editor } from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import styles from './Editor.css'
 
-const HTMLEditor = (props) => 
+const HTMLEditor = (props) => {
 
-<Editor editorClassName="editor" 
-editorState={props.editorState} 
-onEditorStateChange={props.setEditorState}
-/>
+    console.log('HTMLEditor', props);
+
+    return (<Editor editorClassName="editor"
+        editorState={props.editorState}
+        onEditorStateChange={props.setEditorState}
+    />)
+}
 export default HTMLEditor;
 
 

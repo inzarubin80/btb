@@ -54,7 +54,7 @@ const useStyles = makeStyles((theme) => ({
 const FormTask = (props) => {
 
   const classes = useStyles();
-  const { maket, idTaskChange, taskChangeFiles, editorState, removeTaskFile, addTaskFile,editingHtmlText} = React.useContext(MaketCardContext);
+  const {maket, idTaskChange, taskChangeFiles, editorState, removeTaskFile, addTaskFile,editingHtmlText} = React.useContext(MaketCardContext);
   const task = maket.tasks.find((task) => task.uid == idTaskChange);
 
 

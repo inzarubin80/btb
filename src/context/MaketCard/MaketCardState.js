@@ -159,6 +159,7 @@ export const MaketCardState = ({ children }) => {
             taskChangeFiles: state.taskChangeFiles,
             taskEditingOpens: state.taskEditingOpens,
             indexСurrentTab:state.indexСurrentTab,
+            editorState:state.editorState,
             openCard,
             openChangeTask,
             switchTab,

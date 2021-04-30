@@ -14,9 +14,6 @@ import {
 
 export const MaketCardReducer = (state, action) => {
 
-
-    console.log('MaketCardReducer', action);
-
     switch (action.type) {
 
         case EDITING_HTML_TEXT:
