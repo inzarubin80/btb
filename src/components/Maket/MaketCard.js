@@ -25,23 +25,14 @@ import {
 } from "react-router-dom";
 import DoneIcon from '@material-ui/icons/Done';
 import BorderColorIcon from '@material-ui/icons/BorderColor';
-import { EditorState, ContentState, convertToRaw } from 'draft-js';
-
-import draftToHtml from 'draftjs-to-html';
-import htmlToDraft from 'html-to-draftjs';
-
 import Lightbox from 'react-image-lightbox';
 import 'react-image-lightbox/style.css';
-
 import { saveAs } from 'file-saver';
-
 import MuiAlert from '@material-ui/lab/Alert';
-
 import Modal from '@material-ui/core/Modal';
-
 import {useDispatch} from 'react-redux';
-
 import {MaketCardContext} from '../../context/MaketCard/MaketCardContext';
+import {b64toBlob, getBase64} from '../../utils/utils';
 
 
 
@@ -116,47 +107,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
 
-
-  
-
-
 }));
-
-
-const b64toBlob = (b64Data, contentType='', sliceSize=512) => {
-  const byteCharacters = atob(b64Data);
-  const byteArrays = [];
-
-  for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
-    const slice = byteCharacters.slice(offset, offset + sliceSize);
-
-    const byteNumbers = new Array(slice.length);
-    for (let i = 0; i < slice.length; i++) {
-      byteNumbers[i] = slice.charCodeAt(i);
-    }
-
-    const byteArray = new Uint8Array(byteNumbers);
-    byteArrays.push(byteArray);
-  }
-
-  const blob = new Blob(byteArrays, {type: contentType});
-  return blob;
-}
-
-const getBase64 = (file) => {
-  return new Promise(resolve => {
-
-    let baseURL = "";
-    let reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => {
-      baseURL = reader.result.split(',')[1];
-      resolve(baseURL);
-
-    };
-
-  });
-};
 
 
 function TabPanel(props) {
@@ -196,15 +147,13 @@ function a11yProps(index) {
 const MaketCard = (props) => {
 
   const classes = useStyles();
-  const [maket, setMaket] = React.useState();
-  const [value, setValue] = React.useState(0);
   const [stateLoadingButton, setStateLoadingButton] = React.useState({ loading: [] });
   
   const [imgData,   seIimgData] = React.useState(null);
   const [isOpen,    setIsOpen] = React.useState(false);
   const [messages,  setMessages] = React.useState([]);
 
-  const {taskEditingOpens, idTaskChange, taskChangeFiles, openChangeTask, editorState} = React.useContext(MaketCardContext);
+  const {maket, switchTab, indexСurrentTab,  taskEditingOpens, idTaskChange, taskChangeFiles, openChangeTask, editorState,openCard} = React.useContext(MaketCardContext);
 
   const dispatch = useDispatch();
 
@@ -251,7 +200,7 @@ const theme = useTheme();
 
 
 const handleChange = (event, newValue) => {
-  setValue(newValue);
+  switchTab(newValue);
 };
 
 /*
@@ -426,7 +375,7 @@ const handleOpenFile = (macetCode, fileName) => {
 
         const responseHandlingFunction = (json)=> {
           if (json.responseMaket.maket) {
-            setMaket(json.responseMaket.maket);
+            //setMaket(json.responseMaket.maket);
           }
           hendlerStateLoadingButton(idButton, false);
         }
@@ -459,7 +408,7 @@ const handleOpenFile = (macetCode, fileName) => {
       hendlerStateLoadingButton(idButton, false);
 
         if (json.responseMaket.maket) {
-          setMaket(json.responseMaket.maket);
+          //setMaket(json.responseMaket.maket);
         }
 
         if (json.error) {
@@ -494,7 +443,7 @@ const handleOpenFile = (macetCode, fileName) => {
       hendlerStateLoadingButton(idButton, false);
 
         if (json.responseMaket.maket) {
-          setMaket(json.responseMaket.maket);
+          //setMaket(json.responseMaket.maket);
         }
 
         if (json.error) {
@@ -521,25 +470,13 @@ const isload = (buttonId) => {
 }
 
 const handleChangeIndex = (index) => {
-  setValue(index);
+  switchTab(index);
 };
 
 
 React.useEffect(() => {
-
-const functionRequest = () => {
-  return getMaket(props.match.params.id)
-};
-    
-const responseHandlingFunction = (json) => {
-    if (!json.error) {
-      setMaket(json.maket);
-  }
-};
-
-const exceptionHandlingFunction = () => {setMaket({})}
-    
-executorRequests(functionRequest, responseHandlingFunction, exceptionHandlingFunction,dispatch);      
+  
+  openCard(props.match.params.id, dispatch)
 
 }, [props.match.params.id,dispatch]);
 
@@ -633,7 +570,7 @@ executorRequests(functionRequest, responseHandlingFunction, exceptionHandlingFun
             <div className={classes.root}>
               <AppBar position="static" color="default">
                 <Tabs
-                  value={value}
+                  value={indexСurrentTab}
                   onChange={handleChange}
                   indicatorColor="primary"
                   textColor="primary"
@@ -652,20 +589,20 @@ executorRequests(functionRequest, responseHandlingFunction, exceptionHandlingFun
               </AppBar>
               <SwipeableViews
                 axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
-                index={value}
+                index={indexСurrentTab}
                 onChangeIndex={handleChangeIndex}
               >
 
-                <TabPanel value={value} index={0} dir={theme.direction}>
+                <TabPanel value={indexСurrentTab} index={0} dir={theme.direction}>
                   <ParameterTable maket={maket} />
                 </TabPanel>
 
 
-                <TabPanel value={value} index={1} dir={theme.direction}>
+                <TabPanel value={indexСurrentTab} index={1} dir={theme.direction}>
                   <FilesTable maket={maket} handleChangeFile={handleChangeFile} handleDownload={handleDownload} hendlerStateLoadingButton={hendlerStateLoadingButton} handleOpenFile = {handleOpenFile}  isload={isload} />
                 </TabPanel>
 
-                <TabPanel value={value} index={2} dir={theme.direction}>
+                <TabPanel value={indexСurrentTab} index={2} dir={theme.direction}>
 
 
                   {!idTaskChange && <TasksTable maket={maket} 
@@ -673,7 +610,7 @@ executorRequests(functionRequest, responseHandlingFunction, exceptionHandlingFun
                   handleDownloadFileTask={handleDownloadFileTask}
                   hendlerStateLoadingButton={hendlerStateLoadingButton}
                   isload = {isload}
-                  setMaket = {setMaket}
+                 // setMaket = {setMaket}
                   addMessage = {addMessage}
                   
                   />}
@@ -697,7 +634,7 @@ executorRequests(functionRequest, responseHandlingFunction, exceptionHandlingFun
                 </TabPanel>
 
 
-                <TabPanel value={value} index={3} dir={theme.direction}>
+                <TabPanel value={indexСurrentTab} index={3} dir={theme.direction}>
                   <ColorsTable colors={maket.colors} />
                 </TabPanel>
 
