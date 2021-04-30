@@ -41,6 +41,11 @@ import Modal from '@material-ui/core/Modal';
 
 import {useDispatch} from 'react-redux';
 
+import {MaketCardContext} from '../../context/MaketCard/MaketCardContext';
+
+
+
+
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
@@ -193,15 +198,13 @@ const MaketCard = (props) => {
   const classes = useStyles();
   const [maket, setMaket] = React.useState();
   const [value, setValue] = React.useState(0);
-  const [idTask, setidTask] = React.useState(null);
   const [stateLoadingButton, setStateLoadingButton] = React.useState({ loading: [] });
-  const [editorState, setEditorState] = React.useState(EditorState.createEmpty());
-  const [taskFiles, setTaskFiles] = React.useState([]);
   
-  const [imgData, seIimgData] = React.useState(null);
-  const [isOpen, setIsOpen] = React.useState(false);
-  const [messages, setMessages] = React.useState([]);
+  const [imgData,   seIimgData] = React.useState(null);
+  const [isOpen,    setIsOpen] = React.useState(false);
+  const [messages,  setMessages] = React.useState([]);
 
+  const {taskEditingOpens, idTaskChange, taskChangeFiles, openChangeTask, editorState} = React.useContext(MaketCardContext);
 
   const dispatch = useDispatch();
 
@@ -251,59 +254,13 @@ const handleChange = (event, newValue) => {
   setValue(newValue);
 };
 
-const handleChangeTask = (uid) => {
- 
-  const idButton = uid +'handleChangeTask';
-  hendlerStateLoadingButton(idButton, true);
-
-  const functionRequest = () => {
-   return getMaket(props.match.params.id)
- };
-    
-  const responseHandlingFunction = (json)=> {  
-   if (!json.error) {
-    let task = json.maket.tasks.find((task) => task.uid == uid);
-    
-    if (task) {
-      const contentBlock = htmlToDraft(task.text);
-      if (contentBlock) {
-          const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
-          const NewEditorState = EditorState.createWithContent(contentState);
-          setEditorState(NewEditorState);
-        };
-
-        setTaskFiles(task.files)
-
-        setidTask(uid);
-      }
-    } else {
-
-      setTaskFiles([])
-
-    }
-
-
-    hendlerStateLoadingButton(idButton, false);
-
-   
-    
-  };
-  
-  const exceptionHandlingFunction = () => {
-    hendlerStateLoadingButton(idButton, false);
-  };
-  executorRequests(functionRequest, responseHandlingFunction, exceptionHandlingFunction, dispatch);
-  
-};
-
-
-
+/*
 const handleSaveTask = () => {
 
   const idButton = 'saveTask';
   let number = 0;
-  if (idTask != '-1') {
-   number = maket.tasks.find((task) => task.uid == idTask).number;
+  if (idTaskChange != '-1') {
+   number = maket.tasks.find((task) => task.uid == idTaskChange).number;
   }
 
   const taskTextValueHTML = draftToHtml(convertToRaw(editorState.getCurrentContent()));
@@ -318,7 +275,7 @@ const handleSaveTask = () => {
   hendlerStateLoadingButton(idButton, true);
 
   const functionRequest = () => {
-    return saveTask(maket.code, idTask, number, taskTextValueHTML, taskFiles)
+    return saveTask(maket.code, idTaskChange, number, taskTextValueHTML, taskFiles)
   };
     
   const exceptionHandlingFunction = () => {}
@@ -333,7 +290,6 @@ const handleSaveTask = () => {
      if (!json.error) {
         setidTask(null);
         setEditorState(EditorState.createEmpty());
-        setTaskFiles([])
         addMessage(idButton, 'success','Задание успешно записано', 1500); 
       } else {
         addMessage(idButton, 'warning', json.error, 3000); 
@@ -344,15 +300,13 @@ const handleSaveTask = () => {
 
   };
 
-
-
+*/
 
   const handleCancelСhangeTask = () => {
 
-    setidTask(null);
-    setEditorState(EditorState.createEmpty());
-    setTaskFiles([])
-
+    //setidTask(null);
+    //setEditorState(EditorState.createEmpty());
+   
   }
 
   const hendlerStateLoadingButton = (buttonId, add) => {
@@ -367,6 +321,7 @@ const handleSaveTask = () => {
       return state;
     })
   }
+ 
 
 const handleDownloadFileTask = (uidTask, uidFile) => {
 
@@ -713,9 +668,8 @@ executorRequests(functionRequest, responseHandlingFunction, exceptionHandlingFun
                 <TabPanel value={value} index={2} dir={theme.direction}>
 
 
-                  {!idTask && <TasksTable maket={maket} 
-                  setidTask={setidTask} 
-                  handleChangeTask={handleChangeTask} 
+                  {!idTaskChange && <TasksTable maket={maket} 
+                  handleChangeTask={openChangeTask} 
                   handleDownloadFileTask={handleDownloadFileTask}
                   hendlerStateLoadingButton={hendlerStateLoadingButton}
                   isload = {isload}
@@ -725,15 +679,13 @@ executorRequests(functionRequest, responseHandlingFunction, exceptionHandlingFun
                   />}
 
 
-                  {idTask && <FormTask
+                  {idTaskChange && <FormTask
                     maket={maket}
-                    setidTask={setidTask}
-                    handleSaveTask={handleSaveTask}
-                    idTask={idTask}
+                   // handleSaveTask={handleSaveTask}
+                    idTask={idTaskChange}
                     editorState={editorState}
-                    setEditorState={setEditorState}
-                    taskFiles={taskFiles}
-                    setTaskFiles = {setTaskFiles}
+                   // setEditorState={setEditorState}
+                    taskChangeFiles={taskChangeFiles}
                     getBase64 = {getBase64}
                     hendlerStateLoadingButton={hendlerStateLoadingButton}
                     isload = {isload}

@@ -8,7 +8,7 @@ import MaketCard from './components/Maket/MaketCard';
 import Reports from './components/Reports/Reports';
 import Start from './components/Start/Start';
 import { useSelector } from 'react-redux';
-
+import { MaketCardState } from './context/MaketCard/MaketCardState';
 
 function App() {
 
@@ -37,11 +37,15 @@ function App() {
                         </PrivateRoute>
 
                         <PrivateRoute path="/makets/:id">
-                            <MaketCard />
+
+                            <MaketCardState>
+                                <MaketCard />
+                            </MaketCardState>
+
                         </PrivateRoute>
 
-                       
-                        
+
+
                         <PrivateRoute path="/reports">
                             <Reports />
                         </PrivateRoute>
