@@ -13,7 +13,7 @@ import HTMLEditor from './HTMLEditor'
 import { v4 as uuidv4 } from 'uuid';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { MaketCardContext } from '../../context/MaketCard/MaketCardContext';
-
+import {b64toBlob, getBase64} from '../../utils/utils';
 const useStyles = makeStyles((theme) => ({
   table: {
     minWidth: 10,
@@ -57,24 +57,19 @@ const FormTask = (props) => {
   const {maket, idTaskChange, taskChangeFiles, editorState, removeTaskFile, addTaskFile,editingHtmlText} = React.useContext(MaketCardContext);
   const task = maket.tasks.find((task) => task.uid == idTaskChange);
 
-
   return (
     <div className={classes.taskСhanges}>
 
       <div className={classes.buttonGroup}>
 
 
-        {!props.isload('saveTask') && <Button variant="contained" color="secondary" onClick={() => { props.handleCancelСhangeTask() }}>Отмена</Button>}
+       <Button variant="contained" color="secondary" onClick={() => { props.handleCancelСhangeTask() }}>Отмена</Button>
 
-
-        {!props.isload('saveTask') && <Button style={{ 'marginTop': 10 }} variant="contained" color="primary" onClick={() => { props.handleSaveTask() }}>
+        <Button style={{ 'marginTop': 10 }} variant="contained" color="primary" onClick={() => { props.handleSaveTask() }}>
           {(!task) ? 'Добавить задание' : "Обновить задание"}
-        </Button>}
+        </Button>
 
-        {props.isload('saveTask') &&
-          <CircularProgress />}
-
-
+  
       </div>
 
       <Typography variant="h6" className={classes.title}>
@@ -122,11 +117,11 @@ const FormTask = (props) => {
           onChange={(e) => {
             if (e.target.files) {
 
-              //props.hendlerStateLoadingButton('uploadTaskFile', true);
+              
 
               const file = e.target.files[0];
 
-              props.getBase64(file)
+              getBase64(file)
                 .then(base64 => {
 
                   const newFile = { name: file.name, uid: uuidv4(), fileBase64: base64 };
@@ -144,12 +139,11 @@ const FormTask = (props) => {
 
         <label htmlFor={"contained-button-file"}>
 
-          {!props.isload('uploadTaskFile') && <IconButton aria-label="download" variant="contained" color="primary" component="span">
+          <IconButton aria-label="download" variant="contained" color="primary" component="span">
             <BackupIcon />
-          </IconButton>}
+          </IconButton>
 
-          {props.isload('uploadTaskFile') &&
-            <CircularProgress />}
+         
         </label>
       </div>
     </div>
