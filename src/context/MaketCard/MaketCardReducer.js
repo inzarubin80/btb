@@ -1,13 +1,14 @@
 import {
-    REQUEST_EDIT_FAILURE,
-    REQUEST_EDIT_TASK
+    OPEN_EDIT_TASK_REQUEST,
+    OPEN_EDIT_TASK_FAILURE,
+    OPEN_EDIT_TASK_SUCCESS
 } from "../types"
 
 export const MaketCardReducer = (state, action) => {
 
     switch (action.type) {
 
-        case REQUEST_EDIT_TASK:
+        case OPEN_EDIT_TASK_REQUEST:
             return {
                 ...state,
                 idTaskChange: null,
@@ -15,14 +16,14 @@ export const MaketCardReducer = (state, action) => {
                 taskEditingOpens: true
             }
 
-        case REQUEST_EDIT_FAILURE:
+        case OPEN_EDIT_TASK_FAILURE:
             return {
                 ...state,
                 taskEditingOpens: false,
                 ...action.payload
             }
 
-        case REQUEST_EDIT_SUCCESS:
+        case OPEN_EDIT_TASK_SUCCESS:
                 return {
                     ...state,
                     ...action.payload,

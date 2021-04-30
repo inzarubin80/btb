@@ -1,8 +1,8 @@
 import React, { useReducer } from 'react'
 import {
-    REQUEST_EDIT_TASK,
-    REQUEST_EDIT_FAILURE,
-    REQUEST_EDIT_SUCCESS
+    OPEN_EDIT_TASK_REQUEST,
+    OPEN_EDIT_TASK_FAILURE,
+    OPEN_EDIT_TASK_SUCCESS
 } from '../types'
 import { MaketCardContext } from './MaketCardContext'
 import { MaketCardReducer } from './MaketCardReducer'
@@ -30,19 +30,19 @@ export const MaketCardState = ({ children }) => {
     const [state, dispatch] = useReducer(MaketCardReducer, initialState)
 
     const requestEditTask = () => {
-        dispatch({ type: REQUEST_EDIT_TASK })
+        dispatch({ type: OPEN_EDIT_TASK_REQUEST })
     };
 
-    const requestEditFailure = (err, maket=null) => {
-        if (maket){
-            dispatch({ type: REQUEST_EDIT_FAILURE, payload: { message: err, maket} })    
+    const requestEditFailure = (err, maket = null) => {
+        if (maket) {
+            dispatch({ type: OPEN_EDIT_TASK_FAILURE, payload: { message: err, maket } })
         } else {
-            dispatch({ type: REQUEST_EDIT_FAILURE, payload: { message: err}})  
+            dispatch({ type: OPEN_EDIT_TASK_FAILURE, payload: { message: err} })
         }
     };
 
     const requestEditSuccess = (maket, idTaskChange, taskChangeFiles, editorState) => {
-        dispatch({ type: REQUEST_EDIT_SUCCESS, payload: { maket, idTaskChange, taskChangeFiles, editorState } })
+        dispatch({ type: OPEN_EDIT_TASK_SUCCESS, payload: { maket, idTaskChange, taskChangeFiles, editorState } })
     };
 
     const openChangeTask = (uid, id, dispatchRedux) => {
