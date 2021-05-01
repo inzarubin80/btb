@@ -14,7 +14,7 @@ import SearchIcon from '@material-ui/icons/Search';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import CardActions from '@material-ui/core/CardActions';
 import { approval } from './constants'
-
+import { MaketCardContext } from '../../context/MaketCard/MaketCardContext';
 
 const useStyles = makeStyles((theme) => ({
 
@@ -34,10 +34,15 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-const FilesTable = ({ maket, handleChangeFile, handleDownload,  isload, handleOpenFile }) => {
+const FilesTable = () => {
+
+
+
+    const { maket } = React.useContext(MaketCardContext);
+
 
     const classes = useStyles();
-    
+
 
     return (
         <div>
@@ -67,21 +72,18 @@ const FilesTable = ({ maket, handleChangeFile, handleDownload,  isload, handleOp
 
                                     <CardActions>
 
-                                        {!isload(file.fileName + 'open') &&
-                                            <IconButton   aria-label="delete" color="primary" onClick={() => { handleOpenFile(file.code, file.fileName, file.shortfileName) }}>
-                                                <SearchIcon />
-                                            </IconButton>}
 
-                                        {isload(file.fileName + 'open') &&
-                                            <CircularProgress />}
+                                        <IconButton aria-label="delete" color="primary" onClick={() => { }}>
+                                            <SearchIcon />
+                                        </IconButton>
 
 
-                                        {!isload(file.fileName + 'save') && <IconButton style={{ 'display': 'inlineBlock' }} aria-label="delete" color="primary" onClick={() => { handleDownload(file) }}>
+
+                                        <IconButton style={{ 'display': 'inlineBlock' }} aria-label="delete" color="primary" onClick={() => { }}>
                                             <SaveIcon />
-                                        </IconButton>}
+                                        </IconButton>
 
-                                        {isload(file.fileName + 'save') &&
-                                            <CircularProgress />}
+
                                     </CardActions>
 
                                 </TableCell>
@@ -93,17 +95,15 @@ const FilesTable = ({ maket, handleChangeFile, handleDownload,  isload, handleOp
                                     {file.shortfileNameСonfirmation}
                                     <CardActions>
 
-                                        {!isload(file.fileNameСonfirmation + 'open') && file.fileNameСonfirmation &&
-                                            <IconButton aria-label="delete" color="primary" onClick={() => { handleOpenFile(file.code, file.fileNameСonfirmation, file.shortfileNameСonfirmation) }}>
+                                       
+                                            <IconButton aria-label="delete" color="primary" onClick={() => { }}>
                                                 <SearchIcon />
-                                            </IconButton>}
+                                            </IconButton>
 
-                                        {isload(file.fileNameСonfirmation + 'open') &&
-                                            <CircularProgress />}
-
+                        
 
 
-                                        {!isload(file.fileName + 'upload') && approval == maket.status && <div className={classes.rootButton}>
+                                         <div className={classes.rootButton}>
                                             <input
 
                                                 accept="image/*"
@@ -112,7 +112,7 @@ const FilesTable = ({ maket, handleChangeFile, handleDownload,  isload, handleOp
                                                 type="file"
 
 
-                                                onChange={(e) => handleChangeFile(file.code, e.target.files[0], file.fileName, file.shortfileName)}
+                                                onChange={(e) =>{}}
 
                                             />
                                             <label htmlFor={"contained-button-file" + file.id}>
@@ -120,11 +120,9 @@ const FilesTable = ({ maket, handleChangeFile, handleDownload,  isload, handleOp
                                                     <BackupIcon />
                                                 </IconButton>
                                             </label>
-                                        </div>}
+                                        </div>
 
-
-                                        {isload(file.fileName + 'upload') &&
-                                            <CircularProgress />}
+    
                                     </CardActions>
 
                                 </TableCell>
@@ -144,7 +142,7 @@ const FilesTable = ({ maket, handleChangeFile, handleDownload,  isload, handleOp
 
 
 
-           
+
 
         </div>
     );

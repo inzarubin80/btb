@@ -1,8 +1,7 @@
 import React from 'react';
-import { makeStyles, useTheme} from '@material-ui/core/styles';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
-import { executorRequests, getMaket, getImgMaket, saveFileСonfirmation,revisionMaket, сonfirmationMaket, saveTask,getFileTask} from '../../api/dataService1c';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
@@ -15,28 +14,16 @@ import ColorsTable from './ColorsTable'
 import ParameterTable from './ParameterTable'
 import TasksTable from './TasksTable'
 import FormTask from './FormTask'
-import Button from '@material-ui/core/Button';
 import { green, blue, pink } from '@material-ui/core/colors';
-import { approval } from './constants'
 import 'antd/dist/antd.css';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import {
   withRouter
 } from "react-router-dom";
-import DoneIcon from '@material-ui/icons/Done';
-import BorderColorIcon from '@material-ui/icons/BorderColor';
-import Lightbox from 'react-image-lightbox';
 import 'react-image-lightbox/style.css';
-import { saveAs } from 'file-saver';
 import MuiAlert from '@material-ui/lab/Alert';
-import Modal from '@material-ui/core/Modal';
-import {useDispatch} from 'react-redux';
-import {MaketCardContext} from '../../context/MaketCard/MaketCardContext';
-import {b64toBlob, getBase64} from '../../utils/utils';
-
-
-
-
+import { MaketCardContext } from '../../context/MaketCard/MaketCardContext';
+import Typography from '@material-ui/core/Typography';
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
@@ -73,17 +60,17 @@ const useStyles = makeStyles((theme) => ({
     },
   },
 
-  messageBox:{
+  messageBox: {
     //margin: theme.spacing(2),
-   position: 'absolute',
-   top: '50%', 
-   left: '43%'
-    
+    position: 'absolute',
+    top: '50%',
+    left: '43%'
+
   },
 
-  imageBox:{
+  imageBox: {
     //margin: theme.spacing(2),
-   //position: 'absolute',
+    //position: 'absolute',
     //marginTop:80000
 
   },
@@ -91,7 +78,7 @@ const useStyles = makeStyles((theme) => ({
   margin: {
     marginTop: theme.spacing(1),
   },
-  
+
   offset: theme.mixins.toolbar,
 
   wrapperReject: {
@@ -143,466 +130,69 @@ function a11yProps(index) {
   };
 }
 
-
 const MaketCard = (props) => {
 
   const classes = useStyles();
-  const [stateLoadingButton, setStateLoadingButton] = React.useState({ loading: [] });
-  
-  const [imgData,   seIimgData] = React.useState(null);
-  const [isOpen,    setIsOpen] = React.useState(false);
-  const [messages,  setMessages] = React.useState([]);
-
-  const {maket, switchTab, indexСurrentTab,  taskEditingOpens, idTaskChange, taskChangeFiles, openChangeTask, editorState,openCard} = React.useContext(MaketCardContext);
-
-  const dispatch = useDispatch();
-
-  const removeMessage = (idMessage) => {
-   let remove = false;
-    setMessages((prevState) => {
-      return prevState.filter((error)=>{
-      if  (error.idMessage!=idMessage || remove) {
-        return true;
-      } else {
-        remove = true;
-        return false;
-      }
-      })
-     }
-     )
-  }
-
-  const addMessage = (idMessage, typeMessage, text, timeOut=0) => {   
-   
-    setMessages((prevState) => {
-     return [...prevState, {idMessage, typeMessage, text}]
-    }
-    )
-    if (timeOut) {
-      setTimeout(()=>removeMessage(idMessage),  timeOut)
-    }
-  }
-
-  const getUniqueMessages = () => {
-  
-    let uniqueMessages = [] 
-    for (let i = messages.length-1; i>=0; i--){
-    
-    if (!uniqueMessages.find((message)=>message.idMessage==messages[i].idMessage)) {
-      uniqueMessages.push(messages[i])
-    }
-  }
-  return uniqueMessages;
-
-}
-
-const theme = useTheme();
-
-
-const handleChange = (event, newValue) => {
-  switchTab(newValue);
-};
-
-  const handleCancelСhangeTask = () => {
-
-    //setidTask(null);
-    //setEditorState(EditorState.createEmpty());
-   
-  }
-
-  const hendlerStateLoadingButton = (buttonId, add) => {
-    setStateLoadingButton((prevState) => {
-      let state = { ...prevState };
-      if (add) {
-        state.loading = [...state.loading, buttonId]
-      } else {
-        state.loading = state.loading.filter((buttonIdInState) => { return (buttonIdInState != buttonId) })
-      }
-
-      return state;
-    })
-  }
- 
-
-const handleDownloadFileTask = (uidTask, uidFile) => {
-
-  const idButton = uidFile + 'save';
-  hendlerStateLoadingButton(idButton, true);
-  
-  const functionRequest = () => {
-    return getFileTask(maket.code, uidTask, uidFile)
+  const { maket, switchTab, indexСurrentTab, taskEditingOpens, idTaskChange, taskChangeFiles, openChangeTask, editorState, openCard } = React.useContext(MaketCardContext);
+  const theme = useTheme();
+  const handleChange = (event, newValue) => {
+    switchTab(newValue);
   };
-    
-
-   
-
-  const responseHandlingFunction = (json) => {
-    
-    if (!json.error){
-
-   //   console.log("!json.error");
-
-     // const time = performance.now();
-      const blob = b64toBlob(json.fileBase64, '');
-      //time = performance.now() - time;
-     // console.log('Время выполнения b64toBlob = ', time);
-
-    
-      saveAs(blob, json.name); 
-    }
-    
-  
-      hendlerStateLoadingButton(idButton, false);
-    };
-
-  const exceptionHandlingFunction = (error) => {
-
-  
-    hendlerStateLoadingButton(idButton, false);
-  }
-   executorRequests(functionRequest, responseHandlingFunction, exceptionHandlingFunction, dispatch);
-}
-
-const handleDownload = ({ code, fileName}) => {
-     
-  const idButton = fileName + 'save';
-  hendlerStateLoadingButton(idButton, true);
-   
-  const functionRequest = () => {
-    return getImgMaket(code, fileName)
+  const handleChangeIndex = (index) => {
+    switchTab(index);
   };
-
-  const responseHandlingFunction =  (json) => {
-    
-    if (!json.error) {
-      const blob = b64toBlob(json.file.imgBase64, '');
-      saveAs(blob, json.file.shortName);  
-      }  
-      hendlerStateLoadingButton(idButton, false);
-    }
-
-  const exceptionHandlingFunction = () => { 
-    hendlerStateLoadingButton(idButton, false);
-  };
-
-  executorRequests(functionRequest, responseHandlingFunction, exceptionHandlingFunction, dispatch);
+  React.useEffect(() => {
+    openCard(props.match.params.id)
+  }, [props.match.params.id]);
+  return (
+    <div style={{ textAlign: 'center', maxWidth: '50%', margin: 'auto', marginTop: 30 }}>
+      {maket && <Card className={classes.root}>
+        <CardContent>
+          <Typography gutterBottom variant="h5" component="h2">
+            Макет №{maket.code + " "}
+          </Typography>
+          <Descriptions layout="vertical" bordered >
+            <Descriptions.Item label="Продукт">{maket.product}</Descriptions.Item>
+            <Descriptions.Item label="Конечный потребитель">{maket.finalBuyer}</Descriptions.Item>
+            <Descriptions.Item label="Статус">{maket.status}</Descriptions.Item>
+          </Descriptions>
+          <div className={classes.root}>
+            <AppBar position="static" color="default">
+              <Tabs
+                value={indexСurrentTab}
+                onChange={handleChange}
+                indicatorColor="primary"
+                textColor="primary"
+                variant="fullWidth"
+                aria-label="full width tabs example">
+                <Tab label="Основные данные" {...a11yProps(0)} />
+                <Tab label={"Файлы (" + maket.files.length + ")"} {...a11yProps(1)} />
+                <Tab label={"Задания (" + maket.tasks.length + ")"} {...a11yProps(2)} />
+                <Tab label={"Цвета (" + maket.colors.length + ")"} {...a11yProps(3)} />
+              </Tabs>
+            </AppBar>
+            <SwipeableViews
+              axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
+              index={indexСurrentTab}
+              onChangeIndex={handleChangeIndex}>
+              <TabPanel value={indexСurrentTab} index={0} dir={theme.direction}>
+                <ParameterTable maket={maket} />
+              </TabPanel>
+              <TabPanel value={indexСurrentTab} index={1} dir={theme.direction}>
+                <FilesTable />
+              </TabPanel>
+              <TabPanel value={indexСurrentTab} index={2} dir={theme.direction}>
+                {!idTaskChange && <TasksTable />}
+                {idTaskChange && <FormTask />}
+              </TabPanel>
+              <TabPanel value={indexСurrentTab} index={3} dir={theme.direction}>
+                <ColorsTable colors={maket.colors} />
+              </TabPanel>
+            </SwipeableViews >
+          </div>
+        </CardContent>
+      </Card>}
+    </div>
+  );
 }
-
-
-const handleOpenFile = (macetCode, fileName) => {
-
-  const idButton = fileName  + 'open';
-  hendlerStateLoadingButton(idButton, true);
-
-  const  functionRequest = () => {
-    return getImgMaket(macetCode, fileName)
-  }
-
-  const responseHandlingFunction = (json) => {
-    hendlerStateLoadingButton(idButton, false);
-    seIimgData(json.file);
-    setIsOpen(true);
-  }
-
-  const exceptionHandlingFunction = () => {
-    hendlerStateLoadingButton(idButton, false);
-    seIimgData(null);
-  };
-    
-  executorRequests(functionRequest, responseHandlingFunction, exceptionHandlingFunction, dispatch);
-
-  }
-
-  const handleChangeFile = (macetCode, file, fileName, shortfileName) => {
-
-    const idButton = fileName + 'upload';
-
-    hendlerStateLoadingButton(idButton, true);
-
-    getBase64(file).then(fileBase64 => {
-
-        const functionRequest = () => {
-          return  saveFileСonfirmation(macetCode, fileName, shortfileName, fileBase64)
-        };
-
-        const responseHandlingFunction = (json)=> {
-          if (json.responseMaket.maket) {
-            //setMaket(json.responseMaket.maket);
-          }
-          hendlerStateLoadingButton(idButton, false);
-        }
-        
-        const exceptionHandlingFunction = () => {
-          hendlerStateLoadingButton(idButton, false); 
-        };
-
-        executorRequests(functionRequest, responseHandlingFunction, exceptionHandlingFunction, dispatch);
-
-    }
-    )
-      .catch(err => {
-        console.log(err);
-      });
-  }
-
-  const hendleConfirmationMaket = () => {
-
-    const idButton = 'confirmationButton';
-
-    hendlerStateLoadingButton(idButton, true);
-
-    const functionRequest = () => {
-      return   сonfirmationMaket(maket.code)
-    };
-
-    const responseHandlingFunction = (json)=> {
-    
-      hendlerStateLoadingButton(idButton, false);
-
-        if (json.responseMaket.maket) {
-          //setMaket(json.responseMaket.maket);
-        }
-
-        if (json.error) {
-          addMessage(idButton,'warning', json.error, 3000);
-        } else {
-          addMessage(idButton,'success', 'Статус макета успешно изменен', 3000);
-        }
-    }
-
-    const exceptionHandlingFunction = () => {
-      hendlerStateLoadingButton(idButton, false); 
-      addMessage(idButton,'warning', "Что то пошло не так...", 3000);
-    };
-
-    executorRequests(functionRequest, responseHandlingFunction, exceptionHandlingFunction, dispatch);
-
-  }
-
-
-  const hendleRevisionMaket = () => {
-
-    const idButton = 'revisionButton';
-
-    hendlerStateLoadingButton(idButton, true);
-
-    const functionRequest = () => {
-      return   revisionMaket(maket.code)
-    };
-
-    const responseHandlingFunction = (json)=> {
-    
-      hendlerStateLoadingButton(idButton, false);
-
-        if (json.responseMaket.maket) {
-          //setMaket(json.responseMaket.maket);
-        }
-
-        if (json.error) {
-          addMessage(idButton,'warning', json.error, 3000);
-        } else {
-          addMessage(idButton,'success', 'Статус макета успешно изменен', 3000);
-        }
-    }
-
-    const exceptionHandlingFunction = () => {
-      hendlerStateLoadingButton(idButton, false); 
-    };
-
-    executorRequests(functionRequest, responseHandlingFunction, exceptionHandlingFunction, dispatch);
-
-  }
-
-const isload = (buttonId) => {
-  if (stateLoadingButton.loading.find((id) => { return id == buttonId })){
-    return true
-  } else {
-    return false
-  }
-}
-
-const handleChangeIndex = (index) => {
-  switchTab(index);
-};
-
-
-React.useEffect(() => {
-  
-  openCard(props.match.params.id, dispatch)
-
-}, [props.match.params.id,dispatch]);
-
-
-  const messageBox = ()  => {return (<div className={classes.messageBox}>
-    
-    {getUniqueMessages().map((message)=><Alert key={message.idMessage} severity= {message.typeMessage}>{message.text}</Alert>)}
-
-    <Button onClick = {()=>setMessages([])} variant="contained" size="medium" color="inherit" className={classes.margin}>
-          ок
-      </Button>
-
- </div>)}
-
-  if (maket != null && maket.code) {
-
-    return (
-      <div style={{ textAlign: 'center', maxWidth: '50%', margin: 'auto', marginTop: 30 }}>
-
-    {isOpen && (
-      
-      <div className={classes.imageBox}>
-      <Lightbox 
-          mainSrc={`data:image/jpeg;base64,${imgData.imgBase64}`}
-          onCloseRequest={() => setIsOpen(false)}
-          
-          />
-          </div>)}
-
-        <Card className={classes.root}>
-          <CardContent>
-           
-              {approval == maket.status &&
-
-
-                <div className={classes.wrapperReject}>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    className={classes.buttonReject}
-                    disabled={isload('revisionButton')}
-                    onClick={() => {hendleRevisionMaket()}}
-
-                    startIcon={<BorderColorIcon />}
-                  >
-                    Доработка
-              
-              </Button>
-                  {isload('revisionButton') && <CircularProgress size={24} className={classes.buttonProgress} />}
-                </div>
-
-
-              }
-
-              Макет №{maket.code + " "}
-
-              {approval == maket.status &&
-                <div className={classes.wrapperApproval}>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    className={classes.buttonApproval}
-                    disabled={isload('confirmationButton')}
-                    onClick={() => hendleConfirmationMaket()}
-
-                    startIcon={<DoneIcon />}
-                  >
-                    Согласовать
-                </Button>
-                  {isload('confirmationButton') && <CircularProgress size={24} className={classes.buttonProgress} />}
-                </div>
-              }
-
-            
-      <Modal
-        open={messages.length>0}
-        onClose={()=>{}}
-        aria-labelledby="simple-modal-title"
-        aria-describedby="simple-modal-description"
-      >
-        {messageBox()}
-      </Modal>
-      
-              <Descriptions layout="vertical" bordered >
-              <Descriptions.Item label="Продукт">{maket.product}</Descriptions.Item>
-              <Descriptions.Item label="Конечный потребитель">{maket.finalBuyer}</Descriptions.Item>
-              <Descriptions.Item label="Статус">{maket.status}</Descriptions.Item>
-
-            </Descriptions>
-          
-            
-            <div className={classes.root}>
-              <AppBar position="static" color="default">
-                <Tabs
-                  value={indexСurrentTab}
-                  onChange={handleChange}
-                  indicatorColor="primary"
-                  textColor="primary"
-                  variant="fullWidth"
-                  aria-label="full width tabs example"
-                >
-
-                  <Tab label="Основные данные" {...a11yProps(0)} />
-                  <Tab label={"Файлы (" + maket.files.length + ")"} {...a11yProps(1)} />
-                  <Tab label={"Задания (" + maket.tasks.length + ")"} {...a11yProps(2)} />
-                  <Tab label={"Цвета (" + maket.colors.length + ")"} {...a11yProps(3)} />
-
-
-
-                </Tabs>
-              </AppBar>
-              <SwipeableViews
-                axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
-                index={indexСurrentTab}
-                onChangeIndex={handleChangeIndex}
-              >
-
-                <TabPanel value={indexСurrentTab} index={0} dir={theme.direction}>
-                  <ParameterTable maket={maket} />
-                </TabPanel>
-
-
-                <TabPanel value={indexСurrentTab} index={1} dir={theme.direction}>
-                  <FilesTable maket={maket} handleChangeFile={handleChangeFile} handleDownload={handleDownload} hendlerStateLoadingButton={hendlerStateLoadingButton} handleOpenFile = {handleOpenFile}  isload={isload} />
-                </TabPanel>
-
-                <TabPanel value={indexСurrentTab} index={2} dir={theme.direction}>
-
-
-                  {!idTaskChange && <TasksTable maket={maket} 
-                  handleChangeTask={openChangeTask} 
-                  handleDownloadFileTask={handleDownloadFileTask}
-                  hendlerStateLoadingButton={hendlerStateLoadingButton}
-                  isload = {isload}
-                 // setMaket = {setMaket}
-                  addMessage = {addMessage}
-                  
-                  />}
-
-
-                  {idTaskChange && <FormTask
-                  />}
-
-
-                </TabPanel>
-
-
-                <TabPanel value={indexСurrentTab} index={3} dir={theme.direction}>
-                  <ColorsTable colors={maket.colors} />
-                </TabPanel>
-
-
-
-              </SwipeableViews >
-            </div>
-
-          </CardContent>
-        </Card>
-      </div>
-    );
-
-  } else if (maket != null && !maket.code) {
-
-    return (<div style={{ textAlign: 'center', maxWidth: '50%', margin: 'auto', marginTop: 30 }}>
-      <h3>Макет №{props.match.params.id} не найден</h3>
-    </div>)
-  }
-
-  else {
-
-    return (<div style={{ textAlign: 'center', maxWidth: '50%', margin: 'auto', marginTop: 30 }}>
-      <h3>...грузим</h3>
-    </div>)
-  }
-}
-
 export default withRouter(MaketCard)

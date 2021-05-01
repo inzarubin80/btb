@@ -29,12 +29,13 @@ import { executorRequests, getMaket, getImgMaket, saveFileСonfirmation, revisio
 import htmlToDraft from 'html-to-draftjs';
 import { useDispatch } from 'react-redux';
 import draftToHtml from 'draftjs-to-html'
+import { b64toBlob, getBase64 } from '../../utils/utils';
+import { saveAs } from 'file-saver';
 
 export const MaketCardState = ({ children }) => {
 
     const initialState = {
 
-        error: null,
         maket: null,
         fileBase64: null,
         fileIsOpenForViewing: false,
@@ -51,11 +52,12 @@ export const MaketCardState = ({ children }) => {
         taskEditingOpens: false,
         taskSaved: false,
         taskRemove: false,
-        
-
         idTaskRemove: null,
 
-
+        //files
+        uploadFiles: [],
+        downloadFiles: [],
+        openFiles: [],
 
         //carent tab
         indexСurrentTab: 0,
@@ -84,23 +86,23 @@ export const MaketCardState = ({ children }) => {
     }
 
     const hendleRemoveTask = () => {
-        
+
         removeTaskRequest();
-       
+
         const functionRequest = () => {
             return removeTask(state.maket.code, state.idTaskRemove)
         };
 
         const responseHandlingFunction = (json) => {
             if (!json.error) {
-                removeTaskSuccess(json.responseMaket.maket);
+                removeTaskSuccess(json.maket);
             } else {
                 removeTaskFailure(json.error, json.responseMaket.maket)
             }
         }
 
-        const exceptionHandlingFunction = (err) =>  {
-            removeTaskFailure(err) 
+        const exceptionHandlingFunction = (err) => {
+            removeTaskFailure(err)
         }
 
         executorRequests(functionRequest, responseHandlingFunction, exceptionHandlingFunction, dispatchRedux);
@@ -279,6 +281,198 @@ export const MaketCardState = ({ children }) => {
 
     };
 
+
+    const handleDownload = (code, fileName) => {
+
+        //const idButton = fileName + 'save';
+        // hendlerStateLoadingButton(idButton, true);
+
+        const functionRequest = () => {
+            return getImgMaket(code, fileName)
+        };
+        const responseHandlingFunction = (json) => {
+
+            if (!json.error) {
+                const blob = b64toBlob(json.file.imgBase64, '');
+                saveAs(blob, json.file.shortName);
+            }
+        }
+
+        const exceptionHandlingFunction = () => {
+        };
+
+        executorRequests(functionRequest, responseHandlingFunction, exceptionHandlingFunction, dispatch);
+    }
+
+
+    /*
+    const handleDownloadFileTask = (uidTask, uidFile) => {
+
+const idButton = uidFile + 'save';
+hendlerStateLoadingButton(idButton, true);
+ 
+const functionRequest = () => {
+  return getFileTask(maket.code, uidTask, uidFile)
+};
+  
+
+ 
+
+const responseHandlingFunction = (json) => {
+  
+  if (!json.error){
+
+ //   console.log("!json.error");
+
+   // const time = performance.now();
+    const blob = b64toBlob(json.fileBase64, '');
+    //time = performance.now() - time;
+   // console.log('Время выполнения b64toBlob = ', time);
+
+  
+    saveAs(blob, json.name); 
+  }
+  
+ 
+    hendlerStateLoadingButton(idButton, false);
+  };
+
+const exceptionHandlingFunction = (error) => {
+
+ 
+  hendlerStateLoadingButton(idButton, false);
+}
+ executorRequests(functionRequest, responseHandlingFunction, exceptionHandlingFunction, dispatch);
+}
+   
+
+const hendleRevisionMaket = () => {
+
+  const idButton = 'revisionButton';
+
+  hendlerStateLoadingButton(idButton, true);
+
+  const functionRequest = () => {
+    return   revisionMaket(maket.code)
+  };
+
+  const responseHandlingFunction = (json)=> {
+  
+    hendlerStateLoadingButton(idButton, false);
+
+      if (json.responseMaket.maket) {
+        //setMaket(json.responseMaket.maket);
+      }
+
+      if (json.error) {
+        addMessage(idButton,'warning', json.error, 3000);
+      } else {
+        addMessage(idButton,'success', 'Статус макета успешно изменен', 3000);
+      }
+  }
+
+  const exceptionHandlingFunction = () => {
+    hendlerStateLoadingButton(idButton, false); 
+  };
+
+  executorRequests(functionRequest, responseHandlingFunction, exceptionHandlingFunction, dispatch);
+
+}
+
+
+  const hendleConfirmationMaket = () => {
+
+  const idButton = 'confirmationButton';
+
+  hendlerStateLoadingButton(idButton, true);
+
+  const functionRequest = () => {
+    return   сonfirmationMaket(maket.code)
+  };
+
+  const responseHandlingFunction = (json)=> {
+  
+    hendlerStateLoadingButton(idButton, false);
+
+      if (json.responseMaket.maket) {
+        //setMaket(json.responseMaket.maket);
+      }
+
+      if (json.error) {
+        addMessage(idButton,'warning', json.error, 3000);
+      } else {
+        addMessage(idButton,'success', 'Статус макета успешно изменен', 3000);
+      }
+  }
+
+  const exceptionHandlingFunction = () => {
+    hendlerStateLoadingButton(idButton, false); 
+    addMessage(idButton,'warning', "Что то пошло не так...", 3000);
+  };
+
+  executorRequests(functionRequest, responseHandlingFunction, exceptionHandlingFunction, dispatch);
+
+}
+
+
+const handleOpenFile = (macetCode, fileName) => {
+
+const idButton = fileName  + 'open';
+hendlerStateLoadingButton(idButton, true);
+
+const  functionRequest = () => {
+  return getImgMaket(macetCode, fileName)
+}
+
+const responseHandlingFunction = (json) => {
+  hendlerStateLoadingButton(idButton, false);
+  seIimgData(json.file);
+  setIsOpen(true);
+}
+
+const exceptionHandlingFunction = () => {
+  hendlerStateLoadingButton(idButton, false);
+  seIimgData(null);
+};
+  
+executorRequests(functionRequest, responseHandlingFunction, exceptionHandlingFunction, dispatch);
+
+}
+
+const handleChangeFile = (macetCode, file, fileName, shortfileName) => {
+
+  const idButton = fileName + 'upload';
+
+  hendlerStateLoadingButton(idButton, true);
+
+  getBase64(file).then(fileBase64 => {
+
+      const functionRequest = () => {
+        return  saveFileСonfirmation(macetCode, fileName, shortfileName, fileBase64)
+      };
+
+      const responseHandlingFunction = (json)=> {
+        if (json.responseMaket.maket) {
+          //setMaket(json.responseMaket.maket);
+        }
+        hendlerStateLoadingButton(idButton, false);
+      }
+      
+      const exceptionHandlingFunction = () => {
+        hendlerStateLoadingButton(idButton, false); 
+      };
+
+      executorRequests(functionRequest, responseHandlingFunction, exceptionHandlingFunction, dispatch);
+
+  }
+  )
+    .catch(err => {
+      console.log(err);
+    });
+}
+
+
+*/
     return (
         <MaketCardContext.Provider value={{
             maket: state.maket,
