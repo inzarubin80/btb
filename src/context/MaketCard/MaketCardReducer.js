@@ -21,6 +21,10 @@ import {
     REMOVE_TASK_FAILURE,
     REMOVE_TASK_SUCCESS,
 
+    DOWNLOAD_FILE_MAKET_REQUEST,
+    DOWNLOAD_FILE_MAKET_FAILURE,
+    DOWNLOAD_FILE_MAKET_SUCCESS
+
 } from "../types"
 
 export const MaketCardReducer = (state, action) => {
@@ -29,27 +33,46 @@ export const MaketCardReducer = (state, action) => {
 
     switch (action.type) {
 
+        case DOWNLOAD_FILE_MAKET_REQUEST:
+            return {
+
+                ...state,
+                downloadFiles: [...state.downloadFiles, action.payload.idFile]
+            }
+        case DOWNLOAD_FILE_MAKET_FAILURE:
+            return {
+                ...state,
+                downloadFiles: state.downloadFiles.filter((idFile) => { idFile != action.payload.idFile }),
+                message: action.payload.message
+            }
+
+        case DOWNLOAD_FILE_MAKET_SUCCESS:
+            return {
+                ...state,
+                downloadFiles: state.downloadFiles.filter((idFile) => { idFile != action.payload.idFile })
+            }
+
         case REMOVE_TASK_REQUEST:
             return {
                 ...state,
                 ...action.payload,
-                taskRemove:true
+                taskRemove: true
             }
 
         case REMOVE_TASK_FAILURE:
             return {
                 ...state,
                 ...action.payload,
-                taskRemove:false,
-                idTaskRemove:null
+                taskRemove: false,
+                idTaskRemove: null
             }
 
         case REMOVE_TASK_SUCCESS:
             return {
                 ...state,
                 ...action.payload,
-                taskRemove:false,
-                idTaskRemove:null
+                taskRemove: false,
+                idTaskRemove: null
             }
         case REMOVE_TASK_START:
             return {

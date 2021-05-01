@@ -21,6 +21,10 @@ import {
     REMOVE_TASK_FAILURE,
     REMOVE_TASK_SUCCESS,
 
+    DOWNLOAD_FILE_MAKET_REQUEST,
+    DOWNLOAD_FILE_MAKET_FAILURE,
+    DOWNLOAD_FILE_MAKET_SUCCESS
+
 } from '../types'
 import { MaketCardContext } from './MaketCardContext'
 import { MaketCardReducer } from './MaketCardReducer'
@@ -62,16 +66,28 @@ export const MaketCardState = ({ children }) => {
         //carent tab
         indexСurrentTab: 0,
 
+
+
     }
 
 
     const dispatchRedux = useDispatch();
     const [state, dispatch] = useReducer(MaketCardReducer, initialState)
 
+    downloadFileMaketRequest => {
+        dispatch({ type: DOWNLOAD_FILE_MAKET_REQUEST })
+    }
+    downloadFileMaketFailure => {
+        dispatch({ type: DOWNLOAD_FILE_MAKET_FAILURE })
+    }
+    downloadFileMaketSuccess => {
+        dispatch({ type: DOWNLOAD_FILE_MAKET_SUCCESS })
+    }
 
     const removeTaskRequest = () => {
         dispatch({ type: REMOVE_TASK_REQUEST })
     }
+
     const removeTaskFailure = (err, maket = null) => {
         if (maket) {
             dispatch({ type: REMOVE_TASK_FAILURE, payload: { message: err, maket } })
