@@ -13,12 +13,19 @@ import {
     SAVE_TASK_REQUEST,
     SAVE_TASK_FAILURE,
     SAVE_TASK_SUCCESS,
-    CANCEL_TASK_EDITING
-    } from '../types'
+    CANCEL_TASK_EDITING,
+    ADD_TASK,
+    REMOVE_TASK_START,
+    REMOVE_TASK_CANCEL,
+    REMOVE_TASK_REQUEST,
+    REMOVE_TASK_FAILURE,
+    REMOVE_TASK_SUCCESS,
+
+} from '../types'
 import { MaketCardContext } from './MaketCardContext'
 import { MaketCardReducer } from './MaketCardReducer'
 import { EditorState, ContentState, convertToRaw } from 'draft-js';
-import { executorRequests, getMaket, getImgMaket, saveFileСonfirmation, revisionMaket, сonfirmationMaket, saveTask, getFileTask } from '../../api/dataService1c';
+import { executorRequests, getMaket, getImgMaket, saveFileСonfirmation, revisionMaket, сonfirmationMaket, saveTask, getFileTask, removeTask } from '../../api/dataService1c';
 import htmlToDraft from 'html-to-draftjs';
 import { useDispatch } from 'react-redux';
 import draftToHtml from 'draftjs-to-html'
@@ -43,6 +50,11 @@ export const MaketCardState = ({ children }) => {
         taskChangeFiles: [],
         taskEditingOpens: false,
         taskSaved: false,
+        taskRemove: false,
+        
+
+        idTaskRemove: null,
+
 
 
         //carent tab
@@ -53,6 +65,56 @@ export const MaketCardState = ({ children }) => {
 
     const dispatchRedux = useDispatch();
     const [state, dispatch] = useReducer(MaketCardReducer, initialState)
+
+
+    const removeTaskRequest = () => {
+        dispatch({ type: REMOVE_TASK_REQUEST })
+    }
+    const removeTaskFailure = (err, maket = null) => {
+        if (maket) {
+            dispatch({ type: REMOVE_TASK_FAILURE, payload: { message: err, maket } })
+
+        } else {
+            dispatch({ type: REMOVE_TASK_FAILURE, payload: { message: err } })
+        }
+    }
+
+    const removeTaskSuccess = (maket) => {
+        dispatch({ type: REMOVE_TASK_SUCCESS, payload: { maket } })
+    }
+
+    const hendleRemoveTask = () => {
+        
+        removeTaskRequest();
+       
+        const functionRequest = () => {
+            return removeTask(state.maket.code, state.idTaskRemove)
+        };
+
+        const responseHandlingFunction = (json) => {
+            if (!json.error) {
+                removeTaskSuccess(json.responseMaket.maket);
+            } else {
+                removeTaskFailure(json.error, json.responseMaket.maket)
+            }
+        }
+
+        const exceptionHandlingFunction = (err) =>  {
+            removeTaskFailure(err) 
+        }
+
+        executorRequests(functionRequest, responseHandlingFunction, exceptionHandlingFunction, dispatchRedux);
+    }
+
+
+
+    const removeTaskCancel = () => {
+        dispatch({ type: REMOVE_TASK_CANCEL })
+    }
+
+    const removeTaskStart = (idTaskRemove) => {
+        dispatch({ type: REMOVE_TASK_START, payload: { idTaskRemove } })
+    }
 
 
 
@@ -67,6 +129,10 @@ export const MaketCardState = ({ children }) => {
     const requestEditTask = () => {
         dispatch({ type: OPEN_EDIT_TASK_REQUEST })
     };
+
+    const addTask = () => {
+        dispatch({ type: ADD_TASK })
+    }
 
     const requestEditFailure = (err, maket = null) => {
         if (maket) {
@@ -106,7 +172,7 @@ export const MaketCardState = ({ children }) => {
             }
         };
 
-        const exceptionHandlingFunction = (err) => { openCardMaketSuccess(err) }
+        const exceptionHandlingFunction = (err) => { openCardMaketFailure(err) }
 
         executorRequests(functionRequest, responseHandlingFunction, exceptionHandlingFunction, dispatchRedux);
 
@@ -155,30 +221,30 @@ export const MaketCardState = ({ children }) => {
     const saveTaskRequest = () => {
         dispatch({ type: SAVE_TASK_REQUEST })
     }
-    const saveTaskFailure = (err, maket=null) => {
+    const saveTaskFailure = (err, maket = null) => {
         if (maket) {
-            dispatch({ type: SAVE_TASK_FAILURE, payload: {message: err, maket} })   
+            dispatch({ type: SAVE_TASK_FAILURE, payload: { message: err, maket } })
         } else {
             dispatch({ type: SAVE_TASK_FAILURE, payload: { message: err } })
         }
-      
+
     }
     const saveTaskSuccess = (maket) => {
-        dispatch({ type: SAVE_TASK_SUCCESS, payload: {maket}})
+        dispatch({ type: SAVE_TASK_SUCCESS, payload: { maket } })
     }
-  
-    
+
+
     const cancelTaskEditing = () => {
-        dispatch({ type: CANCEL_TASK_EDITING})
+        dispatch({ type: CANCEL_TASK_EDITING })
     }
-   
+
 
 
     const handleSaveTask = () => {
 
-        
+
         let number = 0;
-        if ( state.idTaskChange != '-1') {
+        if (state.idTaskChange != '-1') {
             number = state.maket.tasks.find((task) => task.uid == state.idTaskChange).number;
         }
 
@@ -191,14 +257,14 @@ export const MaketCardState = ({ children }) => {
         }
         */
 
-       saveTaskRequest();
-        
+        saveTaskRequest();
+
         const functionRequest = () => {
             return saveTask(state.maket.code, state.idTaskChange, number, taskTextValueHTML, state.taskChangeFiles)
         };
 
         const exceptionHandlingFunction = (err) => {
-             saveTaskFailure(err)
+            saveTaskFailure(err)
         }
 
         const responseHandlingFunction = (json) => {
@@ -222,6 +288,7 @@ export const MaketCardState = ({ children }) => {
             taskEditingOpens: state.taskEditingOpens,
             indexСurrentTab: state.indexСurrentTab,
             editorState: state.editorState,
+            idTaskRemove: state.idTaskRemove,
             openCard,
             openChangeTask,
             switchTab,
@@ -229,7 +296,11 @@ export const MaketCardState = ({ children }) => {
             addTaskFile,
             editingHtmlText,
             handleSaveTask,
-            cancelTaskEditing
+            cancelTaskEditing,
+            addTask,
+            removeTaskStart,
+            removeTaskCancel,
+            hendleRemoveTask
 
         }}>{children}</MaketCardContext.Provider>)
 

@@ -55,7 +55,7 @@ const useStyles = makeStyles((theme) => ({
 const FormTask = () => {
 
   const classes = useStyles();
-  const { maket, idTaskChange, taskChangeFiles, editorState, removeTaskFile, addTaskFile, editingHtmlText, handleSaveTask, cancelTaskEditing} = React.useContext(MaketCardContext);
+  const { maket, idTaskChange, taskChangeFiles, editorState, removeTaskFile, addTaskFile, editingHtmlText, handleSaveTask, cancelTaskEditing } = React.useContext(MaketCardContext);
   const task = maket.tasks.find((task) => task.uid == idTaskChange);
 
   return (
@@ -64,9 +64,9 @@ const FormTask = () => {
       <div className={classes.buttonGroup}>
 
 
-        <Button variant="contained" color="secondary" onClick={()=>cancelTaskEditing()}>Отмена</Button>
+        <Button variant="contained" color="secondary" onClick={() => cancelTaskEditing()}>Отмена</Button>
 
-        <Button style={{ 'marginTop': 10 }} variant="contained" color="primary" onClick={()=>handleSaveTask()}>
+        <Button style={{ 'marginTop': 10 }} variant="contained" color="primary" onClick={() => handleSaveTask()}>
           {(!task) ? 'Добавить задание' : "Обновить задание"}
         </Button>
 
@@ -142,8 +142,6 @@ const FormTask = () => {
           <IconButton aria-label="download" variant="contained" color="primary" component="span">
             <BackupIcon />
           </IconButton>
-
-
         </label>
       </div>
     </div>

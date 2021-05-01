@@ -12,7 +12,14 @@ import {
     SAVE_TASK_REQUEST,
     SAVE_TASK_FAILURE,
     SAVE_TASK_SUCCESS,
-    CANCEL_TASK_EDITING
+    CANCEL_TASK_EDITING,
+    ADD_TASK,
+    REMOVE_TASK_START,
+    REMOVE_TASK_CANCEL,
+
+    REMOVE_TASK_REQUEST,
+    REMOVE_TASK_FAILURE,
+    REMOVE_TASK_SUCCESS,
 
 } from "../types"
 
@@ -21,6 +28,46 @@ export const MaketCardReducer = (state, action) => {
     console.log(action);
 
     switch (action.type) {
+
+        case REMOVE_TASK_REQUEST:
+            return {
+                ...state,
+                ...action.payload,
+                taskRemove:true
+            }
+
+        case REMOVE_TASK_FAILURE:
+            return {
+                ...state,
+                ...action.payload,
+                taskRemove:false,
+                idTaskRemove:null
+            }
+
+        case REMOVE_TASK_SUCCESS:
+            return {
+                ...state,
+                ...action.payload,
+                taskRemove:false,
+                idTaskRemove:null
+            }
+        case REMOVE_TASK_START:
+            return {
+                ...state,
+                ...action.payload
+            }
+
+        case REMOVE_TASK_CANCEL:
+            return {
+                ...state,
+                idTaskRemove: null
+            }
+
+        case ADD_TASK:
+            return {
+                ...state,
+                idTaskChange: -1
+            }
 
         case SAVE_TASK_REQUEST:
             return {
@@ -35,7 +82,7 @@ export const MaketCardReducer = (state, action) => {
                 taskSaved: false,
                 idTaskChange: null,
                 taskChangeFiles: [],
-                editorState:null
+                editorState: null
             }
 
         case CANCEL_TASK_EDITING:
@@ -43,7 +90,7 @@ export const MaketCardReducer = (state, action) => {
                 ...state,
                 idTaskChange: null,
                 taskChangeFiles: [],
-                editorState:null
+                editorState: null
             }
 
         case SAVE_TASK_FAILURE:
@@ -57,7 +104,7 @@ export const MaketCardReducer = (state, action) => {
         case EDITING_HTML_TEXT:
             return {
                 ...state,
-                editorState:action.payload,
+                editorState: action.payload,
             }
 
         case OPEN_EDIT_TASK_REQUEST:
@@ -86,7 +133,7 @@ export const MaketCardReducer = (state, action) => {
             return {
                 ...state,
                 cardOpens: true,
-                maket:null             
+                maket: null
             }
 
         case OPEN_CARD_MAKET_FAILURE:
@@ -104,20 +151,20 @@ export const MaketCardReducer = (state, action) => {
             }
 
         case REMOVE_TASK_FILE:
-                return {
-                    ...state,
-                    taskChangeFiles: state.taskChangeFiles.filter((file)=>file.uid!=action.payload),
-                    cardOpens: false
-                }
+            return {
+                ...state,
+                taskChangeFiles: state.taskChangeFiles.filter((file) => file.uid != action.payload),
+                cardOpens: false
+            }
 
         case ADD_TASK_FILE:
-                    return {
-                        ...state,
-                        taskChangeFiles: [...state.taskChangeFiles, action.payload],
-                        cardOpens: false
-                    }
-            
-            case SWITCH_TAB:
+            return {
+                ...state,
+                taskChangeFiles: [...state.taskChangeFiles, action.payload],
+                cardOpens: false
+            }
+
+        case SWITCH_TAB:
             return {
                 ...state,
                 ...action.payload,

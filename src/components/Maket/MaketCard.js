@@ -519,6 +519,7 @@ React.useEffect(() => {
 
             </Descriptions>
           
+            
             <div className={classes.root}>
               <AppBar position="static" color="default">
                 <Tabs
@@ -569,17 +570,6 @@ React.useEffect(() => {
 
 
                   {idTaskChange && <FormTask
-                    maket={maket}
-                   // handleSaveTask={handleSaveTask}
-                    idTask={idTaskChange}
-                    editorState={editorState}
-                   // setEditorState={setEditorState}
-                    taskChangeFiles={taskChangeFiles}
-                    getBase64 = {getBase64}
-                    hendlerStateLoadingButton={hendlerStateLoadingButton}
-                    isload = {isload}
-                    handleCancelСhangeTask={handleCancelСhangeTask}
-                    addMessage = {addMessage}
                   />}
 
 
