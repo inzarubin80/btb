@@ -13,7 +13,8 @@ import HTMLEditor from './HTMLEditor'
 import { v4 as uuidv4 } from 'uuid';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { MaketCardContext } from '../../context/MaketCard/MaketCardContext';
-import {b64toBlob, getBase64} from '../../utils/utils';
+import { getBase64 } from '../../utils/utils';
+
 const useStyles = makeStyles((theme) => ({
   table: {
     minWidth: 10,
@@ -51,10 +52,10 @@ const useStyles = makeStyles((theme) => ({
 
 }));
 
-const FormTask = (props) => {
+const FormTask = () => {
 
   const classes = useStyles();
-  const {maket, idTaskChange, taskChangeFiles, editorState, removeTaskFile, addTaskFile,editingHtmlText} = React.useContext(MaketCardContext);
+  const { maket, idTaskChange, taskChangeFiles, editorState, removeTaskFile, addTaskFile, editingHtmlText, handleSaveTask, cancelTaskEditing} = React.useContext(MaketCardContext);
   const task = maket.tasks.find((task) => task.uid == idTaskChange);
 
   return (
@@ -63,13 +64,13 @@ const FormTask = (props) => {
       <div className={classes.buttonGroup}>
 
 
-       <Button variant="contained" color="secondary" onClick={() => { props.handleCancelСhangeTask() }}>Отмена</Button>
+        <Button variant="contained" color="secondary" onClick={()=>cancelTaskEditing()}>Отмена</Button>
 
-        <Button style={{ 'marginTop': 10 }} variant="contained" color="primary" onClick={() => { props.handleSaveTask() }}>
+        <Button style={{ 'marginTop': 10 }} variant="contained" color="primary" onClick={()=>handleSaveTask()}>
           {(!task) ? 'Добавить задание' : "Обновить задание"}
         </Button>
 
-  
+
       </div>
 
       <Typography variant="h6" className={classes.title}>
@@ -117,7 +118,6 @@ const FormTask = (props) => {
           onChange={(e) => {
             if (e.target.files) {
 
-              
 
               const file = e.target.files[0];
 
@@ -143,7 +143,7 @@ const FormTask = (props) => {
             <BackupIcon />
           </IconButton>
 
-         
+
         </label>
       </div>
     </div>

@@ -5,7 +5,7 @@ import styles from './Editor.css'
 
 const HTMLEditor = (props) => {
 
-    console.log('HTMLEditor', props);
+  
 
     return (<Editor editorClassName="editor"
         editorState={props.editorState}

@@ -9,12 +9,50 @@ import {
     REMOVE_TASK_FILE,
     ADD_TASK_FILE,
     EDITING_HTML_TEXT,
+    SAVE_TASK_REQUEST,
+    SAVE_TASK_FAILURE,
+    SAVE_TASK_SUCCESS,
+    CANCEL_TASK_EDITING
 
 } from "../types"
 
 export const MaketCardReducer = (state, action) => {
 
+    console.log(action);
+
     switch (action.type) {
+
+        case SAVE_TASK_REQUEST:
+            return {
+                ...state,
+                taskSaved: true
+            }
+
+        case SAVE_TASK_SUCCESS:
+            return {
+                ...state,
+                ...action.payload,
+                taskSaved: false,
+                idTaskChange: null,
+                taskChangeFiles: [],
+                editorState:null
+            }
+
+        case CANCEL_TASK_EDITING:
+            return {
+                ...state,
+                idTaskChange: null,
+                taskChangeFiles: [],
+                editorState:null
+            }
+
+        case SAVE_TASK_FAILURE:
+            return {
+                ...state,
+                ...action.payload,
+                taskSaved: false,
+            }
+
 
         case EDITING_HTML_TEXT:
             return {

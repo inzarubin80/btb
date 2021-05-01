@@ -203,54 +203,6 @@ const handleChange = (event, newValue) => {
   switchTab(newValue);
 };
 
-/*
-const handleSaveTask = () => {
-
-  const idButton = 'saveTask';
-  let number = 0;
-  if (idTaskChange != '-1') {
-   number = maket.tasks.find((task) => task.uid == idTaskChange).number;
-  }
-
-  const taskTextValueHTML = draftToHtml(convertToRaw(editorState.getCurrentContent()));
-  
-  if (!editorState.getCurrentContent().getPlainText()){
-    addMessage(idButton, 'warning', 'Заполните текст задания', 3000); 
-    return
-  }
-
-
-
-  hendlerStateLoadingButton(idButton, true);
-
-  const functionRequest = () => {
-    return saveTask(maket.code, idTaskChange, number, taskTextValueHTML, taskFiles)
-  };
-    
-  const exceptionHandlingFunction = () => {}
-
-  const responseHandlingFunction = (json) => {
-    if (json.responseMaket.maket) {
-        setMaket(json.responseMaket.maket);
-     }
-    
-     hendlerStateLoadingButton(idButton, false);
-    
-     if (!json.error) {
-        setidTask(null);
-        setEditorState(EditorState.createEmpty());
-        addMessage(idButton, 'success','Задание успешно записано', 1500); 
-      } else {
-        addMessage(idButton, 'warning', json.error, 3000); 
-      }
-    };
-    
-    executorRequests(functionRequest, responseHandlingFunction, exceptionHandlingFunction, dispatch);
-
-  };
-
-*/
-
   const handleCancelСhangeTask = () => {
 
     //setidTask(null);
