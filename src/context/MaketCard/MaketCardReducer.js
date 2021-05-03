@@ -28,7 +28,12 @@ import {
     DOWNLOAD_FILE_TASK_REQUEST,
     DOWNLOAD_FILE_TASK_FAILURE,
     DOWNLOAD_FILE_TASK_SUCCESS,
-    OPEN_FOLDER_FILES_TASK
+    OPEN_FOLDER_FILES_TASK,
+
+    SET_MAKET_STATUS_REQUEST,
+    SET_MAKET_STATUS_FAILURE,
+    SET_MAKET_STATUS_SUCCESS
+
 } from "../types"
 
 export const MaketCardReducer = (state, action) => {
@@ -37,17 +42,49 @@ export const MaketCardReducer = (state, action) => {
 
     switch (action.type) {
 
-        case OPEN_FOLDER_FILES_TASK:
 
-            if (state.openFoldersTask.find(idTask=>idTask == action.payload.idTask)){
-                  return {
+        case SET_MAKET_STATUS_REQUEST:
+            return {
+
+                ...state,
+                statusBeingSet: true
+            }
+        case SET_MAKET_STATUS_FAILURE:
+
+            if (action.payload.maket) {
+                return {
                     ...state,
-                    openFoldersTask: state.openFoldersTask.filter(idTask=>idTask!= action.payload.idTask) 
+                    statusBeingSet: false,
+                    message: action.payload.message,
+                    maket: action.payload.maket,
                 }
             } else {
                 return {
                     ...state,
-                    openFoldersTask: [...state.openFoldersTask, action.payload.idTask] 
+                    statusBeingSet: false,
+                    message: action.payload.message
+                }
+            }
+
+        case SET_MAKET_STATUS_SUCCESS:
+           
+        return {
+                ...state,
+                statusBeingSet: false,
+                maket:action.payload.maket
+            }
+
+        case OPEN_FOLDER_FILES_TASK:
+
+            if (state.openFoldersTask.find(idTask => idTask == action.payload.idTask)) {
+                return {
+                    ...state,
+                    openFoldersTask: state.openFoldersTask.filter(idTask => idTask != action.payload.idTask)
+                }
+            } else {
+                return {
+                    ...state,
+                    openFoldersTask: [...state.openFoldersTask, action.payload.idTask]
                 }
             }
         case DOWNLOAD_FILE_TASK_REQUEST:
@@ -226,8 +263,7 @@ export const MaketCardReducer = (state, action) => {
         case OPEN_CARD_MAKET_REQUEST:
             return {
                 ...state,
-                cardOpens: true,
-                maket: null
+                ...action.payload
             }
 
         case OPEN_CARD_MAKET_FAILURE:

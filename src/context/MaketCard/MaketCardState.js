@@ -29,16 +29,18 @@ import {
     DOWNLOAD_FILE_TASK_REQUEST,
     DOWNLOAD_FILE_TASK_FAILURE,
     DOWNLOAD_FILE_TASK_SUCCESS,
-
     OPEN_FOLDER_FILES_TASK,
-
+    SET_MAKET_STATUS_REQUEST,
+    SET_MAKET_STATUS_FAILURE,
+    SET_MAKET_STATUS_SUCCESS
+    
 
 
 } from '../types'
 import { MaketCardContext } from './MaketCardContext'
 import { MaketCardReducer } from './MaketCardReducer'
 import { EditorState, ContentState, convertToRaw } from 'draft-js';
-import { executorRequests, getMaket, getImgMaket, saveFileСonfirmation, revisionMaket, сonfirmationMaket, saveTask, getFileTask, removeTask } from '../../api/dataService1c';
+import { executorRequests, getMaket, getImgMaket, saveFileСonfirmation, setMaketStatus, saveTask, getFileTask, removeTask } from '../../api/dataService1c';
 import htmlToDraft from 'html-to-draftjs';
 import { useDispatch } from 'react-redux';
 import draftToHtml from 'draftjs-to-html'
@@ -50,8 +52,6 @@ export const MaketCardState = ({ children }) => {
     const initialState = {
 
         maket: null,
-        fileBase64: null,
-        fileIsOpenForViewing: false,
         message: '',
 
 
@@ -75,7 +75,8 @@ export const MaketCardState = ({ children }) => {
         //carent tab
         indexСurrentTab: 0,
 
-
+        //state
+        statusBeingSet:false
 
     }
 
@@ -83,6 +84,45 @@ export const MaketCardState = ({ children }) => {
     const dispatchRedux = useDispatch();
     const [state, dispatch] = useReducer(MaketCardReducer, initialState)
 
+
+    const setMaketStatusRequest = () => {
+        dispatch({ type: SET_MAKET_STATUS_REQUEST})
+    }
+    
+    const setMaketStatusFailure = (message, maket=null) => {
+        dispatch({ type: SET_MAKET_STATUS_FAILURE, payload: {message, maket}})
+    }
+
+    const setMaketStatusSuccess = (maket) =>{
+        dispatch({ type: SET_MAKET_STATUS_SUCCESS, payload: {maket}})
+    }
+
+    const hendleSetMaketStatus  = (uidState) =>{
+        setMaketStatusRequest();
+
+        const functionRequest = () => {
+            return setMaketStatus(state.maket.code, uidState)
+        };
+
+        const responseHandlingFunction = (json) => {
+            if (!json.error) {
+                setMaketStatusSuccess(json.responseMaket.maket);
+
+            } else {
+                
+                setMaketStatusFailure(json.error, json.responseMaket.maket);
+            }
+        };
+
+        const exceptionHandlingFunction = (error) => {
+            setMaketStatusFailure(error);
+        }
+
+        executorRequests(functionRequest, responseHandlingFunction, exceptionHandlingFunction, dispatchRedux);
+
+
+    }
+   
 
     const hendleOpenFolderFilesTask  = (idTask) =>{
         dispatch({ type: OPEN_FOLDER_FILES_TASK, payload: {idTask }})
@@ -292,7 +332,7 @@ export const MaketCardState = ({ children }) => {
     };
 
     const openCardMaketRequest = () => {
-        dispatch({ type: OPEN_CARD_MAKET_REQUEST })
+        dispatch({ type: OPEN_CARD_MAKET_REQUEST, payload: {...initialState,  cardOpens:true}})
     }
     const openCardMaketFailure = (message) => {
         dispatch({ type: OPEN_CARD_MAKET_FAILURE, payload: { message } })
@@ -438,6 +478,7 @@ export const MaketCardState = ({ children }) => {
             uploadFiles: state.uploadFiles,
             downloadFilesTask:state.downloadFilesTask,
             openFoldersTask:state.openFoldersTask,
+            statusBeingSet:state.statusBeingSet,
             openCard,
             openChangeTask,
             switchTab,
@@ -453,9 +494,9 @@ export const MaketCardState = ({ children }) => {
             handleDownload,
             handleUploadFile,
             handleDownloadFileTask,
-            hendleOpenFolderFilesTask
+            hendleOpenFolderFilesTask,
+            hendleSetMaketStatus
         
-
         }}>{children}</MaketCardContext.Provider>)
 
 }

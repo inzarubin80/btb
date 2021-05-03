@@ -17,16 +17,10 @@ export const getMaket = (id) => {
     return fetch(`${API_URL}/?typerequest=getMaket&id=${id}`, config);
 }
 
-export const сonfirmationMaket = (id) => {
-    const config = getConfig();
-    return fetch(`${API_URL}/?typerequest=confirmationMaket&id=${id}`, config);
+export const setMaketStatus = (id, uidState) => {
+    const config = getConfig({uidState});
+    return fetch(`${API_URL}/?typerequest=setMaketStatus&id=${id}`, config);
 }
-
-export const revisionMaket = (id) => {
-    const config = getConfig();
-    return fetch(`${API_URL}/?typerequest=revisionMaket&id=${id}`, config);
-}
-
 
 export const getImgMaket = (id, fileName) => {
     const config = getConfig()

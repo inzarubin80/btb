@@ -24,6 +24,11 @@ import 'react-image-lightbox/style.css';
 import MuiAlert from '@material-ui/lab/Alert';
 import { MaketCardContext } from '../../context/MaketCard/MaketCardContext';
 import Typography from '@material-ui/core/Typography';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import Button from '@material-ui/core/Button';
+
+import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
+
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
@@ -81,18 +86,12 @@ const useStyles = makeStyles((theme) => ({
 
   offset: theme.mixins.toolbar,
 
-  wrapperReject: {
-    margin: theme.spacing(1),
-    position: 'relative',
-    float: 'left'
-  },
-
-  buttonReject: {
-    backgroundColor: blue,
-    '&:hover': {
-      backgroundColor: pink,
+  buttonStatusGroup: {
+    '& > *': {
+      margin: theme.spacing(1),
     },
   },
+
 
 }));
 
@@ -133,7 +132,7 @@ function a11yProps(index) {
 const MaketCard = (props) => {
 
   const classes = useStyles();
-  const { maket, switchTab, indexСurrentTab, taskEditingOpens, idTaskChange, taskChangeFiles, openChangeTask, editorState, openCard } = React.useContext(MaketCardContext);
+  const { maket, switchTab, indexСurrentTab, taskEditingOpens, idTaskChange, taskChangeFiles, openChangeTask, editorState, openCard, hendleSetMaketStatus,  statusBeingSet} = React.useContext(MaketCardContext);
   const theme = useTheme();
   const handleChange = (event, newValue) => {
     switchTab(newValue);
@@ -154,6 +153,18 @@ const MaketCard = (props) => {
           <Typography gutterBottom variant="h5" component="h2">
             Макет №{maket.code + " "}
           </Typography>
+
+          <div className={classes.buttonStatusGroup}>
+            {maket.actions.map((action) => {
+              if (action.progress) {
+                return (<Button onClick = {()=>{hendleSetMaketStatus(action.uid)}} variant="outlined" endIcon={<ArrowForwardIcon />} key={action.uid} color="primary"> {action.name}</Button>)
+              } else {
+                return (<Button onClick = {()=>{hendleSetMaketStatus(action.uid)}} variant="outlined" startIcon={<ArrowBackIcon />}  key={action.uid}  color="primary"> {action.name}</Button>)
+              }
+            }
+            )}
+          </div>
+
           <Descriptions layout="vertical" bordered >
             <Descriptions.Item label="Продукт">{maket.product}</Descriptions.Item>
             <Descriptions.Item label="Конечный потребитель">{maket.finalBuyer}</Descriptions.Item>
