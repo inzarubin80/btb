@@ -46,6 +46,11 @@ import { useDispatch } from 'react-redux';
 import draftToHtml from 'draftjs-to-html'
 import { b64toBlob, getBase64 } from '../../utils/utils';
 import { saveAs } from 'file-saver';
+import { v4 as uuidv4 } from 'uuid';
+
+const alertTypes = {error:'error', warning:'warning', info:'info', success:'success'};
+
+
 
 export const MaketCardState = ({ children }) => {
 
@@ -84,6 +89,14 @@ export const MaketCardState = ({ children }) => {
     const dispatchRedux = useDispatch();
     const [state, dispatch] = useReducer(MaketCardReducer, initialState)
 
+    
+    const createMesage=(type, str, lifetime=0)=>{
+        const uid = uuidv4();
+        if (lifetime) {
+            setTimeout(()=>dispatch({type:'clear message by timeout', payload: {uid}}), lifetime)
+        }
+        return {type, str, uid}
+    }
 
     const setMaketStatusRequest = () => {
         dispatch({ type: SET_MAKET_STATUS_REQUEST})
