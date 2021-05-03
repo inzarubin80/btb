@@ -390,7 +390,7 @@ export const MaketCardState = ({ children }) => {
             }
         };
 
-        const exceptionHandlingFunction = () => { }
+        const exceptionHandlingFunction = (err) => {requestEditFailure(err)}
         executorRequests(functionRequest, responseHandlingFunction, exceptionHandlingFunction, dispatchRedux);
     }
 
