@@ -155,7 +155,7 @@ const MaketCard = (props) => {
           </Typography>
 
           <div className={classes.buttonStatusGroup}>
-            {maket.actions.map((action) => {
+            {!statusBeingSet && maket.actions.map((action) => {
               if (action.progress) {
                 return (<Button onClick = {()=>{hendleSetMaketStatus(action.uid)}} variant="outlined" endIcon={<ArrowForwardIcon />} key={action.uid} color="primary"> {action.name}</Button>)
               } else {
@@ -163,6 +163,7 @@ const MaketCard = (props) => {
               }
             }
             )}
+            {statusBeingSet && <CircularProgress/>}
           </div>
 
           <Descriptions layout="vertical" bordered >
