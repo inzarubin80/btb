@@ -20,14 +20,18 @@ import {
     REMOVE_TASK_REQUEST,
     REMOVE_TASK_FAILURE,
     REMOVE_TASK_SUCCESS,
-
     DOWNLOAD_FILE_MAKET_REQUEST,
     DOWNLOAD_FILE_MAKET_FAILURE,
     DOWNLOAD_FILE_MAKET_SUCCESS,
-
     UPLOAD_FILE_MAKET_REQUEST,
     UPLOAD_FILE_MAKET_FAILURE,
     UPLOAD_FILE_MAKET_SUCCESS,
+    DOWNLOAD_FILE_TASK_REQUEST,
+    DOWNLOAD_FILE_TASK_FAILURE,
+    DOWNLOAD_FILE_TASK_SUCCESS,
+
+    OPEN_FOLDER_FILES_TASK,
+
 
 
 } from '../types'
@@ -66,7 +70,8 @@ export const MaketCardState = ({ children }) => {
         //files
         uploadFiles: [],
         downloadFiles: [],
-
+        downloadFilesTask: [],
+        openFoldersTask:[],
         //carent tab
         indexСurrentTab: 0,
 
@@ -77,6 +82,49 @@ export const MaketCardState = ({ children }) => {
 
     const dispatchRedux = useDispatch();
     const [state, dispatch] = useReducer(MaketCardReducer, initialState)
+
+
+    const hendleOpenFolderFilesTask  = (idTask) =>{
+        dispatch({ type: OPEN_FOLDER_FILES_TASK, payload: {idTask }})
+    }
+   
+    const downloadFileTaskRequest = (idFile) => {
+        dispatch({ type: DOWNLOAD_FILE_TASK_REQUEST, payload: { idFile } })
+    }
+
+    const downloadFileTaskFailure = (idFile, message) => {
+        dispatch({ type: DOWNLOAD_FILE_TASK_FAILURE, payload: { idFile, message } })
+    }
+
+    const downloadFileTaskSuccess = (idFile) => {
+        dispatch({ type: DOWNLOAD_FILE_TASK_SUCCESS, payload: {idFile} })
+    }
+
+
+    const handleDownloadFileTask = (uidTask, idFile) => {
+
+        downloadFileTaskRequest(idFile);
+
+        const functionRequest = () => {
+            return getFileTask(state.maket.code, uidTask, idFile)
+        };
+
+        const responseHandlingFunction = (json) => {
+            if (!json.error) {
+                const blob = b64toBlob(json.fileBase64, '');
+                saveAs(blob, json.name);
+                downloadFileTaskSuccess(idFile);
+            } else {
+                downloadFileTaskFailure(idFile, !json.error);
+            }
+        };
+
+        const exceptionHandlingFunction = (error) => {
+            downloadFileTaskFailure(idFile, error);
+        }
+
+        executorRequests(functionRequest, responseHandlingFunction, exceptionHandlingFunction, dispatchRedux);
+    }
 
 
     const uploadFileMaketRequest = (idFile) => {
@@ -122,9 +170,6 @@ export const MaketCardState = ({ children }) => {
                 uploadFileMaketRequest(idFile, err);;
             });
     }
-
-
-
 
     const downloadFileMaketRequest = (idFile) => {
         dispatch({ type: DOWNLOAD_FILE_MAKET_REQUEST, payload: { idFile } })
@@ -379,120 +424,6 @@ export const MaketCardState = ({ children }) => {
 
     };
 
-
-    /*
-    const handleDownloadFileTask = (uidTask, uidFile) => {
-
-const idButton = uidFile + 'save';
-hendlerStateLoadingButton(idButton, true);
- 
-const functionRequest = () => {
-  return getFileTask(maket.code, uidTask, uidFile)
-};
-  
-
-
-const responseHandlingFunction = (json) => {
-  
-  if (!json.error){
-
- //   console.log("!json.error");
-
-   // const time = performance.now();
-    const blob = b64toBlob(json.fileBase64, '');
-    //time = performance.now() - time;
-   // console.log('Время выполнения b64toBlob = ', time);
-
-  
-    saveAs(blob, json.name); 
-  }
-  
- 
-    hendlerStateLoadingButton(idButton, false);
-  };
-
-const exceptionHandlingFunction = (error) => {
-
- 
-  hendlerStateLoadingButton(idButton, false);
-}
- executorRequests(functionRequest, responseHandlingFunction, exceptionHandlingFunction, dispatch);
-}
-   
-
-const hendleRevisionMaket = () => {
-
-  const idButton = 'revisionButton';
-
-  hendlerStateLoadingButton(idButton, true);
-
-  const functionRequest = () => {
-    return   revisionMaket(maket.code)
-  };
-
-  const responseHandlingFunction = (json)=> {
-  
-    hendlerStateLoadingButton(idButton, false);
-
-      if (json.responseMaket.maket) {
-        //setMaket(json.responseMaket.maket);
-      }
-
-      if (json.error) {
-        addMessage(idButton,'warning', json.error, 3000);
-      } else {
-        addMessage(idButton,'success', 'Статус макета успешно изменен', 3000);
-      }
-  }
-
-  const exceptionHandlingFunction = () => {
-    hendlerStateLoadingButton(idButton, false); 
-  };
-
-  executorRequests(functionRequest, responseHandlingFunction, exceptionHandlingFunction, dispatch);
-
-}
-
-
-  const hendleConfirmationMaket = () => {
-
-  const idButton = 'confirmationButton';
-
-  hendlerStateLoadingButton(idButton, true);
-
-  const functionRequest = () => {
-    return   сonfirmationMaket(maket.code)
-  };
-
-  const responseHandlingFunction = (json)=> {
-  
-    hendlerStateLoadingButton(idButton, false);
-
-      if (json.responseMaket.maket) {
-        //setMaket(json.responseMaket.maket);
-      }
-
-      if (json.error) {
-        addMessage(idButton,'warning', json.error, 3000);
-      } else {
-        addMessage(idButton,'success', 'Статус макета успешно изменен', 3000);
-      }
-  }
-
-  const exceptionHandlingFunction = () => {
-    hendlerStateLoadingButton(idButton, false); 
-    addMessage(idButton,'warning', "Что то пошло не так...", 3000);
-  };
-
-  executorRequests(functionRequest, responseHandlingFunction, exceptionHandlingFunction, dispatch);
-
-}
-
-
-
-
-
-*/
     return (
         <MaketCardContext.Provider value={{
             maket: state.maket,
@@ -505,7 +436,8 @@ const hendleRevisionMaket = () => {
             idTaskRemove: state.idTaskRemove,
             downloadFiles: state.downloadFiles,
             uploadFiles: state.uploadFiles,
-
+            downloadFilesTask:state.downloadFilesTask,
+            openFoldersTask:state.openFoldersTask,
             openCard,
             openChangeTask,
             switchTab,
@@ -519,7 +451,10 @@ const hendleRevisionMaket = () => {
             removeTaskCancel,
             hendleRemoveTask,
             handleDownload,
-            handleUploadFile
+            handleUploadFile,
+            handleDownloadFileTask,
+            hendleOpenFolderFilesTask
+        
 
         }}>{children}</MaketCardContext.Provider>)
 

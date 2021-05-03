@@ -86,8 +86,23 @@ const useStyles = makeStyles((theme) => ({
 
 const TasksTable = () => {
 
-  const { maket, idTaskRemove, openChangeTask, addTask, removeTaskStart, removeTaskCancel, hendleRemoveTask} = React.useContext(MaketCardContext);
+  const { maket, 
+    idTaskRemove,
+    openChangeTask, 
+    addTask,
+    removeTaskStart,
+    removeTaskCancel, 
+    hendleRemoveTask,
+    downloadFilesTask,
+    handleDownloadFileTask,
+    openFoldersTask, hendleOpenFolderFilesTask} = React.useContext(MaketCardContext);
 
+
+
+    const  folderIsOpen=(idTaskCarent)=>{
+      return openFoldersTask.find(idTask=>idTask==idTaskCarent)?true:false;
+    }
+    
 
 
   const classes = useStyles();
@@ -117,14 +132,14 @@ const TasksTable = () => {
             <div className={classes.paper}>
               {/* <h2 id="transition-modal-title">Transition modal</h2>*/}
 
-              {idTaskRemove && <p id="transition-modal-description">{'Уверены что хотите удалить задание ' + maket.tasks.find((task)=>task.uid==idTaskRemove).number + '?'}</p>}
+              {idTaskRemove && <p id="transition-modal-description">{'Уверены что хотите удалить задание ' + maket.tasks.find((task) => task.uid == idTaskRemove).number + '?'}</p>}
             </div>
 
 
             <div className={classes.buttonModal}>
 
-              <Button variant="contained" color="primary" onClick={() => {hendleRemoveTask()}}>Да</Button>
-              <Button variant="contained" onClick={() => {removeTaskCancel()}}> Нет</Button>
+              <Button variant="contained" color="primary" onClick={() => { hendleRemoveTask() }}>Да</Button>
+              <Button variant="contained" onClick={() => { removeTaskCancel() }}> Нет</Button>
 
             </div>
           </div>
@@ -139,10 +154,10 @@ const TasksTable = () => {
         className={classes.button}
         endIcon={<AddCircleIcon />}
         onClick={() => { addTask() }}
-        
-        disabled = {!maket.allowedAddTask} 
 
-        
+        disabled={!maket.allowedAddTask}
+
+
 
       >
         Добавить
@@ -189,24 +204,26 @@ const TasksTable = () => {
                       className={classes.root}
                     >
 
-                      <ListItem button onClick={() => { }}>
+                      <ListItem button onClick={() => { hendleOpenFolderFilesTask(task.uid)}}>
                         <ListItemIcon>
                           <FolderIcon />
                         </ListItemIcon>
                         <ListItemText primary={"Присоединенные файлы (" + task.files.length + ")"} />
-                        {true ? <ExpandLess /> : <ExpandMore />}
+                        {folderIsOpen(task.uid) ? <ExpandLess /> : <ExpandMore />}
                       </ListItem>
 
-                      <Collapse in={true} timeout="auto" unmountOnExit>
+                      <Collapse in={folderIsOpen(task.uid)} timeout="auto" unmountOnExit>
 
                         <List component="div" disablePadding>
 
 
                           {task.files.map((file) => <ListItem key={file.uid} button className={classes.nested}>
 
-                            <IconButton aria-label="delete" color="primary" onClick={() => { }}>
+                            {!downloadFilesTask.find(id=>file.uid==id) && <IconButton aria-label="delete" color="primary" onClick={() => {handleDownloadFileTask(task.uid, file.uid)}}>
                               <SaveIcon />
-                            </IconButton>
+                            </IconButton>}
+
+                            {downloadFilesTask.find(id=>file.uid==id) && <CircularProgress/>}
 
                             <ListItemText primary={file.name} />
                           </ListItem>)}
@@ -222,12 +239,12 @@ const TasksTable = () => {
                     />
                     <CardActions>
 
-                      <IconButton color="primary" onClick={() => {openChangeTask(task.uid) }}>
+                      <IconButton color="primary" onClick={() => { openChangeTask(task.uid) }}>
                         <EditIcon />
                       </IconButton>
 
 
-                      <IconButton color="secondary" onClick={() => {removeTaskStart(task.uid)}}>
+                      <IconButton color="secondary" onClick={() => { removeTaskStart(task.uid) }}>
                         <DeleteIcon />
                       </IconButton>
 

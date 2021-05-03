@@ -22,22 +22,52 @@ import {
     DOWNLOAD_FILE_MAKET_REQUEST,
     DOWNLOAD_FILE_MAKET_FAILURE,
     DOWNLOAD_FILE_MAKET_SUCCESS,
-
     UPLOAD_FILE_MAKET_REQUEST,
     UPLOAD_FILE_MAKET_FAILURE,
     UPLOAD_FILE_MAKET_SUCCESS,
-
-
-
-
-
+    DOWNLOAD_FILE_TASK_REQUEST,
+    DOWNLOAD_FILE_TASK_FAILURE,
+    DOWNLOAD_FILE_TASK_SUCCESS,
+    OPEN_FOLDER_FILES_TASK
 } from "../types"
 
 export const MaketCardReducer = (state, action) => {
 
+    console.log(action);
 
     switch (action.type) {
 
+        case OPEN_FOLDER_FILES_TASK:
+
+            if (state.openFoldersTask.find(idTask=>idTask == action.payload.idTask)){
+                  return {
+                    ...state,
+                    openFoldersTask: state.openFoldersTask.filter(idTask=>idTask!= action.payload.idTask) 
+                }
+            } else {
+                return {
+                    ...state,
+                    openFoldersTask: [...state.openFoldersTask, action.payload.idTask] 
+                }
+            }
+        case DOWNLOAD_FILE_TASK_REQUEST:
+            return {
+
+                ...state,
+                downloadFilesTask: [...state.downloadFilesTask, action.payload.idFile]
+            }
+        case DOWNLOAD_FILE_TASK_FAILURE:
+            return {
+                ...state,
+                downloadFilesTask: state.downloadFilesTask.filter((idFile) => idFile != action.payload.idFile),
+                message: action.payload.message
+            }
+
+        case DOWNLOAD_FILE_TASK_SUCCESS:
+            return {
+                ...state,
+                downloadFilesTask: state.downloadFilesTask.filter(idFile => idFile !== action.payload.idFile)
+            }
 
         case UPLOAD_FILE_MAKET_REQUEST:
             return {
