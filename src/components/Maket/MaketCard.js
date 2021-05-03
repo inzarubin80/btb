@@ -141,6 +141,9 @@ const MaketCard = (props) => {
   const handleChangeIndex = (index) => {
     switchTab(index);
   };
+
+  console.log('Макет***********************', maket);
+
   React.useEffect(() => {
     openCard(props.match.params.id)
   }, [props.match.params.id]);

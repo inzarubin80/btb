@@ -16,22 +16,60 @@ import {
     ADD_TASK,
     REMOVE_TASK_START,
     REMOVE_TASK_CANCEL,
-
     REMOVE_TASK_REQUEST,
     REMOVE_TASK_FAILURE,
     REMOVE_TASK_SUCCESS,
-
     DOWNLOAD_FILE_MAKET_REQUEST,
     DOWNLOAD_FILE_MAKET_FAILURE,
-    DOWNLOAD_FILE_MAKET_SUCCESS
+    DOWNLOAD_FILE_MAKET_SUCCESS,
+
+    UPLOAD_FILE_MAKET_REQUEST,
+    UPLOAD_FILE_MAKET_FAILURE,
+    UPLOAD_FILE_MAKET_SUCCESS,
+
+
+
+
 
 } from "../types"
 
 export const MaketCardReducer = (state, action) => {
 
-    console.log(action);
 
     switch (action.type) {
+
+
+        case UPLOAD_FILE_MAKET_REQUEST:
+            return {
+
+                ...state,
+                uploadFiles: [...state.uploadFiles, action.payload.idFile]
+            }
+        case UPLOAD_FILE_MAKET_FAILURE:
+
+
+            let newState = {
+                ...state,
+                uploadFiles: state.uploadFiles.filter((idFile) => idFile != action.payload.idFile),
+                message: action.payload.message,
+                maket: action.payload.maket,
+            }
+
+            if (action.payload.maket) {
+                newState.maket = action.payload.maket;
+            }
+
+            return newState;
+
+
+
+        case UPLOAD_FILE_MAKET_SUCCESS:
+            return {
+                ...state,
+                uploadFiles: state.uploadFiles.filter((idFile) => idFile !== action.payload.idFile),
+                maket: action.payload.maket
+            }
+
 
         case DOWNLOAD_FILE_MAKET_REQUEST:
             return {
@@ -42,15 +80,18 @@ export const MaketCardReducer = (state, action) => {
         case DOWNLOAD_FILE_MAKET_FAILURE:
             return {
                 ...state,
-                downloadFiles: state.downloadFiles.filter((idFile) => { idFile != action.payload.idFile }),
+                downloadFiles: state.downloadFiles.filter((idFile) => idFile != action.payload.idFile),
                 message: action.payload.message
             }
 
         case DOWNLOAD_FILE_MAKET_SUCCESS:
             return {
                 ...state,
-                downloadFiles: state.downloadFiles.filter((idFile) => { idFile != action.payload.idFile })
+                downloadFiles: state.downloadFiles.filter(idFile => idFile !== action.payload.idFile)
             }
+
+
+
 
         case REMOVE_TASK_REQUEST:
             return {

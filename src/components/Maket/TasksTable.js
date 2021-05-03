@@ -139,6 +139,11 @@ const TasksTable = () => {
         className={classes.button}
         endIcon={<AddCircleIcon />}
         onClick={() => { addTask() }}
+        
+        disabled = {!maket.allowedAddTask} 
+
+        
+
       >
         Добавить
       </Button>

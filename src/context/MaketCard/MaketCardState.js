@@ -23,7 +23,12 @@ import {
 
     DOWNLOAD_FILE_MAKET_REQUEST,
     DOWNLOAD_FILE_MAKET_FAILURE,
-    DOWNLOAD_FILE_MAKET_SUCCESS
+    DOWNLOAD_FILE_MAKET_SUCCESS,
+
+    UPLOAD_FILE_MAKET_REQUEST,
+    UPLOAD_FILE_MAKET_FAILURE,
+    UPLOAD_FILE_MAKET_SUCCESS,
+
 
 } from '../types'
 import { MaketCardContext } from './MaketCardContext'
@@ -61,7 +66,6 @@ export const MaketCardState = ({ children }) => {
         //files
         uploadFiles: [],
         downloadFiles: [],
-        openFiles: [],
 
         //carent tab
         indexСurrentTab: 0,
@@ -74,15 +78,93 @@ export const MaketCardState = ({ children }) => {
     const dispatchRedux = useDispatch();
     const [state, dispatch] = useReducer(MaketCardReducer, initialState)
 
-    downloadFileMaketRequest => {
-        dispatch({ type: DOWNLOAD_FILE_MAKET_REQUEST })
+
+    const uploadFileMaketRequest = (idFile) => {
+        dispatch({ type: UPLOAD_FILE_MAKET_REQUEST, payload: { idFile } })
     }
-    downloadFileMaketFailure => {
-        dispatch({ type: DOWNLOAD_FILE_MAKET_FAILURE })
+    const uploadFileMaketFailure = (idFile, message, maket = null) => {
+        dispatch({ type: UPLOAD_FILE_MAKET_FAILURE, payload: { idFile, message, maket } })
     }
-    downloadFileMaketSuccess => {
-        dispatch({ type: DOWNLOAD_FILE_MAKET_SUCCESS })
+    const uploadFileMaketSuccess = (idFile, maket) => {
+        dispatch({ type: UPLOAD_FILE_MAKET_SUCCESS, payload: { idFile, maket } })
     }
+
+
+    const handleUploadFile = (idFile, macetCode, file, fileName, shortfileName) => {
+
+        uploadFileMaketRequest(idFile);
+
+        getBase64(file).then(fileBase64 => {
+
+            const functionRequest = () => {
+                return saveFileСonfirmation(macetCode, fileName, shortfileName, fileBase64)
+            };
+
+            const responseHandlingFunction = (json) => {
+                if (!json.error) {
+                    uploadFileMaketSuccess(idFile, json.responseMaket.maket)
+                } else {
+                    uploadFileMaketFailure(idFile, json.error, json.responseMaket.maket)
+                }
+            }
+
+            const exceptionHandlingFunction = (err) => {
+
+                uploadFileMaketFailure(idFile, err);
+
+            };
+
+            executorRequests(functionRequest, responseHandlingFunction, exceptionHandlingFunction, dispatchRedux);
+
+        }
+        )
+            .catch(err => {
+                uploadFileMaketRequest(idFile, err);;
+            });
+    }
+
+
+
+
+    const downloadFileMaketRequest = (idFile) => {
+        dispatch({ type: DOWNLOAD_FILE_MAKET_REQUEST, payload: { idFile } })
+    }
+    const downloadFileMaketFailure = (idFile, message) => {
+        dispatch({ type: DOWNLOAD_FILE_MAKET_FAILURE, payload: { idFile, message } })
+    }
+    const downloadFileMaketSuccess = (idFile) => {
+        dispatch({ type: DOWNLOAD_FILE_MAKET_SUCCESS, payload: { idFile } })
+    }
+
+
+    const handleDownload = (id, code, fileName) => {
+
+
+        downloadFileMaketRequest(id)
+
+        const functionRequest = () => {
+            return getImgMaket(code, fileName)
+        };
+        const responseHandlingFunction = (json) => {
+
+            if (!json.error) {
+                const blob = b64toBlob(json.file.imgBase64, '');
+                downloadFileMaketSuccess(id);
+                saveAs(blob, json.file.shortName);
+            }
+            else {
+                downloadFileMaketFailure(id, json.error)
+            }
+        }
+
+        const exceptionHandlingFunction = (err) => {
+            downloadFileMaketFailure(id, err)
+        };
+
+        executorRequests(functionRequest, responseHandlingFunction, exceptionHandlingFunction, dispatchRedux);
+    }
+
+
 
     const removeTaskRequest = () => {
         dispatch({ type: REMOVE_TASK_REQUEST })
@@ -298,29 +380,6 @@ export const MaketCardState = ({ children }) => {
     };
 
 
-    const handleDownload = (code, fileName) => {
-
-        //const idButton = fileName + 'save';
-        // hendlerStateLoadingButton(idButton, true);
-
-        const functionRequest = () => {
-            return getImgMaket(code, fileName)
-        };
-        const responseHandlingFunction = (json) => {
-
-            if (!json.error) {
-                const blob = b64toBlob(json.file.imgBase64, '');
-                saveAs(blob, json.file.shortName);
-            }
-        }
-
-        const exceptionHandlingFunction = () => {
-        };
-
-        executorRequests(functionRequest, responseHandlingFunction, exceptionHandlingFunction, dispatch);
-    }
-
-
     /*
     const handleDownloadFileTask = (uidTask, uidFile) => {
 
@@ -332,7 +391,6 @@ const functionRequest = () => {
 };
   
 
- 
 
 const responseHandlingFunction = (json) => {
   
@@ -431,61 +489,7 @@ const hendleRevisionMaket = () => {
 }
 
 
-const handleOpenFile = (macetCode, fileName) => {
 
-const idButton = fileName  + 'open';
-hendlerStateLoadingButton(idButton, true);
-
-const  functionRequest = () => {
-  return getImgMaket(macetCode, fileName)
-}
-
-const responseHandlingFunction = (json) => {
-  hendlerStateLoadingButton(idButton, false);
-  seIimgData(json.file);
-  setIsOpen(true);
-}
-
-const exceptionHandlingFunction = () => {
-  hendlerStateLoadingButton(idButton, false);
-  seIimgData(null);
-};
-  
-executorRequests(functionRequest, responseHandlingFunction, exceptionHandlingFunction, dispatch);
-
-}
-
-const handleChangeFile = (macetCode, file, fileName, shortfileName) => {
-
-  const idButton = fileName + 'upload';
-
-  hendlerStateLoadingButton(idButton, true);
-
-  getBase64(file).then(fileBase64 => {
-
-      const functionRequest = () => {
-        return  saveFileСonfirmation(macetCode, fileName, shortfileName, fileBase64)
-      };
-
-      const responseHandlingFunction = (json)=> {
-        if (json.responseMaket.maket) {
-          //setMaket(json.responseMaket.maket);
-        }
-        hendlerStateLoadingButton(idButton, false);
-      }
-      
-      const exceptionHandlingFunction = () => {
-        hendlerStateLoadingButton(idButton, false); 
-      };
-
-      executorRequests(functionRequest, responseHandlingFunction, exceptionHandlingFunction, dispatch);
-
-  }
-  )
-    .catch(err => {
-      console.log(err);
-    });
-}
 
 
 */
@@ -499,6 +503,9 @@ const handleChangeFile = (macetCode, file, fileName, shortfileName) => {
             indexСurrentTab: state.indexСurrentTab,
             editorState: state.editorState,
             idTaskRemove: state.idTaskRemove,
+            downloadFiles: state.downloadFiles,
+            uploadFiles: state.uploadFiles,
+
             openCard,
             openChangeTask,
             switchTab,
@@ -510,7 +517,9 @@ const handleChangeFile = (macetCode, file, fileName, shortfileName) => {
             addTask,
             removeTaskStart,
             removeTaskCancel,
-            hendleRemoveTask
+            hendleRemoveTask,
+            handleDownload,
+            handleUploadFile
 
         }}>{children}</MaketCardContext.Provider>)
 

@@ -10,10 +10,8 @@ import TableBody from '@material-ui/core/TableBody';
 import SaveIcon from '@material-ui/icons/Save';
 import BackupIcon from '@material-ui/icons/Backup';
 import IconButton from '@material-ui/core/IconButton';
-import SearchIcon from '@material-ui/icons/Search';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import CardActions from '@material-ui/core/CardActions';
-import { approval } from './constants'
 import { MaketCardContext } from '../../context/MaketCard/MaketCardContext';
 
 const useStyles = makeStyles((theme) => ({
@@ -38,10 +36,13 @@ const FilesTable = () => {
 
 
 
-    const { maket } = React.useContext(MaketCardContext);
-
-
+    const { maket, handleDownload, downloadFiles, handleUploadFile, uploadFiles } = React.useContext(MaketCardContext);
     const classes = useStyles();
+
+
+    console.log("downloadFiles", downloadFiles);
+    console.log("uploadFiles", uploadFiles);
+
 
 
     return (
@@ -51,20 +52,14 @@ const FilesTable = () => {
                     <TableHead>
                         <TableRow>
 
-
                             <TableCell>Файл</TableCell>
-
-
-                            <TableCell>Файл подтверждения</TableCell>
-
+                            {maket.allowedUploadingConfirmationFiles && <TableCell>Файл подтверждения</TableCell>}
 
                         </TableRow>
                     </TableHead>
                     <TableBody>
                         {maket.files.map((file) => (
                             <TableRow key={file.id}>
-
-
 
                                 <TableCell component="th" scope="file" >
 
@@ -73,76 +68,66 @@ const FilesTable = () => {
                                     <CardActions>
 
 
-                                        <IconButton aria-label="delete" color="primary" onClick={() => { }}>
-                                            <SearchIcon />
-                                        </IconButton>
+                                        {!downloadFiles.find(id => id == file.id) &&
+                                            <IconButton
+                                                style={{ 'display': 'inlineBlock' }}
+                                                aria-label="delete" color="primary"
+                                                onClick={() => { handleDownload(file.id, file.code, file.fileName) }}>
+                                                <SaveIcon />
+                                            </IconButton>}
 
-
-
-                                        <IconButton style={{ 'display': 'inlineBlock' }} aria-label="delete" color="primary" onClick={() => { }}>
-                                            <SaveIcon />
-                                        </IconButton>
-
+                                        {downloadFiles.find(id => id == file.id) &&
+                                            <CircularProgress />
+                                        }
 
                                     </CardActions>
 
                                 </TableCell>
 
 
-                                <TableCell component="th">
+                                {maket.allowedUploadingConfirmationFiles && <TableCell component="th">
 
 
                                     {file.shortfileNameСonfirmation}
                                     <CardActions>
 
-                                       
-                                            <IconButton aria-label="delete" color="primary" onClick={() => { }}>
-                                                <SearchIcon />
-                                            </IconButton>
-
-                        
-
-
-                                         <div className={classes.rootButton}>
+                                        <div className={classes.rootButton}>
                                             <input
 
                                                 accept="image/*"
                                                 className={classes.inputButton}
-                                                id={"contained-button-file" + file.id}
+                                                id={"contained-button-file" + file.idConf}
                                                 type="file"
 
 
-                                                onChange={(e) =>{}}
+                                                onChange={(e) => handleUploadFile(file.idConf, file.code, e.target.files[0], file.fileName, file.shortfileName)}
 
                                             />
-                                            <label htmlFor={"contained-button-file" + file.id}>
-                                                <IconButton aria-label="download" variant="contained" color="primary" component="span">
+                                            <label htmlFor={"contained-button-file" + file.idConf}>
+
+                                                {!uploadFiles.find(idConf => idConf == file.idConf) && <IconButton
+                                                    aria-label="download"
+                                                    variant="contained"
+                                                    color="primary"
+                                                    component="span">
                                                     <BackupIcon />
-                                                </IconButton>
+                                                </IconButton>}
+
+                                                {uploadFiles.find(idConf => idConf == file.idConf) &&
+                                                    <CircularProgress />
+                                                }
+
+
                                             </label>
                                         </div>
 
-    
                                     </CardActions>
-
-                                </TableCell>
-
-
-
-
-
+                                </TableCell>}
                             </TableRow>
                         ))}
                     </TableBody>
                 </Table>
-
-
-
             </TableContainer>
-
-
-
-
 
         </div>
     );
