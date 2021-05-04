@@ -32,7 +32,8 @@ import {
 
     SET_MAKET_STATUS_REQUEST,
     SET_MAKET_STATUS_FAILURE,
-    SET_MAKET_STATUS_SUCCESS
+    SET_MAKET_STATUS_SUCCESS,
+    CLEAR_MESSAGE_BY_TIMEOUT,
 
 } from "../types"
 
@@ -41,6 +42,19 @@ export const MaketCardReducer = (state, action) => {
     console.log(action);
 
     switch (action.type) {
+
+
+        case CLEAR_MESSAGE_BY_TIMEOUT:
+
+            if (state.message && state.message.uid == action.payload.uid)
+                return {
+
+                    ...state,
+                    message: null
+                }
+            else {
+                return state;
+            }
 
 
         case SET_MAKET_STATUS_REQUEST:
@@ -67,11 +81,11 @@ export const MaketCardReducer = (state, action) => {
             }
 
         case SET_MAKET_STATUS_SUCCESS:
-           
-        return {
+
+            return {
                 ...state,
                 statusBeingSet: false,
-                maket:action.payload.maket
+                maket: action.payload.maket
             }
 
         case OPEN_FOLDER_FILES_TASK:

@@ -26,7 +26,7 @@ import { MaketCardContext } from '../../context/MaketCard/MaketCardContext';
 import Typography from '@material-ui/core/Typography';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import Button from '@material-ui/core/Button';
-
+import Modal from '@material-ui/core/Modal';
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 
 function Alert(props) {
@@ -66,10 +66,14 @@ const useStyles = makeStyles((theme) => ({
   },
 
   messageBox: {
-    //margin: theme.spacing(2),
-    position: 'absolute',
-    top: '50%',
-    left: '43%'
+    
+    position: 'fixed',
+  left: 0,
+  bottom: 0,
+  width: '100%',
+  //background-color: red;
+  //color: white;
+  textAlign: 'center'
 
   },
 
@@ -132,7 +136,7 @@ function a11yProps(index) {
 const MaketCard = (props) => {
 
   const classes = useStyles();
-  const { maket, switchTab, indexСurrentTab, taskEditingOpens, idTaskChange, taskChangeFiles, openChangeTask, editorState, openCard, hendleSetMaketStatus,  statusBeingSet} = React.useContext(MaketCardContext);
+  const { maket, switchTab, indexСurrentTab, taskEditingOpens, idTaskChange, openCard, hendleSetMaketStatus,  statusBeingSet, message} = React.useContext(MaketCardContext);
   const theme = useTheme();
   const handleChange = (event, newValue) => {
     switchTab(newValue);
@@ -140,6 +144,12 @@ const MaketCard = (props) => {
   const handleChangeIndex = (index) => {
     switchTab(index);
   };
+
+  const messageBox = ()  => {return (<div className={classes.messageBox}>
+    
+    <Alert onClose={() => {}} severity= {message.type}>{message.str}</Alert>
+
+ </div>)}
 
   console.log('Макет***********************', maket);
 
@@ -165,6 +175,15 @@ const MaketCard = (props) => {
             )}
             {statusBeingSet && <CircularProgress/>}
           </div>
+
+          <Modal
+        open={message?true:false}
+        onClose={()=>{}}
+        aria-labelledby="simple-modal-title"
+        aria-describedby="simple-modal-description"
+      >
+        {message&&messageBox()}
+      </Modal>
 
           <Descriptions layout="vertical" bordered >
             <Descriptions.Item label="Продукт">{maket.product}</Descriptions.Item>

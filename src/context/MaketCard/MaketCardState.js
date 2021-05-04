@@ -32,10 +32,8 @@ import {
     OPEN_FOLDER_FILES_TASK,
     SET_MAKET_STATUS_REQUEST,
     SET_MAKET_STATUS_FAILURE,
-    SET_MAKET_STATUS_SUCCESS
-    
-
-
+    SET_MAKET_STATUS_SUCCESS,
+    CLEAR_MESSAGE_BY_TIMEOUT
 } from '../types'
 import { MaketCardContext } from './MaketCardContext'
 import { MaketCardReducer } from './MaketCardReducer'
@@ -48,7 +46,7 @@ import { b64toBlob, getBase64 } from '../../utils/utils';
 import { saveAs } from 'file-saver';
 import { v4 as uuidv4 } from 'uuid';
 
-const alertTypes = {error:'error', warning:'warning', info:'info', success:'success'};
+const alertTypes = { error: 'error', warning: 'warning', info: 'info', success: 'success' };
 
 
 
@@ -57,7 +55,7 @@ export const MaketCardState = ({ children }) => {
     const initialState = {
 
         maket: null,
-        message: '',
+        message: null,
 
 
         //card open
@@ -76,12 +74,12 @@ export const MaketCardState = ({ children }) => {
         uploadFiles: [],
         downloadFiles: [],
         downloadFilesTask: [],
-        openFoldersTask:[],
+        openFoldersTask: [],
         //carent tab
         indexСurrentTab: 0,
 
         //state
-        statusBeingSet:false
+        statusBeingSet: false
 
     }
 
@@ -89,28 +87,28 @@ export const MaketCardState = ({ children }) => {
     const dispatchRedux = useDispatch();
     const [state, dispatch] = useReducer(MaketCardReducer, initialState)
 
-    
-    const createMesage=(type, str, lifetime=0)=>{
+
+    const createMesage = (type, str, lifetime = 0) => {
         const uid = uuidv4();
         if (lifetime) {
-            setTimeout(()=>dispatch({type:'clear message by timeout', payload: {uid}}), lifetime)
+            setTimeout(() => dispatch({ type: CLEAR_MESSAGE_BY_TIMEOUT, payload: { uid } }), lifetime)
         }
-        return {type, str, uid}
+        return { type, str, uid }
     }
 
     const setMaketStatusRequest = () => {
-        dispatch({ type: SET_MAKET_STATUS_REQUEST})
-    }
-    
-    const setMaketStatusFailure = (message, maket=null) => {
-        dispatch({ type: SET_MAKET_STATUS_FAILURE, payload: {message, maket}})
+        dispatch({ type: SET_MAKET_STATUS_REQUEST })
     }
 
-    const setMaketStatusSuccess = (maket) =>{
-        dispatch({ type: SET_MAKET_STATUS_SUCCESS, payload: {maket}})
+    const setMaketStatusFailure = (message, maket = null) => {
+        dispatch({ type: SET_MAKET_STATUS_FAILURE, payload: { message: createMesage(alertTypes.info, message, 3000), maket } })
     }
 
-    const hendleSetMaketStatus  = (uidState) =>{
+    const setMaketStatusSuccess = (maket) => {
+        dispatch({ type: SET_MAKET_STATUS_SUCCESS, payload: { maket } })
+    }
+
+    const hendleSetMaketStatus = (uidState) => {
         setMaketStatusRequest();
 
         const functionRequest = () => {
@@ -122,7 +120,7 @@ export const MaketCardState = ({ children }) => {
                 setMaketStatusSuccess(json.responseMaket.maket);
 
             } else {
-                
+
                 setMaketStatusFailure(json.error, json.responseMaket.maket);
             }
         };
@@ -135,22 +133,22 @@ export const MaketCardState = ({ children }) => {
 
 
     }
-   
 
-    const hendleOpenFolderFilesTask  = (idTask) =>{
-        dispatch({ type: OPEN_FOLDER_FILES_TASK, payload: {idTask }})
+
+    const hendleOpenFolderFilesTask = (idTask) => {
+        dispatch({ type: OPEN_FOLDER_FILES_TASK, payload: { idTask } })
     }
-   
+
     const downloadFileTaskRequest = (idFile) => {
         dispatch({ type: DOWNLOAD_FILE_TASK_REQUEST, payload: { idFile } })
     }
 
     const downloadFileTaskFailure = (idFile, message) => {
-        dispatch({ type: DOWNLOAD_FILE_TASK_FAILURE, payload: { idFile, message } })
+        dispatch({ type: DOWNLOAD_FILE_TASK_FAILURE, payload: { idFile, message: createMesage(alertTypes.info, message, 3000) } })
     }
 
     const downloadFileTaskSuccess = (idFile) => {
-        dispatch({ type: DOWNLOAD_FILE_TASK_SUCCESS, payload: {idFile} })
+        dispatch({ type: DOWNLOAD_FILE_TASK_SUCCESS, payload: { idFile } })
     }
 
 
@@ -184,7 +182,7 @@ export const MaketCardState = ({ children }) => {
         dispatch({ type: UPLOAD_FILE_MAKET_REQUEST, payload: { idFile } })
     }
     const uploadFileMaketFailure = (idFile, message, maket = null) => {
-        dispatch({ type: UPLOAD_FILE_MAKET_FAILURE, payload: { idFile, message, maket } })
+        dispatch({ type: UPLOAD_FILE_MAKET_FAILURE, payload: { idFile, message: createMesage(alertTypes.info, message, 3000), maket } })
     }
     const uploadFileMaketSuccess = (idFile, maket) => {
         dispatch({ type: UPLOAD_FILE_MAKET_SUCCESS, payload: { idFile, maket } })
@@ -228,7 +226,7 @@ export const MaketCardState = ({ children }) => {
         dispatch({ type: DOWNLOAD_FILE_MAKET_REQUEST, payload: { idFile } })
     }
     const downloadFileMaketFailure = (idFile, message) => {
-        dispatch({ type: DOWNLOAD_FILE_MAKET_FAILURE, payload: { idFile, message } })
+        dispatch({ type: DOWNLOAD_FILE_MAKET_FAILURE, payload: { idFile, message: createMesage(alertTypes.info, message, 3000) } })
     }
     const downloadFileMaketSuccess = (idFile) => {
         dispatch({ type: DOWNLOAD_FILE_MAKET_SUCCESS, payload: { idFile } })
@@ -270,10 +268,10 @@ export const MaketCardState = ({ children }) => {
 
     const removeTaskFailure = (err, maket = null) => {
         if (maket) {
-            dispatch({ type: REMOVE_TASK_FAILURE, payload: { message: err, maket } })
+            dispatch({ type: REMOVE_TASK_FAILURE, payload: { message: createMesage(alertTypes.info, err, 3000), maket } })
 
         } else {
-            dispatch({ type: REMOVE_TASK_FAILURE, payload: { message: err } })
+            dispatch({ type: REMOVE_TASK_FAILURE, payload: { message: createMesage(alertTypes.info, err, 3000) } })
         }
     }
 
@@ -334,9 +332,9 @@ export const MaketCardState = ({ children }) => {
 
     const requestEditFailure = (err, maket = null) => {
         if (maket) {
-            dispatch({ type: OPEN_EDIT_TASK_FAILURE, payload: { message: err, maket } })
+            dispatch({ type: OPEN_EDIT_TASK_FAILURE, payload: { message: createMesage(alertTypes.info, err, 3000), maket } })
         } else {
-            dispatch({ type: OPEN_EDIT_TASK_FAILURE, payload: { message: err } })
+            dispatch({ type: OPEN_EDIT_TASK_FAILURE, payload: { message: createMesage(alertTypes.info, err, 3000) } })
         }
     };
 
@@ -345,10 +343,10 @@ export const MaketCardState = ({ children }) => {
     };
 
     const openCardMaketRequest = () => {
-        dispatch({ type: OPEN_CARD_MAKET_REQUEST, payload: {...initialState,  cardOpens:true}})
+        dispatch({ type: OPEN_CARD_MAKET_REQUEST, payload: { ...initialState, cardOpens: true } })
     }
     const openCardMaketFailure = (message) => {
-        dispatch({ type: OPEN_CARD_MAKET_FAILURE, payload: { message } })
+        dispatch({ type: OPEN_CARD_MAKET_FAILURE, payload: { message: createMesage(alertTypes.info, message, 3000) } })
     }
     const openCardMaketSuccess = (maket) => {
         dispatch({ type: OPEN_CARD_MAKET_SUCCESS, payload: { maket } })
@@ -403,7 +401,7 @@ export const MaketCardState = ({ children }) => {
             }
         };
 
-        const exceptionHandlingFunction = (err) => {requestEditFailure(err)}
+        const exceptionHandlingFunction = (err) => { requestEditFailure(err) }
         executorRequests(functionRequest, responseHandlingFunction, exceptionHandlingFunction, dispatchRedux);
     }
 
@@ -421,9 +419,9 @@ export const MaketCardState = ({ children }) => {
     }
     const saveTaskFailure = (err, maket = null) => {
         if (maket) {
-            dispatch({ type: SAVE_TASK_FAILURE, payload: { message: err, maket } })
+            dispatch({ type: SAVE_TASK_FAILURE, payload: { message: createMesage(alertTypes.info, err, 3000), maket } })
         } else {
-            dispatch({ type: SAVE_TASK_FAILURE, payload: { message: err } })
+            dispatch({ type: SAVE_TASK_FAILURE, payload: { message: createMesage(alertTypes.info, err, 3000) } })
         }
 
     }
@@ -489,9 +487,9 @@ export const MaketCardState = ({ children }) => {
             idTaskRemove: state.idTaskRemove,
             downloadFiles: state.downloadFiles,
             uploadFiles: state.uploadFiles,
-            downloadFilesTask:state.downloadFilesTask,
-            openFoldersTask:state.openFoldersTask,
-            statusBeingSet:state.statusBeingSet,
+            downloadFilesTask: state.downloadFilesTask,
+            openFoldersTask: state.openFoldersTask,
+            statusBeingSet: state.statusBeingSet,
             openCard,
             openChangeTask,
             switchTab,
@@ -509,7 +507,7 @@ export const MaketCardState = ({ children }) => {
             handleDownloadFileTask,
             hendleOpenFolderFilesTask,
             hendleSetMaketStatus
-        
+
         }}>{children}</MaketCardContext.Provider>)
 
 }
