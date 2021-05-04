@@ -298,7 +298,7 @@ export const MaketCardState = ({ children }) => {
 
         const responseHandlingFunction = (json) => {
             if (!json.error) {
-                removeTaskSuccess(json.maket);
+                removeTaskSuccess(json.responseMaket.maket);
             } else {
                 removeTaskFailure(json.error, json.responseMaket.maket)
             }
@@ -437,7 +437,7 @@ export const MaketCardState = ({ children }) => {
 
     }
     const saveTaskSuccess = (maket) => {
-        dispatch({ type: SAVE_TASK_SUCCESS, payload: { maket } })
+        dispatch({ type: SAVE_TASK_SUCCESS, payload: { maket, message:createMesage(alertTypes.success, "Задание записано", 1000) } })
     }
 
 
