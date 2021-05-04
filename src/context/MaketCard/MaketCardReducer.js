@@ -39,7 +39,7 @@ import {
 
 export const MaketCardReducer = (state, action) => {
 
-    console.log(action);
+    console.log('action',action);
 
     switch (action.type) {
 
