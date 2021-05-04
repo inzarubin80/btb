@@ -40,10 +40,7 @@ const FilesTable = () => {
     const classes = useStyles();
 
 
-    console.log("downloadFiles", downloadFiles);
-    console.log("uploadFiles", uploadFiles);
-
-
+    
 
     return (
         <div>

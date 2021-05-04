@@ -97,6 +97,7 @@ export const MaketCardState = ({ children }) => {
     }
 
     const constStandartLifetime = 3500;
+    
 
     const setMaketStatusRequest = () => {
         dispatch({ type: SET_MAKET_STATUS_REQUEST })
@@ -107,7 +108,9 @@ export const MaketCardState = ({ children }) => {
     }
 
     const setMaketStatusSuccess = (maket) => {
-        dispatch({ type: SET_MAKET_STATUS_SUCCESS, payload: { maket } })
+
+        const message = createMesage(alertTypes.success, 'Статус макета успешно изменен', 1500);
+        dispatch({ type: SET_MAKET_STATUS_SUCCESS, payload: { maket,  message} })
     }
 
     const hendleSetMaketStatus = (uidState) => {

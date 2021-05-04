@@ -39,7 +39,6 @@ import {
 
 export const MaketCardReducer = (state, action) => {
 
-    console.log('action',action);
 
     switch (action.type) {
 
@@ -85,7 +84,9 @@ export const MaketCardReducer = (state, action) => {
             return {
                 ...state,
                 statusBeingSet: false,
-                maket: action.payload.maket
+                maket: action.payload.maket,
+                message: action.payload.message,
+                
             }
 
         case OPEN_FOLDER_FILES_TASK:

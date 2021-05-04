@@ -117,7 +117,6 @@ const LoginPage = () => {
     onSubmit: (values) => {
 
 
-      console.log('openConformationCode');
       dispatch(sendConfirmationСode(values.email))
 
 

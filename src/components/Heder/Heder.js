@@ -99,8 +99,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Heder(props) {
 
-  console.log('Heder');
-
+  
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);

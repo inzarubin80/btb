@@ -87,8 +87,7 @@ export default function Makets() {
   },[status, dispatch]);
 
 
-  console.log("filterModel", filterModel)
-
+ 
   return (
 
     <div>

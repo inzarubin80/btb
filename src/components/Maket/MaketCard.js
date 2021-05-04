@@ -67,13 +67,15 @@ const useStyles = makeStyles((theme) => ({
 
   messageBox: {
     
-    position: 'fixed',
-  left: 0,
-  bottom: 0,
-  width: '100%',
-  //background-color: red;
-  //color: white;
-  textAlign: 'center'
+    'position': 'absolute',
+    'top': '0',
+    'bottom': '0',
+    'left': '0',
+    'right': '0',
+    'width': '50%',
+    'height': '30%',
+    'margin': 'auto',
+
 
   },
 
@@ -151,8 +153,7 @@ const MaketCard = (props) => {
 
  </div>)}
 
-  console.log('Макет***********************', maket);
-
+ 
   React.useEffect(() => {
     openCard(props.match.params.id)
   }, [props.match.params.id]);
