@@ -17,9 +17,7 @@ import FormTask from './FormTask'
 import { green, blue, pink } from '@material-ui/core/colors';
 import 'antd/dist/antd.css';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import {
-  withRouter
-} from "react-router-dom";
+import {withRouter} from "react-router-dom";
 import 'react-image-lightbox/style.css';
 import MuiAlert from '@material-ui/lab/Alert';
 import { MaketCardContext } from '../../context/MaketCard/MaketCardContext';
@@ -66,7 +64,7 @@ const useStyles = makeStyles((theme) => ({
   },
 
   messageBox: {
-    
+
     'position': 'absolute',
     'top': '0',
     'bottom': '0',
@@ -138,7 +136,7 @@ function a11yProps(index) {
 const MaketCard = (props) => {
 
   const classes = useStyles();
-  const { maket, switchTab, indexСurrentTab, taskEditingOpens, idTaskChange, openCard, hendleSetMaketStatus,  statusBeingSet, message} = React.useContext(MaketCardContext);
+  const { maket, switchTab, indexСurrentTab, clearMessage, idTaskChange, openCard, hendleSetMaketStatus, statusBeingSet, message } = React.useContext(MaketCardContext);
   const theme = useTheme();
   const handleChange = (event, newValue) => {
     switchTab(newValue);
@@ -147,13 +145,8 @@ const MaketCard = (props) => {
     switchTab(index);
   };
 
-  const messageBox = ()  => {return (<div className={classes.messageBox}>
-    
-    <Alert onClose={() => {}} severity= {message.type}>{message.str}</Alert>
 
- </div>)}
 
- 
   React.useEffect(() => {
     openCard(props.match.params.id)
   }, [props.match.params.id]);
@@ -168,23 +161,29 @@ const MaketCard = (props) => {
           <div className={classes.buttonStatusGroup}>
             {!statusBeingSet && maket.actions.map((action) => {
               if (action.progress) {
-                return (<Button onClick = {()=>{hendleSetMaketStatus(action.uid)}} variant="outlined" endIcon={<ArrowForwardIcon />} key={action.uid} color="primary"> {action.name}</Button>)
+                return (<Button onClick={() => { hendleSetMaketStatus(action.uid) }} variant="outlined" endIcon={<ArrowForwardIcon />} key={action.uid} color="primary"> {action.name}</Button>)
               } else {
-                return (<Button onClick = {()=>{hendleSetMaketStatus(action.uid)}} variant="outlined" startIcon={<ArrowBackIcon />}  key={action.uid}  color="primary"> {action.name}</Button>)
+                return (<Button onClick={() => { hendleSetMaketStatus(action.uid) }} variant="outlined" startIcon={<ArrowBackIcon />} key={action.uid} color="primary"> {action.name}</Button>)
               }
             }
             )}
-            {statusBeingSet && <CircularProgress/>}
+            {statusBeingSet && <CircularProgress />}
           </div>
 
           <Modal
-        open={message?true:false}
-        onClose={()=>{}}
-        aria-labelledby="simple-modal-title"
-        aria-describedby="simple-modal-description"
-      >
-        {message&&messageBox()}
-      </Modal>
+            open={message ? true : false}
+            onClose={() => { }}
+            aria-labelledby="simple-modal-title"
+            aria-describedby="simple-modal-description"
+          >
+
+            <div className={classes.messageBox}>
+
+              {message && <Alert onClose={() => { clearMessage(message.uid) }} severity={message.type}>{message.str}</Alert>}
+
+            </div>
+
+          </Modal>
 
           <Descriptions layout="vertical" bordered >
             <Descriptions.Item label="Продукт">{maket.product}</Descriptions.Item>

@@ -33,7 +33,7 @@ import {
     SET_MAKET_STATUS_REQUEST,
     SET_MAKET_STATUS_FAILURE,
     SET_MAKET_STATUS_SUCCESS,
-    CLEAR_MESSAGE_BY_TIMEOUT,
+    CLEAR_MESSAGE,
 
 } from "../types"
 
@@ -43,7 +43,7 @@ export const MaketCardReducer = (state, action) => {
     switch (action.type) {
 
 
-        case CLEAR_MESSAGE_BY_TIMEOUT:
+        case CLEAR_MESSAGE:
 
             if (state.message && state.message.uid == action.payload.uid)
                 return {
@@ -212,7 +212,8 @@ export const MaketCardReducer = (state, action) => {
         case ADD_TASK:
             return {
                 ...state,
-                idTaskChange: -1
+                idTaskChange: -1,
+                editorState:action.payload.editorState
             }
 
         case SAVE_TASK_REQUEST:
@@ -272,6 +273,7 @@ export const MaketCardReducer = (state, action) => {
             return {
                 ...state,
                 ...action.payload,
+                editorState:action.payload.editorState,
                 taskEditingOpens: false
             }
 

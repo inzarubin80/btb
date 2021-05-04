@@ -33,7 +33,7 @@ import {
     SET_MAKET_STATUS_REQUEST,
     SET_MAKET_STATUS_FAILURE,
     SET_MAKET_STATUS_SUCCESS,
-    CLEAR_MESSAGE_BY_TIMEOUT
+    CLEAR_MESSAGE
 } from '../types'
 import { MaketCardContext } from './MaketCardContext'
 import { MaketCardReducer } from './MaketCardReducer'
@@ -91,13 +91,17 @@ export const MaketCardState = ({ children }) => {
     const createMesage = (type, str, lifetime = 3000) => {
         const uid = uuidv4();
         if (lifetime) {
-            setTimeout(() => dispatch({ type: CLEAR_MESSAGE_BY_TIMEOUT, payload: { uid } }), lifetime)
+            setTimeout(() => clearMessage(uid), lifetime)
         }
         return { type, str, uid }
     }
 
     const constStandartLifetime = 3500;
-    
+
+
+    const clearMessage = (uid) => {
+        dispatch({ type: CLEAR_MESSAGE, payload: { uid } })
+    }
 
     const setMaketStatusRequest = () => {
         dispatch({ type: SET_MAKET_STATUS_REQUEST })
@@ -110,7 +114,7 @@ export const MaketCardState = ({ children }) => {
     const setMaketStatusSuccess = (maket) => {
 
         const message = createMesage(alertTypes.success, 'Статус макета успешно изменен', 1500);
-        dispatch({ type: SET_MAKET_STATUS_SUCCESS, payload: { maket,  message} })
+        dispatch({ type: SET_MAKET_STATUS_SUCCESS, payload: { maket, message } })
     }
 
     const hendleSetMaketStatus = (uidState) => {
@@ -231,7 +235,7 @@ export const MaketCardState = ({ children }) => {
         dispatch({ type: DOWNLOAD_FILE_MAKET_REQUEST, payload: { idFile } })
     }
     const downloadFileMaketFailure = (idFile, message) => {
-        dispatch({ type: DOWNLOAD_FILE_MAKET_FAILURE, payload: { idFile, message: createMesage(alertTypes.info, message,constStandartLifetime) } })
+        dispatch({ type: DOWNLOAD_FILE_MAKET_FAILURE, payload: { idFile, message: createMesage(alertTypes.info, message, constStandartLifetime) } })
     }
     const downloadFileMaketSuccess = (idFile) => {
         dispatch({ type: DOWNLOAD_FILE_MAKET_SUCCESS, payload: { idFile } })
@@ -273,10 +277,10 @@ export const MaketCardState = ({ children }) => {
 
     const removeTaskFailure = (err, maket = null) => {
         if (maket) {
-            dispatch({ type: REMOVE_TASK_FAILURE, payload: { message: createMesage(alertTypes.info, err,constStandartLifetime), maket } })
+            dispatch({ type: REMOVE_TASK_FAILURE, payload: { message: createMesage(alertTypes.info, err, constStandartLifetime), maket } })
 
         } else {
-            dispatch({ type: REMOVE_TASK_FAILURE, payload: { message: createMesage(alertTypes.info, err,constStandartLifetime) } })
+            dispatch({ type: REMOVE_TASK_FAILURE, payload: { message: createMesage(alertTypes.info, err, constStandartLifetime) } })
         }
     }
 
@@ -332,14 +336,14 @@ export const MaketCardState = ({ children }) => {
     };
 
     const addTask = () => {
-        dispatch({ type: ADD_TASK })
+        dispatch({ type: ADD_TASK, payload: { editorState: EditorState.createEmpty() } })
     }
 
     const requestEditFailure = (err, maket = null) => {
         if (maket) {
-            dispatch({ type: OPEN_EDIT_TASK_FAILURE, payload: { message: createMesage(alertTypes.info, err,constStandartLifetime), maket } })
+            dispatch({ type: OPEN_EDIT_TASK_FAILURE, payload: { message: createMesage(alertTypes.info, err, constStandartLifetime), maket } })
         } else {
-            dispatch({ type: OPEN_EDIT_TASK_FAILURE, payload: { message: createMesage(alertTypes.info, err,constStandartLifetime) } })
+            dispatch({ type: OPEN_EDIT_TASK_FAILURE, payload: { message: createMesage(alertTypes.info, err, constStandartLifetime) } })
         }
     };
 
@@ -351,7 +355,7 @@ export const MaketCardState = ({ children }) => {
         dispatch({ type: OPEN_CARD_MAKET_REQUEST, payload: { ...initialState, cardOpens: true } })
     }
     const openCardMaketFailure = (message) => {
-        dispatch({ type: OPEN_CARD_MAKET_FAILURE, payload: { message: createMesage(alertTypes.info, message,constStandartLifetime) } })
+        dispatch({ type: OPEN_CARD_MAKET_FAILURE, payload: { message: createMesage(alertTypes.info, message, constStandartLifetime) } })
     }
     const openCardMaketSuccess = (maket) => {
         dispatch({ type: OPEN_CARD_MAKET_SUCCESS, payload: { maket } })
@@ -377,7 +381,7 @@ export const MaketCardState = ({ children }) => {
 
         executorRequests(functionRequest, responseHandlingFunction, exceptionHandlingFunction, dispatchRedux);
 
-    }   
+    }
 
     const openChangeTask = (uid) => {
 
@@ -391,8 +395,10 @@ export const MaketCardState = ({ children }) => {
             if (!json.error) {
                 let task = json.maket.tasks.find((task) => task.uid == uid);
 
+                let newEditorState = EditorState.createEmpty();
+
                 if (task) {
-                    let newEditorState = EditorState.createEmpty();
+
                     const contentBlock = htmlToDraft(task.text);
                     if (contentBlock) {
                         const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
@@ -424,7 +430,7 @@ export const MaketCardState = ({ children }) => {
     }
     const saveTaskFailure = (err, maket = null) => {
         if (maket) {
-            dispatch({ type: SAVE_TASK_FAILURE, payload: { message: createMesage(alertTypes.info, err,constStandartLifetime), maket } })
+            dispatch({ type: SAVE_TASK_FAILURE, payload: { message: createMesage(alertTypes.info, err, constStandartLifetime), maket } })
         } else {
             dispatch({ type: SAVE_TASK_FAILURE, payload: { message: createMesage(alertTypes.info, err, constStandartLifetime) } })
         }
@@ -449,15 +455,14 @@ export const MaketCardState = ({ children }) => {
             number = state.maket.tasks.find((task) => task.uid == state.idTaskChange).number;
         }
 
+
         const taskTextValueHTML = draftToHtml(convertToRaw(state.editorState.getCurrentContent()));
 
-        /*
-        if (!editorState.getCurrentContent().getPlainText()) {
-            addMessage(idButton, 'warning', 'Заполните текст задания', 3000);
+        if (!state.editorState.getCurrentContent().getPlainText()) {
+            saveTaskFailure('Заполните текст задания')
             return
         }
-        */
-
+        
         saveTaskRequest();
 
         const functionRequest = () => {
@@ -511,7 +516,8 @@ export const MaketCardState = ({ children }) => {
             handleUploadFile,
             handleDownloadFileTask,
             hendleOpenFolderFilesTask,
-            hendleSetMaketStatus
+            hendleSetMaketStatus,
+            clearMessage
 
         }}>{children}</MaketCardContext.Provider>)
 
