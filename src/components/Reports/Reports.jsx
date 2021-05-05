@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
 
     heading: {
         textAlign: 'center',
-        marginTop:theme.spacing(4),
+        marginTop: theme.spacing(4),
 
     },
 
@@ -58,6 +58,12 @@ export default function Reports() {
         setOpen(!open);
     };
 
+
+    function ListItemLink(props) {
+        return <ListItem button component="a" {...props} />;
+    }
+
+
     return (
 
         <div className={classes.root}>
@@ -69,7 +75,7 @@ export default function Reports() {
                     </Typography>
                 </Grid>
 
-                <Grid item xs={1}/>
+                <Grid item xs={1} />
 
                 <Grid item xs={10}>
                     <List
@@ -82,22 +88,25 @@ export default function Reports() {
                             <ListItemIcon>
                                 <FolderIcon />
                             </ListItemIcon>
-                            <ListItemText primary="Комерция" />
+                            <ListItemText primary="Коммерция" />
                             {open ? <ExpandLess /> : <ExpandMore />}
                         </ListItem>
                         <Collapse in={open} timeout="auto" unmountOnExit>
                             <List component="div" disablePadding>
 
-                                <ListItem button className={classes.nested}>
-                                  
+
+
+                                <ListItemLink href="#simple-list">
                                     <ListItemText primary="Заказы" />
-                                </ListItem>
+                                </ListItemLink>
+
                                 <Divider variant="inset" component="li" />
 
-                                <ListItem button className={classes.nested}>
-                                   
+
+                                <ListItemLink href="#simple-list">
                                     <ListItemText primary="Взаиморасчеты" />
-                                </ListItem>
+                                </ListItemLink>
+
 
                                 <Divider variant="inset" component="li" />
 
@@ -115,21 +124,22 @@ export default function Reports() {
                         <Collapse in={open} timeout="auto" unmountOnExit>
                             <List component="div" disablePadding>
 
-                                <ListItem button className={classes.nested}>
-                                   
+
+
+                                <ListItemLink href="#simple-list">
                                     <ListItemText primary="Акт сверки" />
-                                </ListItem>
-                                <Divider variant="inset" component="li" />
-
-                               
+                                </ListItemLink>
 
                                 <Divider variant="inset" component="li" />
+
+
+
 
                             </List>
                         </Collapse>
                     </List>
                 </Grid>
-                <Grid item xs={1}/>
+                <Grid item xs={1} />
             </Grid>
         </div>
 
