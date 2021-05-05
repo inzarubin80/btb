@@ -3,7 +3,7 @@ import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Link from '@material-ui/core/Link';
-import logo from './LOGO_SLAVA.png' // relative path to image 
+import logo from './Logo.png' // relative path to image 
 import prod from './Prod.jpg' // relative path to image 
 
 
