@@ -17,6 +17,11 @@ export const getMaket = (id) => {
     return fetch(`${API_URL}/?typerequest=getMaket&id=${id}`, config);
 }
 
+export const getListReports = (id) => {
+    const config = getConfig()
+    return fetch(`${API_URL}/?typerequest=getListReports`, config);
+}
+
 export const setMaketStatus = (id, uidState) => {
     const config = getConfig({uidState});
     return fetch(`${API_URL}/?typerequest=setMaketStatus&id=${id}`, config);
@@ -56,6 +61,8 @@ export const getAccessKey = (userID, requestKey, confirmationСode) => {
     let config = getConfig({ userID, requestKey, confirmationСode })
     return fetch(`${API_URL}/?typerequest=getAccessKey`, config);
 }
+
+
 
 const getConfig = (body = {}) => {
 
