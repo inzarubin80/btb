@@ -5,6 +5,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -22,6 +23,13 @@ const useStyles = makeStyles((theme) => ({
         textAlign: 'center',
         marginTop: theme.spacing(4),
 
+    },
+
+    Progress: {
+
+        display: 'block',
+        margin: '0 auto',
+        maxWidth: '95%'
     },
 
 
@@ -45,12 +53,21 @@ const ReportCard = (props) => {
                 </Typography>
             </Grid>
 
+
+            <Grid item xs={12}>
+              {reportRequest && <CircularProgress className={classes.Progress}/>}
+            </Grid>
+
             <Grid item xs={1} />
 
             <Grid item xs={10}>
-                <Card>
+            {!reportRequest && <Card>
                     <div dangerouslySetInnerHTML={{ __html: reportHTML }}  />
-                </Card>
+                </Card>}
+
+              
+
+
             </Grid>
 
             <Grid item xs={1} />
