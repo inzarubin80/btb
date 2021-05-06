@@ -17,7 +17,7 @@ import FormTask from './FormTask'
 import { green, blue, pink } from '@material-ui/core/colors';
 import 'antd/dist/antd.css';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import {withRouter} from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import 'react-image-lightbox/style.css';
 import MuiAlert from '@material-ui/lab/Alert';
 import { MaketCardContext } from '../../context/MaketCard/MaketCardContext';
@@ -26,6 +26,7 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import Button from '@material-ui/core/Button';
 import Modal from '@material-ui/core/Modal';
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
+import Grid from '@material-ui/core/Grid';
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -151,81 +152,96 @@ const MaketCard = (props) => {
     openCard(props.match.params.id)
   }, [props.match.params.id]);
   return (
-    <div style={{ textAlign: 'center', maxWidth: '50%', margin: 'auto', marginTop: 30 }}>
-      {maket && <Card className={classes.root}>
-        <CardContent>
-          <Typography gutterBottom variant="h5" component="h2">
-            Макет №{maket.code + " "}
-          </Typography>
 
-          <div className={classes.buttonStatusGroup}>
-            {!statusBeingSet && maket.actions.map((action) => {
-              if (action.progress) {
-                return (<Button onClick={() => { hendleSetMaketStatus(action.uid) }} variant="outlined" endIcon={<ArrowForwardIcon />} key={action.uid} color="primary"> {action.name}</Button>)
-              } else {
-                return (<Button onClick={() => { hendleSetMaketStatus(action.uid) }} variant="outlined" startIcon={<ArrowBackIcon />} key={action.uid} color="primary"> {action.name}</Button>)
-              }
-            }
-            )}
-            {statusBeingSet && <CircularProgress />}
-          </div>
 
-          <Modal
-            open={message ? true : false}
-            onClose={() => { }}
-            aria-labelledby="simple-modal-title"
-            aria-describedby="simple-modal-description"
-          >
+    <div style={{ textAlign: 'center', margin: 'auto', marginTop: 30 }}>
 
-            <div className={classes.messageBox}>
 
-              {message && <Alert onClose={() => { clearMessage(message.uid) }} severity={message.type}>{message.str}</Alert>}
+      {maket &&
 
-            </div>
+        <Grid container spacing={0}>
+          <Grid item xs={2} />
 
-          </Modal>
+          <Grid item xs={8}>
 
-          <Descriptions layout="vertical" bordered >
-            <Descriptions.Item label="Продукт">{maket.product}</Descriptions.Item>
-            <Descriptions.Item label="Конечный потребитель">{maket.finalBuyer}</Descriptions.Item>
-            <Descriptions.Item label="Статус">{maket.status}</Descriptions.Item>
-          </Descriptions>
-          <div className={classes.root}>
-            <AppBar position="static" color="default">
-              <Tabs
-                value={indexСurrentTab}
-                onChange={handleChange}
-                indicatorColor="primary"
-                textColor="primary"
-                variant="fullWidth"
-                aria-label="full width tabs example">
-                <Tab label="Основные данные" {...a11yProps(0)} />
-                <Tab label={"Файлы (" + maket.files.length + ")"} {...a11yProps(1)} />
-                <Tab label={"Задания (" + maket.tasks.length + ")"} {...a11yProps(2)} />
-                <Tab label={"Цвета (" + maket.colors.length + ")"} {...a11yProps(3)} />
-              </Tabs>
-            </AppBar>
-            <SwipeableViews
-              axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
-              index={indexСurrentTab}
-              onChangeIndex={handleChangeIndex}>
-              <TabPanel value={indexСurrentTab} index={0} dir={theme.direction}>
-                <ParameterTable maket={maket} />
-              </TabPanel>
-              <TabPanel value={indexСurrentTab} index={1} dir={theme.direction}>
-                <FilesTable />
-              </TabPanel>
-              <TabPanel value={indexСurrentTab} index={2} dir={theme.direction}>
-                {!idTaskChange && <TasksTable />}
-                {idTaskChange && <FormTask />}
-              </TabPanel>
-              <TabPanel value={indexСurrentTab} index={3} dir={theme.direction}>
-                <ColorsTable colors={maket.colors} />
-              </TabPanel>
-            </SwipeableViews >
-          </div>
-        </CardContent>
-      </Card>}
+            <Card className={classes.root}>
+              <CardContent>
+                <Typography gutterBottom variant="h5" component="h2">
+                  Макет №{maket.code + " "}
+                </Typography>
+
+                <div className={classes.buttonStatusGroup}>
+                  {!statusBeingSet && maket.actions.map((action) => {
+                    if (action.progress) {
+                      return (<Button onClick={() => { hendleSetMaketStatus(action.uid) }} variant="outlined" endIcon={<ArrowForwardIcon />} key={action.uid} color="primary"> {action.name}</Button>)
+                    } else {
+                      return (<Button onClick={() => { hendleSetMaketStatus(action.uid) }} variant="outlined" startIcon={<ArrowBackIcon />} key={action.uid} color="primary"> {action.name}</Button>)
+                    }
+                  }
+                  )}
+                  {statusBeingSet && <CircularProgress />}
+                </div>
+
+                <Modal
+                  open={message ? true : false}
+                  onClose={() => { }}
+                  aria-labelledby="simple-modal-title"
+                  aria-describedby="simple-modal-description"
+                >
+
+                  <div className={classes.messageBox}>
+
+                    {message && <Alert onClose={() => { clearMessage(message.uid) }} severity={message.type}>{message.str}</Alert>}
+                      </div>
+
+                </Modal>
+
+                <Descriptions layout="vertical" bordered >
+                  <Descriptions.Item label="Продукт">{maket.product}</Descriptions.Item>
+                  <Descriptions.Item label="Конечный потребитель">{maket.finalBuyer}</Descriptions.Item>
+                  <Descriptions.Item label="Статус">{maket.status}</Descriptions.Item>
+                </Descriptions>
+                <div className={classes.root}>
+                  <AppBar position="static" color="default">
+                    <Tabs
+                      value={indexСurrentTab}
+                      onChange={handleChange}
+                      indicatorColor="primary"
+                      textColor="primary"
+                      variant="fullWidth"
+                      aria-label="full width tabs example">
+                      <Tab label="Основные данные" {...a11yProps(0)} />
+                      <Tab label={"Файлы (" + maket.files.length + ")"} {...a11yProps(1)} />
+                      <Tab label={"Задания (" + maket.tasks.length + ")"} {...a11yProps(2)} />
+                      <Tab label={"Цвета (" + maket.colors.length + ")"} {...a11yProps(3)} />
+                    </Tabs>
+                  </AppBar>
+                  <SwipeableViews
+                    axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
+                    index={indexСurrentTab}
+                    onChangeIndex={handleChangeIndex}>
+                    <TabPanel value={indexСurrentTab} index={0} dir={theme.direction}>
+                      <ParameterTable maket={maket} />
+                    </TabPanel>
+                    <TabPanel value={indexСurrentTab} index={1} dir={theme.direction}>
+                      <FilesTable />
+                    </TabPanel>
+                    <TabPanel value={indexСurrentTab} index={2} dir={theme.direction}>
+                      {!idTaskChange && <TasksTable />}
+                      {idTaskChange && <FormTask />}
+                    </TabPanel>
+                    <TabPanel value={indexСurrentTab} index={3} dir={theme.direction}>
+                      <ColorsTable colors={maket.colors} />
+                    </TabPanel>
+                  </SwipeableViews >
+                </div>
+              </CardContent>
+            </Card>
+
+      </Grid>
+          <Grid item xs={2} />
+        </Grid >
+      }
     </div>
   );
 }
