@@ -38,6 +38,10 @@ export const REPORTS_REQUEST                = 'REPORTS_REQUEST';
 export const REPORTS_SUCCESS                = 'REPORTS_SUCCESS';
 export const REPORTS_FAILURE                = 'REPORTS_FAILURE';
 
+export const REPORT_REQUEST                = 'REPORT_REQUEST';
+export const REPORT_SUCCESS                = 'REPORT_SUCCESS';
+export const REPORT_FAILURE                = 'REPORT_FAILURE';
+
 export const OPEN_FOLDER_REPORT             = 'OPEN_FOLDER_REPORT'
 
 

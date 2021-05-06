@@ -52,6 +52,12 @@ export const removeTask = (id, uid) => {
     return fetch(`${API_URL}/?typerequest=removeTask&id=${id}`, config);
 }
 
+
+export const getReportHTML = (id) => {
+    let config = getConfig({id:id})
+    return fetch(`${API_URL}/?typerequest=getReportHTML`, config);
+}
+
 export const sendConformationCode = (userID, requestKey) => {
     let config = getConfig({ userID, requestKey })
     return fetch(`${API_URL}/?typerequest=sendConformationCode`, config);

@@ -5,13 +5,18 @@ import {
     REPORTS_SUCCESS,
     REPORTS_FAILURE,
     CLEAR_MESSAGE,
-    OPEN_FOLDER_REPORT
+    OPEN_FOLDER_REPORT,
+
+    REPORT_REQUEST,
+    REPORT_SUCCESS,
+    REPORT_FAILURE,
+
 
 } from '../types'
 import { ReportsContext } from './ReportsContext'
 import { ReportsReducer } from './ReportsReducer'
 import { createMesage, alertTypes } from '../../utils/utils';
-import { executorRequests, getListReports } from '../../api/dataService1c';
+import { executorRequests, getListReports, getReportHTML } from '../../api/dataService1c';
 import { useDispatch} from 'react-redux';
 
 export const ReportsState = ({ children }) => {
@@ -20,7 +25,12 @@ export const ReportsState = ({ children }) => {
         reportsListRequest: false,
         listReports: [],
         reportGroups: [],
-        openFoldersReport:[]
+        openFoldersReport:[],
+        reportHTML:'',
+        nameReport:'',
+        reportRequest: false,
+
+
     }
 
     const constStandartLifetime = 3500;
@@ -28,6 +38,43 @@ export const ReportsState = ({ children }) => {
     const dispatchRedux = useDispatch();
     const [state, dispatch] = useReducer(ReportsReducer, initialState)
 
+
+    const reportRequest = () => {
+        dispatch({ type: REPORT_REQUEST })
+    }
+
+    const reportSuccess = (reportHTML, nameReport) => {
+        dispatch({ type: REPORT_SUCCESS, payload: { reportHTML, nameReport} })
+    }
+
+    const reportFailure = (err) => {
+        dispatch({ type: REPORT_FAILURE, payload: { message: createMesage(alertTypes.info, err, clearMessage, constStandartLifetime) } })
+    }
+
+    const hendleGetReport = (id) => {
+
+        reportRequest();
+
+        const functionRequest = () => {
+            return getReportHTML(id)
+        };
+
+        const responseHandlingFunction = (json) => {
+            
+            console.log('json', json);
+            reportSuccess(json.reportHTML, json.nameReport)
+
+        };
+
+        const exceptionHandlingFunction = (error) => {
+            reportFailure(error);
+        }
+
+        executorRequests(functionRequest, responseHandlingFunction, exceptionHandlingFunction, dispatchRedux)
+
+
+
+    }
 
     const hendleOpenFolderReports = (id) => {
         dispatch({ type: OPEN_FOLDER_REPORT, payload: {id}})
@@ -74,7 +121,10 @@ export const ReportsState = ({ children }) => {
             reportGroups:state.reportGroups,
             listReports:state.listReports,
             openFoldersReport:state.openFoldersReport,
-
+            reportHTML:state.reportHTML,
+            reportRequest:state.reportRequest,
+            nameReport:state.nameReport,
+            hendleGetReport,
             hendleGetReportList,
             hendleOpenFolderReports
         }}>{children}</ReportsContext.Provider>)

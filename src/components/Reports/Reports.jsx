@@ -50,6 +50,8 @@ export default function Reports(props) {
 
 
 
+    console.log('reportGroups', reportGroups);
+
 
     const folderIsOpen = (id) => {
         return openFoldersReport.find(id_ => id_ == id) ? true : false;
@@ -81,7 +83,7 @@ export default function Reports(props) {
                         className={classes.root}
                     >
 
-                        {reportGroups.map((group) => (<div key={group.id}><ListItem  button onClick={() => hendleOpenFolderReports(group.id)}>
+                        { reportGroups.map((group) => (<div key={group.id}><ListItem  button onClick={() => hendleOpenFolderReports(group.id)}>
                             <ListItemIcon>
                                 <FolderIcon />
                             </ListItemIcon>

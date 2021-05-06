@@ -1,16 +1,53 @@
 import React from 'react';
-import {withRouter} from "react-router-dom";
+import { withRouter } from "react-router-dom";
+import { ReportsContext } from '../../context/Reports/ReportsContext';
+import Typography from '@material-ui/core/Typography';
+import { makeStyles } from '@material-ui/core/styles';
+import Grid from '@material-ui/core/Grid';
+
+const useStyles = makeStyles((theme) => ({
+    root: {
+
+        flexGrow: 1,
+        //width: '100%',
+        // maxWidth: 360,
+        // backgroundColor: theme.palette.background.paper,
+    },
+    nested: {
+        paddingLeft: theme.spacing(4),
+    },
+
+    heading: {
+        textAlign: 'center',
+        marginTop: theme.spacing(4),
+
+    },
 
 
-const ReportCard =(props)=> {
+}));
 
-    console.log('Report card');
+const ReportCard = (props) => {
+
+    const { hendleGetReport, reportHTML, listReports, reportRequest, nameReport } = React.useContext(ReportsContext);
+    const classes = useStyles();
+    React.useEffect(() => {
+        hendleGetReport(props.match.params.id)
+    }, [props.match.params.id]);
+
+
     return (
-
-        <div>
-            <h1>{props.match.params.id}</h1>
-        </div>
-
+        <Grid container spacing={0}>
+            <Grid item xs={12}>
+                <Typography className={classes.heading} gutterBottom variant="h5" component="h2">
+                    {nameReport}
+                </Typography>
+            </Grid>
+            <Grid item xs={1} />
+            <Grid item xs={10}>
+                <div dangerouslySetInnerHTML={{ __html: reportHTML }} style={{ backgroundColor: 'rgba(252, 252, 250)', minHeight: 60 }} />
+            </Grid>
+            <Grid item xs={1} />
+        </Grid>
     );
 }
 
