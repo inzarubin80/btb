@@ -4,6 +4,7 @@ import { ReportsContext } from '../../context/Reports/ReportsContext';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
+import Card from '@material-ui/core/Card';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -36,18 +37,25 @@ const ReportCard = (props) => {
 
 
     return (
+
         <Grid container spacing={0}>
             <Grid item xs={12}>
                 <Typography className={classes.heading} gutterBottom variant="h5" component="h2">
                     {nameReport}
                 </Typography>
             </Grid>
+
             <Grid item xs={1} />
+
             <Grid item xs={10}>
-                <div dangerouslySetInnerHTML={{ __html: reportHTML }} style={{ backgroundColor: 'rgba(252, 252, 250)', minHeight: 60 }} />
+                <Card>
+                    <div dangerouslySetInnerHTML={{ __html: reportHTML }}  />
+                </Card>
             </Grid>
+
             <Grid item xs={1} />
-        </Grid>
+        </Grid >
+
     );
 }
 
