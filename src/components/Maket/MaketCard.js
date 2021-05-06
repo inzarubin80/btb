@@ -34,38 +34,12 @@ function Alert(props) {
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    minWidth: 120
-  },
-  bullet: {
-    display: 'inline-block',
-    margin: '0 2px',
-    transform: 'scale(0.8)',
-  },
-  title: {
-    //fontSize: 14,
-  },
-  pos: {
-    marginBottom: 12,
-  },
-
-  table: {
-    minWidth: 10,
-  },
-
-  wrapperApproval: {
-    margin: theme.spacing(1),
-    position: 'relative',
-    float: 'right'
-  },
-  buttonApproval: {
-    backgroundColor: green[500],
-    '&:hover': {
-      backgroundColor: green[700],
-    },
+    textAlign: 'center',
+    margin: 'auto',
+    marginTop: 30
   },
 
   messageBox: {
-
     'position': 'absolute',
     'top': '0',
     'bottom': '0',
@@ -74,22 +48,7 @@ const useStyles = makeStyles((theme) => ({
     'width': '50%',
     'height': '30%',
     'margin': 'auto',
-
-
   },
-
-  imageBox: {
-    //margin: theme.spacing(2),
-    //position: 'absolute',
-    //marginTop:80000
-
-  },
-
-  margin: {
-    marginTop: theme.spacing(1),
-  },
-
-  offset: theme.mixins.toolbar,
 
   buttonStatusGroup: {
     '& > *': {
@@ -146,15 +105,13 @@ const MaketCard = (props) => {
     switchTab(index);
   };
 
-
-
   React.useEffect(() => {
     openCard(props.match.params.id)
   }, [props.match.params.id]);
   return (
 
 
-    <div style={{ textAlign: 'center', margin: 'auto', marginTop: 30 }}>
+    <div className={classes.root}>
 
 
       {maket &&
@@ -164,7 +121,7 @@ const MaketCard = (props) => {
 
           <Grid item xs={8}>
 
-            <Card className={classes.root}>
+            <Card >
               <CardContent>
                 <Typography gutterBottom variant="h5" component="h2">
                   Макет №{maket.code + " "}
@@ -190,10 +147,8 @@ const MaketCard = (props) => {
                 >
 
                   <div className={classes.messageBox}>
-
                     {message && <Alert onClose={() => { clearMessage(message.uid) }} severity={message.type}>{message.str}</Alert>}
-                      </div>
-
+                  </div>
                 </Modal>
 
                 <Descriptions layout="vertical" bordered >
@@ -238,7 +193,7 @@ const MaketCard = (props) => {
               </CardContent>
             </Card>
 
-      </Grid>
+          </Grid>
           <Grid item xs={2} />
         </Grid >
       }
