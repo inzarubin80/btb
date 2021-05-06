@@ -286,7 +286,7 @@ export const MaketCardReducer = (state, action) => {
         case OPEN_CARD_MAKET_FAILURE:
             return {
                 ...state,
-                cardOpens: false,
+                maketRequest: false,
                 ...action.payload
             }
 
@@ -294,7 +294,7 @@ export const MaketCardReducer = (state, action) => {
             return {
                 ...state,
                 ...action.payload,
-                cardOpens: false
+                maketRequest: false
             }
 
         case REMOVE_TASK_FILE:

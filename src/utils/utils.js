@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from 'uuid';
 
 export const b64toBlob = (b64Data, contentType = '', sliceSize = 512) => {
     const byteCharacters = atob(b64Data);
@@ -35,6 +36,13 @@ export const getBase64 = (file) => {
     });
 };
 
+export const createMesage = (type, str, clearMessage, lifetime = 3000) => {
+    const uid = uuidv4();
+    if (lifetime) {
+        setTimeout(() => clearMessage(uid), lifetime)
+    }
+    return { type, str, uid }
+}
 
-
+export const alertTypes = { error: 'error', warning: 'warning', info: 'info', success: 'success' };
 

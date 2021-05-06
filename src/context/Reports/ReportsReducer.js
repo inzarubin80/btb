@@ -1,8 +1,12 @@
 import {
 
-    CLEAR_MESSAGE,
-
+    REPORTS_REQUEST,
+    REPORTS_SUCCESS,
+    REPORTS_FAILURE,
+    OPEN_FOLDER_REPORT
 } from "../types"
+
+
 
 export const ReportsReducer = (state, action) => {
 
@@ -10,19 +14,41 @@ export const ReportsReducer = (state, action) => {
     switch (action.type) {
 
 
-        case CLEAR_MESSAGE:
-
-            if (state.message && state.message.uid == action.payload.uid)
-                return {
-
-                    ...state,
-                    message: null
-                }
-            else {
-                return state;
+        case REPORTS_REQUEST:
+            return {
+                ...state,
+                message: null,
+                listReports: [],
+                reportGroups: []
             }
 
-       default:
+        case REPORTS_SUCCESS:
+            return {
+                ...state,
+                message: null,
+                listReports: action.payload.listReports,
+                reportGroups: action.payload.reportGroups
+            }
+        case REPORTS_FAILURE:
+            return {
+                ...state,
+                message: action.payload.message,
+            }
+
+        case OPEN_FOLDER_REPORT:
+
+            if (state.openFoldersReport.find(id =>id == action.payload.id)) {
+                return {
+                    ...state,
+                    openFoldersReport: state.openFoldersReport.filter(id=>id!=action.payload.id)
+                }
+            } else {
+                return {
+                    ...state,
+                    openFoldersReport: [...state.openFoldersReport, action.payload.id]
+                }
+            }
+        default:
             return state
     }
 

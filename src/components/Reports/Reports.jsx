@@ -11,7 +11,7 @@ import ExpandMore from '@material-ui/icons/ExpandMore';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import { Link } from 'react-router-dom';
-
+import { ReportsContext } from '../../context/Reports/ReportsContext';
 const useStyles = makeStyles((theme) => ({
     root: {
 
@@ -46,23 +46,18 @@ const useStyles = makeStyles((theme) => ({
 export default function Reports(props) {
     const classes = useStyles();
     const [open, setOpen] = React.useState(true);
-
-    const handleClick = () => {
-        setOpen(!open);
-    };
+    const { message, reportsListRequest, listReports, reportGroups, hendleGetReportList, hendleOpenFolderReports, openFoldersReport } = React.useContext(ReportsContext);
 
 
-    const ListItemLink = (props) => {
-        const { primary, to } = props;
 
 
-        return (
-
-            <ListItem component={Link} to={to}>
-                <ListItemText primary={primary} />
-            </ListItem>
-        );
+    const folderIsOpen = (id) => {
+        return openFoldersReport.find(id_ => id_ == id) ? true : false;
     }
+
+    React.useEffect(() => {
+            hendleGetReportList()  
+    }, []);
 
 
 
@@ -83,49 +78,37 @@ export default function Reports(props) {
                     <List
                         component="nav"
                         aria-labelledby="nested-list-subheader"
-
                         className={classes.root}
                     >
-                        <ListItem button onClick={handleClick}>
+
+                        {reportGroups.map((group) => (<div key={group.id}><ListItem  button onClick={() => hendleOpenFolderReports(group.id)}>
                             <ListItemIcon>
                                 <FolderIcon />
                             </ListItemIcon>
-                            <ListItemText primary="Коммерция" />
-                            {open ? <ExpandLess /> : <ExpandMore />}
+                            <ListItemText primary={group.name} />
+                            {folderIsOpen(group.id) ? <ExpandLess /> : <ExpandMore />}
                         </ListItem>
-                        <Collapse in={open} timeout="auto" unmountOnExit>
-                            <List component="div" disablePadding>
+
+                            <Collapse in={folderIsOpen(group.id)} timeout="auto" unmountOnExit>
+                                <List component="div" disablePadding>
+
+                                    {listReports.filter(report => report.group == group.id)
+                                        .map((report) => (
 
 
+                                            <ListItem key={report.id} component={Link} to={`/reports/${report.id}`}>
+                                                <ListItemText  primary={report.name} />
+                                            </ListItem>
 
 
-                                <ListItemLink to="/reports/orders" primary="Заказы" />
+                                        ))}
 
-                                <ListItemLink to="/reports/payments " primary="Взаиморасчеты" />
-
-
-
-                            </List>
-                        </Collapse>
+                                </List>
+                            </Collapse>
 
 
-                        <ListItem button onClick={handleClick}>
-                            <ListItemIcon>
-                                <FolderIcon />
-                            </ListItemIcon>
-                            <ListItemText primary="Бухгалтерский учет" />
-                            {open ? <ExpandLess /> : <ExpandMore />}
-                        </ListItem>
-                        <Collapse in={open} timeout="auto" unmountOnExit>
-                            <List component="div" disablePadding>
+                        </div>))}
 
-
-                                <ListItemLink to="/reports/reconciliation" primary="Акты сверки" />
-
-
-
-                            </List>
-                        </Collapse>
                     </List>
                 </Grid>
                 <Grid item xs={1} />
