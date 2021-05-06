@@ -41,25 +41,6 @@ const useStyles = makeStyles((theme) => ({
     marginTop: 25
   },
 
-
-  listFiles: {
-    marginTop: 25
-  },
-
-  taskСhanges: {
-    borderWidth: '1px',
-    borderStyle: 'solid',
-    //border:5,
-    //borderWidth: 10,
-    borderСolor: '#777',
-    padding: '7px'
-
-  },
-
-  input: {
-    display: 'none',
-  },
-
   modal: {
     display: 'flex',
     alignItems: 'center',
