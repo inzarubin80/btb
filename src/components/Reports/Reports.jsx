@@ -10,7 +10,7 @@ import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
-import Divider from '@material-ui/core/Divider';
+import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -41,7 +41,9 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function Reports() {
+
+
+export default function Reports(props) {
     const classes = useStyles();
     const [open, setOpen] = React.useState(true);
 
@@ -50,9 +52,18 @@ export default function Reports() {
     };
 
 
-    function ListItemLink(props) {
-        return <ListItem button component="a" {...props} />;
+    const ListItemLink = (props) => {
+        const { primary, to } = props;
+
+
+        return (
+
+            <ListItem component={Link} to={to}>
+                <ListItemText primary={primary} />
+            </ListItem>
+        );
     }
+
 
 
     return (
@@ -87,19 +98,12 @@ export default function Reports() {
 
 
 
-                                <ListItemLink href="#simple-list">
-                                    <ListItemText primary="Заказы" />
-                                </ListItemLink>
 
-                                <Divider variant="inset" component="li" />
+                                <ListItemLink to="/reports/orders" primary="Заказы" />
 
-
-                                <ListItemLink href="#simple-list">
-                                    <ListItemText primary="Взаиморасчеты" />
-                                </ListItemLink>
+                                <ListItemLink to="/reports/payments " primary="Взаиморасчеты" />
 
 
-                                <Divider variant="inset" component="li" />
 
                             </List>
                         </Collapse>
@@ -116,13 +120,7 @@ export default function Reports() {
                             <List component="div" disablePadding>
 
 
-
-                                <ListItemLink href="#simple-list">
-                                    <ListItemText primary="Акт сверки" />
-                                </ListItemLink>
-
-                                <Divider variant="inset" component="li" />
-
+                                <ListItemLink to="/reports/reconciliation" primary="Акты сверки" />
 
 
 

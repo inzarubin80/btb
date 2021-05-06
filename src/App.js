@@ -6,9 +6,10 @@ import Heder from './components/Heder/Heder.js';
 import Makets from './components/Maket/Makets.js';
 import MaketCard from './components/Maket/MaketCard';
 import Reports from './components/Reports/Reports';
+import ReportCard from './components/Reports/ReportCard';
 import Start from './components/Start/Start';
 import { useSelector } from 'react-redux';
-import {MaketCardState} from './context/MaketCard/MaketCardState';
+import { MaketCardState } from './context/MaketCard/MaketCardState';
 
 function App() {
 
@@ -37,18 +38,19 @@ function App() {
                         </PrivateRoute>
 
                         <PrivateRoute path="/makets/:id">
-
-                        <MaketCardState>
+                            <MaketCardState>
                                 <MaketCard />
-                        </MaketCardState>
-                        
+                            </MaketCardState>
                         </PrivateRoute>
 
-                       
-                        
-                        <PrivateRoute path="/reports">
-                            <Reports />
+                        <PrivateRoute exact path="/reports">
+                            <Reports/>
                         </PrivateRoute>
+
+                        <PrivateRoute path="/reports/:id">
+                            <ReportCard/>
+                        </PrivateRoute>
+
 
                         <Route path="*">
                             <NoMatch />
