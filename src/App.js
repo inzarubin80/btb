@@ -11,7 +11,7 @@ import Start from './components/Start/Start';
 import { useSelector } from 'react-redux';
 import { MaketCardState } from './context/MaketCard/MaketCardState';
 import { ReportsState } from './context/Reports/ReportsState';
-
+import  firebase from './firebase'
 
 function App() {
 

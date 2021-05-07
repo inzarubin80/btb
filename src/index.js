@@ -12,6 +12,8 @@ import rootReducer from './redux/rootReducer';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import { ruRU } from '@material-ui/core/locale';
 
+
+
 const theme = createMuiTheme({
   palette: {
     //  primary: { main: '#1976d2' },
@@ -27,6 +29,9 @@ const logger = store => next => action => {
 
 
 const store = createStore(rootReducer, applyMiddleware(thunk, logger));
+
+
+
 
 
 ReactDOM.render(

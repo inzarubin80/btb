@@ -71,8 +71,10 @@ export const getAccessKey = (userID, requestKey, confirmationСode) => {
 
 
 const getConfig = (body = {}) => {
-
+    
     body.key = localStorage.getItem('key');
+    body.key = localStorage.getItem('key');
+    
     let config = {
         method: 'post',
         headers: new Headers({
