@@ -71,9 +71,9 @@ export const getAccessKey = (userID, requestKey, confirmationСode) => {
 
 
 const getConfig = (body = {}) => {
-    
+
     body.key = localStorage.getItem('key');
-    body.key = localStorage.getItem('key');
+    body.messageRecipientKey = localStorage.getItem('messageRecipientKey');
     
     let config = {
         method: 'post',

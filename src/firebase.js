@@ -14,11 +14,8 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 var messaging = firebase.messaging();
 
-
-
 messaging.onMessage(function(payload) {
     console.log("Message received. ", payload);
-   // fcmFgUI(payload);
 });
 
 function initToken() {
@@ -34,16 +31,9 @@ function initToken() {
           console.log('No Instance ID token available. Request permission to generate one.');
         }
     }).catch(function(err) {
-
-      localStorage.setItem('messageRecipientKey', "");
-       
-      // console.log('An error occurred while retrieving token. *****', err);
-        //setTokenSentToServer(false);
-    });
+    localStorage.setItem('messageRecipientKey', "");
+      });
 }
-
-
-
 
 
 initToken()
