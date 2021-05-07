@@ -99,7 +99,7 @@ export default function Makets() {
           <BottomNavigationAction label="Все" value="" icon={<ImageIcon />} />
 
           {statusButtons.map((statusButton)=>(
-              <BottomNavigationAction label={statusButton.name} value={statusButton.id} icon={(<Icon> {statusButton.icon}</Icon>)}/>
+              <BottomNavigationAction key= {statusButton.id} label={statusButton.name} value={statusButton.id} icon={(<Icon> {statusButton.icon}</Icon>)}/>
           ))}
 
 

@@ -1,6 +1,18 @@
 import firebase from 'firebase/app';
 import 'firebase/messaging';
 
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker
+    .register("../firebase-messaging-sw.js")
+    .then(function(registration) {
+      console.log("Registration successful, scope is:", registration.scope);
+    })
+    .catch(function(err) {
+      console.log("Service worker registration failed, error:", err);
+    });
+}
+
+
 const firebaseConfig = {
   apiKey: "AIzaSyAAo5GW3sFCa6tA9St8Mh0cttyERN7f3Ow",
   authDomain: "slavab2b.firebaseapp.com",
@@ -12,10 +24,13 @@ const firebaseConfig = {
 };
 
 firebase.initializeApp(firebaseConfig);
-var messaging = firebase.messaging();
+const messaging = firebase.messaging();
 
-messaging.onMessage(function(payload) {
-    console.log("Message received. ", payload);
+
+
+
+messaging.onMessage(payload => {
+  console.log("onMessage: ", payload);
 });
 
 function initToken() {
