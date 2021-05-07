@@ -59,6 +59,15 @@ const ParameterTable = ({ maket }) => {
 
           <TableRow >
             <TableCell component="th" scope="row" >
+                Количество флексоформ
+              </TableCell>
+            <TableCell align="left">
+              {maket.numberForms}
+            </TableCell>
+          </TableRow>
+
+          <TableRow >
+            <TableCell component="th" scope="row" >
               Калибр/Ширина
               </TableCell>
             <TableCell align="left">

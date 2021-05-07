@@ -30,6 +30,7 @@ import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
 import { MaketCardContext } from '../../context/MaketCard/MaketCardContext';
+import Grid from '@material-ui/core/Grid';
 
 const useStyles = makeStyles((theme) => ({
   table: {
@@ -67,23 +68,23 @@ const useStyles = makeStyles((theme) => ({
 
 const TasksTable = () => {
 
-  const { maket, 
+  const { maket,
     idTaskRemove,
-    openChangeTask, 
+    openChangeTask,
     addTask,
     removeTaskStart,
-    removeTaskCancel, 
+    removeTaskCancel,
     hendleRemoveTask,
     downloadFilesTask,
     handleDownloadFileTask,
-    openFoldersTask, hendleOpenFolderFilesTask} = React.useContext(MaketCardContext);
+    openFoldersTask, hendleOpenFolderFilesTask } = React.useContext(MaketCardContext);
 
 
 
-    const  folderIsOpen=(idTaskCarent)=>{
-      return openFoldersTask.find(idTask=>idTask==idTaskCarent)?true:false;
-    }
-    
+  const folderIsOpen = (idTaskCarent) => {
+    return openFoldersTask.find(idTask => idTask == idTaskCarent) ? true : false;
+  }
+
 
 
   const classes = useStyles();
@@ -171,10 +172,18 @@ const TasksTable = () => {
 
                   <TableCell component="th" scope="row" >
 
-                    <CardHeader
-                      title={"№" + task.number}
-                      subheader={task.documentDate}
-                    />
+
+                    <Grid container spacing={0}>
+
+                      <Grid item xs={12}>
+                        <CardHeader
+                          title={"№" + task.number + " (" + "*нужно приктурить статус*" + ")"}
+                          subheader={task.documentDate}
+                        />
+                      </Grid>
+
+                      
+                    </Grid>
 
                     <div dangerouslySetInnerHTML={{ __html: task.text }} style={{ backgroundColor: 'rgba(252, 252, 250)', minHeight: 60 }} />
 
@@ -185,7 +194,7 @@ const TasksTable = () => {
                       className={classes.root}
                     >
 
-                      <ListItem button onClick={() => { hendleOpenFolderFilesTask(task.uid)}}>
+                      <ListItem button onClick={() => { hendleOpenFolderFilesTask(task.uid) }}>
                         <ListItemIcon>
                           <FolderIcon />
                         </ListItemIcon>
@@ -200,11 +209,11 @@ const TasksTable = () => {
 
                           {task.files.map((file) => <ListItem key={file.uid} button className={classes.nested}>
 
-                            {!downloadFilesTask.find(id=>file.uid==id) && <IconButton aria-label="delete" color="primary" onClick={() => {handleDownloadFileTask(task.uid, file.uid)}}>
+                            {!downloadFilesTask.find(id => file.uid == id) && <IconButton aria-label="delete" color="primary" onClick={() => { handleDownloadFileTask(task.uid, file.uid) }}>
                               <SaveIcon />
                             </IconButton>}
 
-                            {downloadFilesTask.find(id=>file.uid==id) && <CircularProgress/>}
+                            {downloadFilesTask.find(id => file.uid == id) && <CircularProgress />}
 
                             <ListItemText primary={file.name} />
                           </ListItem>)}

@@ -2,20 +2,18 @@ import * as React from 'react';
 import { DataGrid } from '@material-ui/data-grid';
 import BottomNavigation from '@material-ui/core/BottomNavigation';
 import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
-import ArchiveIcon from '@material-ui/icons/Archive';
-import HowToRegIcon from '@material-ui/icons/HowToReg';
-import BuildIcon from '@material-ui/icons/Build';
 import { makeStyles } from '@material-ui/core/styles';
-import LocalPrintshopIcon from '@material-ui/icons/LocalPrintshop'
+
 import { useDispatch, useSelector } from 'react-redux';
 import {сhangePageParams,  сhangeFiltr, сhangeSort, setMaketsStatus} from '../../redux/makets/maketsActions';
 import {
   Link
 } from "react-router-dom";
+import ImageIcon from '@material-ui/icons/Image';
 
 
 import Gridstrings from './Gridstrings'
-
+import Icon from '@material-ui/core/Icon';
 
 
 
@@ -28,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
     width: 100,
   },
   control: {
-    padding: theme.spacing(2),
+    padding: theme.spacing(3),
   },
 
   stickToBottom: {
@@ -58,11 +56,10 @@ const columns = [
   { field: 'chromaticity', headerName: 'Цветность', width: 130, type: 'string' },
   { field: 'caliber', headerName: 'Калибр', width: 120, type: 'number' },
   { field: 'typPrinting', headerName: 'Тип печати', width: 200, type: 'string' },
-
+  { field: 'status', headerName: 'Статус', width: 200, type: 'string' },
 ];
 
 export default function Makets() {
-
 
   const classes = useStyles();
   const status = useSelector(state => state.makets.status);
@@ -71,6 +68,8 @@ export default function Makets() {
   const filterModel = useSelector(state => state.makets.filterModel);
   const sortModel = useSelector(state => state.makets.sortModel);
   const maketsAr = useSelector(state => state.makets.makets);
+  const statusButtons = useSelector(state => state.makets.statusButtons);
+  const updateStatusRequired = useSelector(state => state.makets.updateStatusRequired);
   
   const dispatch = useDispatch();
 
@@ -81,10 +80,14 @@ export default function Makets() {
   };
   
   React.useEffect(() => { 
-    if (status == '') {
-      dispatch(setMaketsStatus('harmonization'))
-    }
-  },[status, dispatch]);
+    if (status == null) {
+      dispatch(setMaketsStatus(''))
+    } else if (updateStatusRequired) {
+     dispatch(setMaketsStatus(status))
+    } 
+
+  },[status, updateStatusRequired]);
+
 
 
  
@@ -92,11 +95,16 @@ export default function Makets() {
 
     <div>
         <BottomNavigation value={status} onChange={handleChangeBottomNavigation} className={classes.stickToBottom} showLabels>
-          <BottomNavigationAction label="Согласование" value="harmonization" icon={<HowToRegIcon />} />
-          <BottomNavigationAction label="Разработка" value="development" icon={<BuildIcon />} />
-          <BottomNavigationAction label="Готовые" value="ready" icon={<LocalPrintshopIcon />} />
-          <BottomNavigationAction label="Архив" value="archive" icon={<ArchiveIcon />} />
+      
+          <BottomNavigationAction label="Все" value="" icon={<ImageIcon />} />
+
+          {statusButtons.map((statusButton)=>(
+              <BottomNavigationAction label={statusButton.name} value={statusButton.id} icon={(<Icon> {statusButton.icon}</Icon>)}/>
+          ))}
+
+
         </BottomNavigation>
+      
       <div style={{ width: '100%' }}>
 
         <DataGrid 

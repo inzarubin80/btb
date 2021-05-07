@@ -1,20 +1,34 @@
-import { CHANGE_MAKETS_STATUS, MAKETS_SGRID_PAGE_CHANGE_PARAMS, MAKETS_FILTER_CHANGE, MAKETS_SORT_CHANGE, MAKETS_SUCCESS, MAKETS_FAILURE } from '../types'
+import { CHANGE_MAKETS_STATUS,
+     MAKETS_SGRID_PAGE_CHANGE_PARAMS, 
+     MAKETS_FILTER_CHANGE, 
+     MAKETS_SORT_CHANGE, 
+     MAKETS_SUCCESS,
+      MAKETS_FAILURE,
+      MAKETS_REQUEST, MAKETS_UPDATE_STATUS_REQUIRED } from '../types'
 
 const initialState = {
-    status: '',
+    status: null,
     page: 0,
     pageSize: 10,
     filterModel: {linkOperator: "and", items:[]},
     sortModel: [],
-    makets: []
+    makets: [],
+    statusButtons:[],
+    maketsIsRequest:false,
+    error:'',
+    updateStatusRequired:false
 };
 
 export default (state = initialState, action) => {
 
-
-   
-
     switch (action.type) {
+
+        case MAKETS_UPDATE_STATUS_REQUIRED:
+            return {
+                ...state,
+                updateStatusRequired:true
+
+            };
         case CHANGE_MAKETS_STATUS:
             return {
                 ...state,
@@ -56,16 +70,35 @@ export default (state = initialState, action) => {
             }
 
 
+        case MAKETS_REQUEST:
+                return {
+                    ...state,
+                    makets: [],
+                    updateStatusRequired:false,
+                   // statusButtons:[],
+                  //  status: action.payload.status,
+                //    statusButtons:action.payload.statusButtons,
+                    maketsIsRequest:true,
+                    error:''
+                };
+
         case MAKETS_SUCCESS:
             return {
                 ...state,
                 makets: action.payload.makets,
-                status: action.payload.status
+                status: action.payload.status,
+                statusButtons:action.payload.statusButtons,
+                maketsIsRequest:false
             };
            
          case MAKETS_FAILURE:
                 return {
                     ...state,
+                   // makets:[],
+                    statusButtons:[],
+                    maketsIsRequest:false,
+                    error:action.payload.error
+                    
                 };
                     
 

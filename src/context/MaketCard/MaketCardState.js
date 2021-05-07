@@ -44,9 +44,7 @@ import { useDispatch } from 'react-redux';
 import draftToHtml from 'draftjs-to-html'
 import { b64toBlob, getBase64, createMesage, alertTypes} from '../../utils/utils';
 import { saveAs } from 'file-saver';
-
-
-
+import {maketsUpdateStatusRequired} from '../../redux/makets/maketsActions'
 
 
 export const MaketCardState = ({ children }) => {
@@ -106,8 +104,10 @@ export const MaketCardState = ({ children }) => {
 
     const setMaketStatusSuccess = (maket) => {
 
-        const message = createMesage(alertTypes.success, 'Статус макета успешно изменен', 1500);
+        const message = createMesage(alertTypes.success, 'Статус макета успешно изменен', clearMessage, 1500);
         dispatch({ type: SET_MAKET_STATUS_SUCCESS, payload: { maket, message } })
+        dispatchRedux(maketsUpdateStatusRequired());
+
     }
 
     const hendleSetMaketStatus = (uidState) => {
