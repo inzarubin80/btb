@@ -1,6 +1,7 @@
 import firebase from 'firebase/app';
 import 'firebase/messaging';
 
+
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker
     .register("../firebase-messaging-sw.js")
@@ -28,10 +29,10 @@ const messaging = firebase.messaging();
 
 
 
-
 messaging.onMessage(payload => {
   console.log("onMessage: ", payload);
 });
+
 
 function initToken() {
     messaging.getToken().then(function(currentToken) {
