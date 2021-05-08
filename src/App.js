@@ -27,13 +27,17 @@ function App() {
 
                     <Switch>
 
-                        <Route exact path="/">
-                            <Start />
-                        </Route>
+                        
 
                         <Route path="/login">
                             <Login />
                         </Route>
+
+
+                        <PrivateRoute exact path="/">
+                            <Start />
+                        </PrivateRoute>
+
 
                         <PrivateRoute exact path="/makets">
                             <Makets />
