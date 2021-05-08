@@ -99,7 +99,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Heder(props) {
 
-  
+
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
@@ -120,90 +120,84 @@ export default function Heder(props) {
   return (
 
     <div>
-    <div className={classes.root}>
-      <CssBaseline />
-      <AppBar
-        
-        //position="fixed"
-        position="static"
+      <div className={classes.root}>
+        <CssBaseline />
+        <AppBar
 
-        //position="sticky"
+          //position="fixed"
+          position="static"
 
-
-        className={clsx(classes.appBar, {
-          [classes.appBarShift]: open,
-        })}
-      >
-        <Toolbar>
+          //position="sticky"
 
 
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            onClick={handleDrawerOpen}
-            edge="start"
-            className={clsx(classes.menuButton, open && classes.hide)}
-          >
-            <MenuIcon />
-          </IconButton>
+          className={clsx(classes.appBar, {
+            [classes.appBarShift]: open,
+          })}
+        >
+          <Toolbar>
 
 
+            <IconButton
+              color="inherit"
+              aria-label="open drawer"
+              onClick={handleDrawerOpen}
+              edge="start"
+              className={clsx(classes.menuButton, open && classes.hide)}
+            >
+              <MenuIcon />
+            </IconButton>
 
-
-          <Typography variant="h6" className={classes.title} component={Link} to={"/"} style={{ color: '#FFF' }}>
-             SLAVA B2B
+            <Typography variant="h6" className={classes.title} component={Link} to={"/"} style={{ color: '#FFF' }}>
+              SLAVA  B2B
           </Typography>
 
 
-          {isLoggedIn && <div className={classes.toolbarButtons}>
+            {isLoggedIn && <div className={classes.toolbarButtons}>
 
-            <Button color="inherit" onClick={() => { dispatch(logOut()) }}>Выйти</Button>
+              <Button color="inherit" onClick={() => { dispatch(logOut()) }}>Выйти</Button>
 
-          </div>}
+            </div>}
 
-        </Toolbar>
+          </Toolbar>
 
-      </AppBar>
-      <Drawer
-        className={classes.drawer}
-        variant="persistent"
-        anchor="left"
-        open={open}
-        classes={{
-          paper: classes.drawerPaper,
-        }}
-      >
-        <div className={classes.drawerHeader}>
-          <IconButton onClick={handleDrawerClose}>
-            {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
-          </IconButton>
-        </div>
-        <Divider />
-        <List>
+        </AppBar>
+        <Drawer
+          className={classes.drawer}
+          variant="persistent"
+          anchor="left"
+          open={open}
+          classes={{
+            paper: classes.drawerPaper,
+          }}
+        >
+          <div className={classes.drawerHeader}>
+            <IconButton onClick={handleDrawerClose}>
+              {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+            </IconButton>
+          </div>
+          <Divider />
+          <List>
+
+            <ListItem component={Link} to={"/makets"} button key={'Makets'}>
+              <ListItemIcon>   <InboxIcon /> </ListItemIcon>
+              <ListItemText primary={"Макеты"} />
+            </ListItem>
+
+            <ListItem component={Link} to={"/reports"} button key={'Reports'}>
+              <ListItemIcon><AssessmentIcon /></ListItemIcon>
+              <ListItemText primary={"Отчеты"} />
+            </ListItem>
+
+          </List>
+          <Divider />
+
+        </Drawer>
 
 
 
+      </div>
 
-          <ListItem component={Link} to={"/makets"} button key={'Makets'}>
-            <ListItemIcon>   <InboxIcon /> </ListItemIcon>
-            <ListItemText primary={"Макеты"} />
-          </ListItem>
-
-          <ListItem component={Link} to={"/reports"} button key={'Reports'}>
-            <ListItemIcon><AssessmentIcon /></ListItemIcon>
-            <ListItemText primary={"Отчеты"} />
-          </ListItem>
-
-        </List>
-        <Divider />
-
-      </Drawer>
-
-     
-
-    </div>
-
-    {false && <h1>Глобальное сообщение</h1>}
+      {false && <h1>Глобальное сообщение</h1>}
     </div>
   );
 }
