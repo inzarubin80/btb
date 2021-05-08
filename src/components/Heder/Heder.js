@@ -118,6 +118,8 @@ export default function Heder(props) {
   };
 
   return (
+
+    <div>
     <div className={classes.root}>
       <CssBaseline />
       <AppBar
@@ -197,6 +199,11 @@ export default function Heder(props) {
 
       </Drawer>
 
+     
+
+    </div>
+
+    {false && <h1>Глобальное сообщение</h1>}
     </div>
   );
 }
