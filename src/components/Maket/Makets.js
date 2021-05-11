@@ -5,7 +5,7 @@ import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
 import { makeStyles } from '@material-ui/core/styles';
 
 import { useDispatch, useSelector } from 'react-redux';
-import {сhangePageParams,  сhangeFiltr, сhangeSort, setMaketsStatus} from '../../redux/makets/maketsActions';
+import { сhangePageParams, сhangeFiltr, сhangeSort, setMaketsStatus } from '../../redux/makets/maketsActions';
 import {
   Link
 } from "react-router-dom";
@@ -14,6 +14,9 @@ import ImageIcon from '@material-ui/icons/Image';
 
 import Gridstrings from './Gridstrings'
 import Icon from '@material-ui/core/Icon';
+import IconButton from '@material-ui/core/IconButton';
+
+import AddCircleIcon from '@material-ui/icons/AddCircle';
 
 
 
@@ -32,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
   stickToBottom: {
     //width: '100%',
     //position: 'fixed',
-   // bottom: 0,
+    // bottom: 0,
   },
 
 
@@ -70,7 +73,7 @@ export default function Makets() {
   const maketsAr = useSelector(state => state.makets.makets);
   const statusButtons = useSelector(state => state.makets.statusButtons);
   const updateStatusRequired = useSelector(state => state.makets.updateStatusRequired);
-  
+
   const dispatch = useDispatch();
 
   const handleChangeBottomNavigation = (event, newStatus) => {
@@ -78,59 +81,71 @@ export default function Makets() {
 
     dispatch(setMaketsStatus(newStatus))
   };
-  
-  React.useEffect(() => { 
+
+  React.useEffect(() => {
     if (status == null) {
       dispatch(setMaketsStatus(''))
     } else if (updateStatusRequired) {
-     dispatch(setMaketsStatus(status))
-    } 
+      dispatch(setMaketsStatus(status))
+    }
 
-  },[status, updateStatusRequired]);
+  }, [status, updateStatusRequired]);
 
 
 
- 
+
   return (
 
     <div>
-        <BottomNavigation value={status} onChange={handleChangeBottomNavigation} className={classes.stickToBottom} showLabels>
-      
-          <BottomNavigationAction label="Все" value="" icon={<ImageIcon />} />
-
-          {statusButtons.map((statusButton)=>(
-              <BottomNavigationAction key= {statusButton.id} label={statusButton.name} value={statusButton.id} icon={(<Icon> {statusButton.icon}</Icon>)}/>
-          ))}
 
 
-        </BottomNavigation>
-      
+
+
+      <BottomNavigation value={status} onChange={handleChangeBottomNavigation} className={classes.stickToBottom} showLabels>
+
+        <IconButton color="primary" >
+          <AddCircleIcon />
+        </IconButton>
+
+
+
+        {statusButtons.map((statusButton) => (
+          <BottomNavigationAction key={statusButton.id} label={statusButton.name} value={statusButton.id} icon={(<Icon> {statusButton.icon}</Icon>)} />
+        ))}
+
+
+        <BottomNavigationAction label="Все" value="" icon={<ImageIcon />} />
+
+      </BottomNavigation>
+
+
       <div style={{ width: '100%' }}>
 
-        <DataGrid 
-        
-        rowsPerPageOptions={[5, 10, 25, 35, 50, 70, 100]}
-        rowHeight={25} 
-        rows={maketsAr} 
-        columns={columns} 
-        pageSize={pageSize} 
-        autoHeight={true}
-        sortModel ={sortModel}
-        page = {page}
-        filterModel = {filterModel}
-        hideFooterSelectedRowCount={true} 
-        onPageSizeChange={(GridPageChangeParams)=>{dispatch(сhangePageParams(GridPageChangeParams.pageSize, 0))}}
-        onPageChange = {(GridPageChangeParams)=>{dispatch(сhangePageParams(GridPageChangeParams.pageSize, GridPageChangeParams.page))}}
-        onFilterModelChange = {(GridFilterModelParams)=>{dispatch(сhangeFiltr(GridFilterModelParams.filterModel))}}
-        onSortModelChange = {(GridSortModelParams)=>dispatch(сhangeSort(GridSortModelParams.sortModel))}
-        labelRowsPerPage = {(<h1>Макетов на странице</h1>)}
+        <DataGrid
 
-        localeText={Gridstrings}
+          rowsPerPageOptions={[5, 10, 25, 35, 50, 70, 100]}
+          rowHeight={25}
+          rows={maketsAr}
+          columns={columns}
+          pageSize={pageSize}
+          autoHeight={true}
+          sortModel={sortModel}
+          page={page}
+          filterModel={filterModel}
+          hideFooterSelectedRowCount={true}
+          onPageSizeChange={(GridPageChangeParams) => { dispatch(сhangePageParams(GridPageChangeParams.pageSize, 0)) }}
+          onPageChange={(GridPageChangeParams) => { dispatch(сhangePageParams(GridPageChangeParams.pageSize, GridPageChangeParams.page)) }}
+          onFilterModelChange={(GridFilterModelParams) => { dispatch(сhangeFiltr(GridFilterModelParams.filterModel)) }}
+          onSortModelChange={(GridSortModelParams) => dispatch(сhangeSort(GridSortModelParams.sortModel))}
+          labelRowsPerPage={(<h1>Макетов на странице</h1>)}
 
-       />
-     
+          localeText={Gridstrings}
+
+        />
+
 
       </div>
+
 
 
     </div>
