@@ -55,8 +55,10 @@ const useStyles = makeStyles((theme) => ({
 const FormTask = () => {
 
   const classes = useStyles();
-  const { maket, idTaskChange, taskChangeFiles, editorState, removeTaskFile, addTaskFile, editingHtmlText, handleSaveTask, cancelTaskEditing } = React.useContext(MaketCardContext);
+  const { maket, idTaskChange, taskChangeFiles, editorState, removeTaskFile, addTaskFile, editingHtmlText, handleSaveTask, cancelTaskEditing,taskSaved} = React.useContext(MaketCardContext);
   const task = maket.tasks.find((task) => task.uid == idTaskChange);
+
+  console.log('taskSaved', taskSaved);
 
   return (
     <div className={classes.taskСhanges}>
@@ -64,11 +66,17 @@ const FormTask = () => {
       <div className={classes.buttonGroup}>
 
 
+      {!taskSaved&&
         <Button variant="contained" color="secondary" onClick={() => cancelTaskEditing()}>Отмена</Button>
+      }
 
+        {!taskSaved&&
         <Button style={{ 'marginTop': 10 }} variant="contained" color="primary" onClick={() => handleSaveTask()}>
           {(!task) ? 'Добавить задание' : "Обновить задание"}
-        </Button>
+        </Button>}
+
+        {taskSaved&&
+        <CircularProgress/>}
 
 
       </div>

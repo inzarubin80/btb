@@ -493,6 +493,7 @@ export const MaketCardState = ({ children }) => {
             downloadFilesTask: state.downloadFilesTask,
             openFoldersTask: state.openFoldersTask,
             statusBeingSet: state.statusBeingSet,
+            taskSaved:state.taskSaved,
             openCard,
             openChangeTask,
             switchTab,
