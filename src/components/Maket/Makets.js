@@ -14,10 +14,10 @@ import ImageIcon from '@material-ui/icons/Image';
 
 import Gridstrings from './Gridstrings'
 import Icon from '@material-ui/core/Icon';
-import IconButton from '@material-ui/core/IconButton';
+
 
 import AddCircleIcon from '@material-ui/icons/AddCircle';
-
+import Button from '@material-ui/core/Button';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -103,9 +103,23 @@ export default function Makets() {
 
       <BottomNavigation value={status} onChange={handleChangeBottomNavigation} className={classes.stickToBottom} showLabels>
 
-        <IconButton color="primary" >
-          <AddCircleIcon />
-        </IconButton>
+   
+
+
+        <Button
+        style = {{  position: 'absolute',
+        MarginTop: 222, right: 0}}
+        
+        variant="contained"
+        color="primary"
+        className={classes.button}
+        endIcon= {<AddCircleIcon />}
+        size = 'small'
+        variant="outlined"
+>
+        Добавить
+
+      </Button>
 
 
 
