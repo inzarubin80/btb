@@ -77,7 +77,7 @@ const TasksTable = () => {
     hendleRemoveTask,
     downloadFilesTask,
     handleDownloadFileTask,
-    openFoldersTask, hendleOpenFolderFilesTask } = React.useContext(MaketCardContext);
+    openFoldersTask, hendleOpenFolderFilesTask, taskEditingOpens } = React.useContext(MaketCardContext);
 
 
 
@@ -229,10 +229,11 @@ const TasksTable = () => {
                     />
                     <CardActions>
 
-                      <IconButton color="primary" onClick={() => { openChangeTask(task.uid) }}>
+                      {!taskEditingOpens && <IconButton color="primary" onClick={() => { openChangeTask(task.uid) }}>
                         <EditIcon />
-                      </IconButton>
+                      </IconButton>}
 
+                      {taskEditingOpens && <CircularProgress/>}
 
                       <IconButton color="secondary" onClick={() => { removeTaskStart(task.uid) }}>
                         <DeleteIcon />
