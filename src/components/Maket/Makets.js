@@ -19,6 +19,7 @@ import Icon from '@material-ui/core/Icon';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import Button from '@material-ui/core/Button';
 
+import Grid from '@material-ui/core/Grid';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -29,14 +30,47 @@ const useStyles = makeStyles((theme) => ({
     width: 100,
   },
   control: {
-    padding: theme.spacing(3),
+    padding: theme.spacing(1),
   },
 
   stickToBottom: {
-    //width: '100%',
-    //position: 'fixed',
-    // bottom: 0,
+    width: '100%',
+    position: 'fixed',
+    bottom: 0,
+    //marginLeft: 15
+
+
   },
+
+
+
+  buttonAll: {
+    marginLeft: 4
+  },
+
+
+
+  buttonAdd: {
+    marginLeft: 10,
+    height: '70%'
+  },
+
+
+  actions: {
+    // textAlign:'left',
+    justifyContent: 'left',
+    alignItems: 'center',
+    height: '56px',
+    display: 'flex',
+    // justifyContent: 'center',
+    backgroundColor: '#fff'
+
+  },
+
+  actions_: {
+    height: '56px',
+
+  }
 
 
 }));
@@ -95,70 +129,78 @@ export default function Makets() {
 
 
   return (
-
     <div>
 
 
 
+      <Grid container spacing={0}>
+
+
+        <Grid item xs={12} value={2}>
+
+          <div className={classes.actions}>
+
+
+            <Button
+              className={classes.buttonAdd}
+              startIcon={<AddCircleIcon />}
+              lassName={classes.actions}
+              variant="contained"
+              color="primary"
+              size="small"
+            >
+              Добавить макет
+          </Button>
+
+
+
+          </div>
+
+        </Grid>
+      </Grid>
+
+
+
+
+
+      <DataGrid
+
+        rowsPerPageOptions={[5, 10, 25, 35, 50, 70, 100]}
+        rowHeight={25}
+        rows={maketsAr}
+        columns={columns}
+        pageSize={pageSize}
+        autoHeight={true}
+        sortModel={sortModel}
+        page={page}
+        filterModel={filterModel}
+        hideFooterSelectedRowCount={true}
+        onPageSizeChange={(GridPageChangeParams) => { dispatch(сhangePageParams(GridPageChangeParams.pageSize, 0)) }}
+        onPageChange={(GridPageChangeParams) => { dispatch(сhangePageParams(GridPageChangeParams.pageSize, GridPageChangeParams.page)) }}
+        onFilterModelChange={(GridFilterModelParams) => { dispatch(сhangeFiltr(GridFilterModelParams.filterModel)) }}
+        onSortModelChange={(GridSortModelParams) => dispatch(сhangeSort(GridSortModelParams.sortModel))}
+        labelRowsPerPage={(<h1>Макетов на странице</h1>)}
+
+        localeText={Gridstrings}
+
+      />
+
+
+      <div className={classes.actions_}>
+      </div>
+
 
       <BottomNavigation value={status} onChange={handleChangeBottomNavigation} className={classes.stickToBottom} showLabels>
-
-   
-
-
-        <Button
-        style = {{  position: 'absolute',
-        MarginTop: 222, right: 0}}
-        
-        variant="contained"
-        color="primary"
-        className={classes.button}
-        endIcon= {<AddCircleIcon />}
-        size = 'small'
-        variant="outlined"
->
-        Добавить
-
-      </Button>
-
-
+        `<BottomNavigationAction label="Все" value="" icon={<ImageIcon />} className={classes.buttonAll} />
 
         {statusButtons.map((statusButton) => (
           <BottomNavigationAction key={statusButton.id} label={statusButton.name} value={statusButton.id} icon={(<Icon> {statusButton.icon}</Icon>)} />
         ))}
 
 
-        <BottomNavigationAction label="Все" value="" icon={<ImageIcon />} />
-
       </BottomNavigation>
 
 
-      <div style={{ width: '100%' }}>
-
-        <DataGrid
-
-          rowsPerPageOptions={[5, 10, 25, 35, 50, 70, 100]}
-          rowHeight={25}
-          rows={maketsAr}
-          columns={columns}
-          pageSize={pageSize}
-          autoHeight={true}
-          sortModel={sortModel}
-          page={page}
-          filterModel={filterModel}
-          hideFooterSelectedRowCount={true}
-          onPageSizeChange={(GridPageChangeParams) => { dispatch(сhangePageParams(GridPageChangeParams.pageSize, 0)) }}
-          onPageChange={(GridPageChangeParams) => { dispatch(сhangePageParams(GridPageChangeParams.pageSize, GridPageChangeParams.page)) }}
-          onFilterModelChange={(GridFilterModelParams) => { dispatch(сhangeFiltr(GridFilterModelParams.filterModel)) }}
-          onSortModelChange={(GridSortModelParams) => dispatch(сhangeSort(GridSortModelParams.sortModel))}
-          labelRowsPerPage={(<h1>Макетов на странице</h1>)}
-
-          localeText={Gridstrings}
-
-        />
-
-
-      </div>
 
 
 
