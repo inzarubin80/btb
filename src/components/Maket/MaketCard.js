@@ -14,7 +14,7 @@ import ColorsTable from './ColorsTable'
 import ParameterTable from './ParameterTable'
 import TasksTable from './TasksTable'
 import FormTask from './FormTask'
-import { green, blue, pink } from '@material-ui/core/colors';
+
 import 'antd/dist/antd.css';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { withRouter } from "react-router-dom";
@@ -105,15 +105,23 @@ const MaketCard = (props) => {
     switchTab(index);
   };
 
+
+  {/*
   React.useEffect(() => {
-    openCard(props.match.params.id)
+    
+    if (props.match.params.id!='new') {
+      openCard(props.match.params.id)
+    }
+   
+
   }, [props.match.params.id]);
+*/}
+
+ 
   return (
-
-
-    <div className={classes.root}>
-
-
+  
+  
+   <div className={classes.root}>
       {maket &&
 
         <Grid container spacing={0}>
@@ -197,7 +205,6 @@ const MaketCard = (props) => {
           <Grid item xs={2} />
         </Grid >
       }
-    </div>
-  );
+    </div>);
 }
 export default withRouter(MaketCard)

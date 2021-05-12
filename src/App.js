@@ -4,7 +4,10 @@ import { BrowserRouter as Router, Route, Switch, Redirect, useLocation } from 'r
 import Login from './components/loginPage/LoginPage.js';
 import Heder from './components/Heder/Heder.js';
 import Makets from './components/Maket/Makets.js';
-import MaketCard from './components/Maket/MaketCard';
+//import MaketCard from './components/Maket/MaketCard';
+
+import MarketController from './components/Maket/MarketController';
+
 import Reports from './components/Reports/Reports';
 import ReportCard from './components/Reports/ReportCard';
 import Start from './components/Start/Start';
@@ -45,7 +48,7 @@ function App() {
 
                         <PrivateRoute path="/makets/:id">
                             <MaketCardState>
-                                <MaketCard />
+                                <MarketController />
                             </MaketCardState>
                         </PrivateRoute>
 

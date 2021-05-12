@@ -21,6 +21,8 @@ import Button from '@material-ui/core/Button';
 
 import Grid from '@material-ui/core/Grid';
 
+import { green, blue, pink } from '@material-ui/core/colors';
+
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -37,12 +39,7 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
     position: 'fixed',
     bottom: 0,
-    //marginLeft: 15
-
-
   },
-
-
 
   buttonAll: {
     marginLeft: 4
@@ -89,7 +86,6 @@ const columns = [
   { field: 'Shell', headerName: 'Вид продукции', width: 180, type: 'string' },
   { field: 'shellType', headerName: 'Тип оболочки', width: 200, type: 'string' },
   { field: 'shellСolor', headerName: 'Цвет оболочки', width: 150, type: 'string' },
-  //  { field: 'dateAgreement', headerName: 'Дата согласования', width: 200, type: 'date' },
   { field: 'chromaticity', headerName: 'Цветность', width: 130, type: 'string' },
   { field: 'caliber', headerName: 'Калибр', width: 120, type: 'number' },
   { field: 'typPrinting', headerName: 'Тип печати', width: 200, type: 'string' },
@@ -130,16 +126,11 @@ export default function Makets() {
 
   return (
     <div>
-
-
-
       <Grid container spacing={0}>
-
-
         <Grid item xs={12} value={2}>
-
           <div className={classes.actions}>
-
+         
+          <Link to="/makets/new">
 
             <Button
               className={classes.buttonAdd}
@@ -151,11 +142,9 @@ export default function Makets() {
             >
               Добавить макет
           </Button>
-
-
-
+          
+          </Link>
           </div>
-
         </Grid>
       </Grid>
 
@@ -180,11 +169,8 @@ export default function Makets() {
         onFilterModelChange={(GridFilterModelParams) => { dispatch(сhangeFiltr(GridFilterModelParams.filterModel)) }}
         onSortModelChange={(GridSortModelParams) => dispatch(сhangeSort(GridSortModelParams.sortModel))}
         labelRowsPerPage={(<h1>Макетов на странице</h1>)}
-
         localeText={Gridstrings}
-
       />
-
 
       <div className={classes.actions_}>
       </div>
@@ -199,9 +185,6 @@ export default function Makets() {
 
 
       </BottomNavigation>
-
-
-
 
 
     </div>

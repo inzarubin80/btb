@@ -85,8 +85,6 @@ export const MaketCardState = ({ children }) => {
     const [state, dispatch] = useReducer(MaketCardReducer, initialState)
 
 
-
-
     const constStandartLifetime = 3500;
 
 
@@ -348,7 +346,7 @@ export const MaketCardState = ({ children }) => {
         dispatch({ type: OPEN_CARD_MAKET_REQUEST, payload: { ...initialState, maketRequest: true } })
     }
     const openCardMaketFailure = (message) => {
-        dispatch({ type: OPEN_CARD_MAKET_FAILURE, payload: { message: createMesage(alertTypes.info, message, constStandartLifetime) } })
+        dispatch({ type: OPEN_CARD_MAKET_FAILURE, payload: { message: createMesage(alertTypes.info, message, clearMessage,constStandartLifetime) } })
     }
     const openCardMaketSuccess = (maket) => {
         dispatch({ type: OPEN_CARD_MAKET_SUCCESS, payload: { maket } })
