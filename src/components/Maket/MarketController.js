@@ -1,6 +1,6 @@
 import React from 'react';
 import { MaketCardContext } from '../../context/MaketCard/MaketCardContext';
-import MaketProject from './MaketProject'
+import MaketProject from '../MaketProjet/MaketProject'
 import MaketCard from './MaketCard'
 import { withRouter } from "react-router-dom";
 
@@ -19,7 +19,7 @@ const MarketController = (props) => {
     } else if (maket) {
         return (<MaketCard />);
     } else return (<div></div>)
-    
+
 }
 
 export default withRouter(MarketController)
