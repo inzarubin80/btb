@@ -1,27 +1,89 @@
 import React from 'react';
 import { Steps, Button, message } from 'antd';
-import './MaketProject.css';
+//import './MaketProject.css';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
-import classes from '*.module.css';
+//import classes from '*.module.css';
+import InputLabel from '@material-ui/core/InputLabel';
+
+import Select from '@material-ui/core/Select';
 
 const { Step } = Steps;
 
 
+const useStyles = makeStyles((theme) => ({
+
+    title: {
+
+        textAlign: 'center',
+        justifyContent: 'center',
+        marginTop:10
+
+    },
+
+    stepsContent: {
+
+        minHeight: '200px',
+        marginTop: 20,
+        marginRight: 20,
+        textAlign: 'center',
+        backgroundColor: '#fafafa',
+        border: '1px dashed #e9e9e9',
+        borderRadius: '2px',
+        verticalAlign: 'center'
+    },
+
+
+    stepsAktion: {
+
+        marginTop: 20,
+        marginLeft: 20,
+        textAlign: 'center',
+        backgroundColor: '#fafafa',
+        justifyContent: 'left',
+    },
+
+    buttonPrev: {
+        margin: 5,
+        width: 120
+    },
+
+    buttonNext: {
+
+        margin: 5,
+        width: 120
+    },
+
+    selectProd: {
+
+        width: 200,
+
+    }
+
+
+}),
+);
+
 
 
 const steps = [
+    
     {
-        title: 'Выбор вида продукции',
+        title: 'Выбор калибра',
         content: 'First-content',
+        id: 'productSelection'
     },
+
     {
-        title: 'Выбор макета основания',
+        title: 'Выбор типа оболочки',
         content: 'Second-content',
+        id: 'productSelection'
     },
+
     {
-        title: 'Заполненние параметров макета',
+        title: 'Выбор цвета оболочки',
         content: 'Last-content',
+        id: 'productSelection'
     },
 ];
 
@@ -29,21 +91,12 @@ const MaketProject = () => {
 
     const [current, setCurrent] = React.useState(0);
 
-
-    const useStyles = makeStyles((theme) => ({
-
-        title: {
-         textAlign:'center'
-          
-        }
-
-    }),
-);
+    const classes = useStyles();
 
 
     const next = () => {
         setCurrent((pref) => {
-            if (pref == 2)
+            if (pref == steps.length - 1)
                 return pref
             else
                 return current + 1
@@ -61,43 +114,55 @@ const MaketProject = () => {
         );
     };
 
+
+    function handleChange(value) {
+        console.log(`selected ${value}`);
+    }
+
     return (
         <>
 
             <Grid container spacing={0}>
 
-                <Grid item xs={12} >
-                    <h4 className={classes.title}>Создание нового макета</h4>
+                <Grid item xs={12} className={classes.title}>
+
+                    <InputLabel htmlFor="grouped-native-select">Выберите вид продукции</InputLabel>
+                    <Select native defaultValue="" id="grouped-native-select">
+                        <option aria-label="None" value="" />
+                        <option value={1}>Колбасная</option>
+                        <option value={2}>Сосисочная</option>
+                    </Select>
+
                 </Grid>
 
-                <Grid item xs={6} >
+                <Grid item xs={4}>
 
-                    <Steps direction="vertical" current={current}>
-                        {steps.map(item => (
-                            <Step key={item.title} title={item.title} />
-                        ))}
-                    </Steps>
+                    <div className={classes.stepsAktion}>
 
 
-                    <div className="steps-action">
+                        <Steps direction="vertical" current={current}>
+                            {steps.map(item => (
+                                <Step key={item.title} title={item.title} />
+                            ))}
+                        </Steps>
 
-
-                        <Button style={{ margin: '0 8px' }} onClick={() => prev()}>
+                        <Button className={classes.buttonPrev} onClick={() => prev()}>
                             Предыдущий
-                        </Button>
+                           </Button>
 
-                        <Button type="primary" onClick={() => next()}>
+                        <Button type="primary" className={classes.buttonNext} onClick={() => next()}>
                             Следующий
                         </Button>
-
 
                     </div>
 
                 </Grid>
 
-                <Grid item xs={6} >
+                <Grid item xs={8} >
 
-                    <div className="steps-content">{steps[current].content}</div>
+                    <div className={classes.stepsContent}>
+
+                    </div>
 
                 </Grid>
 

@@ -6,13 +6,14 @@ import { withRouter } from "react-router-dom";
 
 const MarketController = (props) => {
 
-    const { maket, openCard } = React.useContext(MaketCardContext);
+    const {maket, openCard } = React.useContext(MaketCardContext);
     
     React.useEffect(() => {
         if (props.match.params.id != 'new') {
             openCard(props.match.params.id)
         }
     }, [props.match.params.id]);
+
 
     if (props.match.params.id == 'new') {
         return (<MaketProject />);

@@ -28,7 +28,10 @@ import {
   Link,
 } from "react-router-dom";
 
+//const drawerWidth = 240;
+
 const drawerWidth = 240;
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -74,23 +77,9 @@ const useStyles = makeStyles((theme) => ({
     ...theme.mixins.toolbar,
     justifyContent: 'flex-end',
   },
-  content: {
-    flexGrow: 1,
-    padding: theme.spacing(3),
-    transition: theme.transitions.create('margin', {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-    marginLeft: -drawerWidth,
-  },
+  
 
-  contentShift: {
-    transition: theme.transitions.create('margin', {
-      easing: theme.transitions.easing.easeOut,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-    marginLeft: 0,
-  },
+  
   link: {
 
   }
@@ -117,6 +106,9 @@ export default function Heder(props) {
     setOpen(false);
   };
 
+
+  
+  
   return (
 
     <div>
@@ -125,14 +117,16 @@ export default function Heder(props) {
         <AppBar
 
           //position="fixed"
-          position="static"
+          //position="static"
 
-          //position="sticky"
+          position="sticky"
 
 
-          className={clsx(classes.appBar, {
-            [classes.appBarShift]: open,
-          })}
+      //    className={clsx(classes.appBar, {
+        //    [classes.appBarShift]: open,
+         // })}
+         className = {classes.appBar}
+
         >
           <Toolbar>
 
