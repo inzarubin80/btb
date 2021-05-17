@@ -32,17 +32,20 @@ export const SET_MAKET_STATUS_REQUEST       = 'SET_MAKET_STATUS_REQUEST'
 export const SET_MAKET_STATUS_FAILURE       = 'SET_MAKET_STATUS_FAILURE'
 export const SET_MAKET_STATUS_SUCCESS       = 'SET_MAKET_STATUS_SUCCESS'
 export const CLEAR_MESSAGE                  = 'CLEAR_MESSAGE'
-
-
 export const REPORTS_REQUEST                = 'REPORTS_REQUEST';
 export const REPORTS_SUCCESS                = 'REPORTS_SUCCESS';
 export const REPORTS_FAILURE                = 'REPORTS_FAILURE';
-
 export const REPORT_REQUEST                = 'REPORT_REQUEST';
 export const REPORT_SUCCESS                = 'REPORT_SUCCESS';
 export const REPORT_FAILURE                = 'REPORT_FAILURE';
-
 export const OPEN_FOLDER_REPORT             = 'OPEN_FOLDER_REPORT'
+
+
+export const MAKET_PROJECTS_REQUEST        = 'MAKET_PROJECTS_REQUEST'
+export const MAKET_PROJECTS_FAILURE        = 'MAKET_PROJECTS_FAILURE'
+export const MAKET_PROJECTS_SUCCESS        = 'MAKET_PROJECTS_SUCCESS'
+
+
 
 
 

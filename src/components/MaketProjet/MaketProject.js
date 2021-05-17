@@ -7,6 +7,7 @@ import { makeStyles, useTheme } from '@material-ui/core/styles';
 import InputLabel from '@material-ui/core/InputLabel';
 
 import Select from '@material-ui/core/Select';
+import { MaketProjectContext } from '../../context/ProjectMaket/MaketProjectContext';
 
 const { Step } = Steps;
 
@@ -94,6 +95,14 @@ const MaketProject = () => {
     const classes = useStyles();
 
 
+    const { message,  projects, projectsRequest,  getProjects} = React.useContext(MaketProjectContext);
+
+
+    React.useEffect(() => {
+        getProjects()
+      }, []);
+
+      
     const next = () => {
         setCurrent((pref) => {
             if (pref == steps.length - 1)
@@ -119,6 +128,9 @@ const MaketProject = () => {
         console.log(`selected ${value}`);
     }
 
+
+    console.log("projects", projects);
+
     return (
         <>
 
@@ -127,10 +139,8 @@ const MaketProject = () => {
                 <Grid item xs={12} className={classes.title}>
 
                     <InputLabel htmlFor="grouped-native-select">Выберите вид продукции</InputLabel>
-                    <Select native defaultValue="" id="grouped-native-select">
-                        <option aria-label="None" value="" />
-                        <option value={1}>Колбасная</option>
-                        <option value={2}>Сосисочная</option>
+                    <Select defaultValue="" id="grouped-native-select">
+                         {projects.map((project)=>( <option value={project.id}>{project.name}</option>))}
                     </Select>
 
                 </Grid>

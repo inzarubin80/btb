@@ -11,9 +11,15 @@ import MarketController from './components/Maket/MarketController';
 import Reports from './components/Reports/Reports';
 import ReportCard from './components/Reports/ReportCard';
 import Start from './components/Start/Start';
+
+import MaketProject from './components/MaketProjet/MaketProject';
+
+
 import { useSelector } from 'react-redux';
 import { MaketCardState } from './context/MaketCard/MaketCardState';
 import { ReportsState } from './context/Reports/ReportsState';
+import { MaketProjectState } from './context/ProjectMaket/MaketProjectState';
+
 import  firebase from './firebase'
 
 function App() {
@@ -57,6 +63,13 @@ function App() {
                                 <Reports />
                             </ReportsState>
                         </PrivateRoute>
+
+                        <PrivateRoute exact path="/projectMaket">
+                            <MaketProjectState>
+                                <MaketProject />
+                            </MaketProjectState>
+                        </PrivateRoute>
+                        
 
                         <PrivateRoute path="/reports/:id">
                             <ReportsState>

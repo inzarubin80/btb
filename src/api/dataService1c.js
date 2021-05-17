@@ -57,6 +57,12 @@ export const getReportHTML = (id) => {
     let config = getConfig({id:id})
     return fetch(`${API_URL}/?typerequest=getReportHTML`, config);
 }
+export const getProjectsMakets = () =>{
+
+    let config = getConfig({})
+    return fetch(`${API_URL}/?typerequest=getProjectsMakets`, config);
+
+}
 
 export const sendConformationCode = (userID, requestKey) => {
     let config = getConfig({ userID, requestKey })
