@@ -7,6 +7,8 @@ import { makeStyles, useTheme } from '@material-ui/core/styles';
 import InputLabel from '@material-ui/core/InputLabel';
 
 import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
+
 import { MaketProjectContext } from '../../context/ProjectMaket/MaketProjectContext';
 
 const { Step } = Steps;
@@ -18,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
 
         textAlign: 'center',
         justifyContent: 'center',
-        marginTop:10
+        marginTop: 10
 
     },
 
@@ -59,6 +61,10 @@ const useStyles = makeStyles((theme) => ({
 
         width: 200,
 
+    },
+
+    select: {
+        width: 240
     }
 
 
@@ -67,45 +73,22 @@ const useStyles = makeStyles((theme) => ({
 
 
 
-const steps = [
-    
-    {
-        title: 'Выбор калибра',
-        content: 'First-content',
-        id: 'productSelection'
-    },
 
-    {
-        title: 'Выбор типа оболочки',
-        content: 'Second-content',
-        id: 'productSelection'
-    },
-
-    {
-        title: 'Выбор цвета оболочки',
-        content: 'Last-content',
-        id: 'productSelection'
-    },
-];
 
 const MaketProject = () => {
 
     const [current, setCurrent] = React.useState(0);
-
     const classes = useStyles();
-
-
-    const { message,  projects, projectsRequest,  getProjects} = React.useContext(MaketProjectContext);
-
+    const { message, projects, projectsRequest, getProjects, setProjectId, projectId, stagesProject, filds } = React.useContext(MaketProjectContext);
 
     React.useEffect(() => {
         getProjects()
-      }, []);
+    }, []);
 
-      
+
     const next = () => {
         setCurrent((pref) => {
-            if (pref == steps.length - 1)
+            if (pref == stagesProject.length - 1)
                 return pref
             else
                 return current + 1
@@ -124,13 +107,6 @@ const MaketProject = () => {
     };
 
 
-    function handleChange(value) {
-        console.log(`selected ${value}`);
-    }
-
-
-    console.log("projects", projects);
-
     return (
         <>
 
@@ -139,8 +115,11 @@ const MaketProject = () => {
                 <Grid item xs={12} className={classes.title}>
 
                     <InputLabel htmlFor="grouped-native-select">Выберите вид продукции</InputLabel>
-                    <Select defaultValue="" id="grouped-native-select">
-                         {projects.map((project)=>( <option value={project.id}>{project.name}</option>))}
+                    <Select native id="grouped-native-select" value={projectId} onChange={(event) => setProjectId(event.target.value)} className={classes.select}>
+
+                        <option aria-label="None" value="" />
+
+                        {projects.map((project) => (<option key={project.id} value={project.id}>{project.name}</option>))}
                     </Select>
 
                 </Grid>
@@ -151,8 +130,8 @@ const MaketProject = () => {
 
 
                         <Steps direction="vertical" current={current}>
-                            {steps.map(item => (
-                                <Step key={item.title} title={item.title} />
+                            {stagesProject.map(item => (
+                                <Step key={item.id} title={item.name} />
                             ))}
                         </Steps>
 
@@ -171,6 +150,33 @@ const MaketProject = () => {
                 <Grid item xs={8} >
 
                     <div className={classes.stepsContent}>
+
+
+                        {filds.map((fild) => {
+
+                            if (fild.type == 'select') {
+                                return (<div key={fild.id}><InputLabel id={fild.id}>{fild.name}</InputLabel>
+                                    <Select
+
+                                        labelId={fild.id}
+                                        id={fild.id + 'select'}
+                                        value={''}
+                                        onChange={() => { }}
+                                        className={classes.select}
+                                    >
+
+                                        {fild.selectValue.map((fildValue) =>
+
+                                            (<MenuItem value={{ value: fildValue.value, representation: fildValue.representation }}>{fildValue.representation}</MenuItem>))}
+
+
+
+                                    </Select></div>)
+                            } else {
+                                return (<h5>ХЗ ЧТО ЭТО!!!</h5>)
+                            }
+
+                        })}
 
                     </div>
 

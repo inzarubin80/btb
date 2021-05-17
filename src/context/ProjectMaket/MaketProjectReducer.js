@@ -2,7 +2,12 @@ import {
     MAKET_PROJECTS_REQUEST,
     MAKET_PROJECTS_FAILURE,
     MAKET_PROJECTS_SUCCESS,
-    CLEAR_MESSAGE
+    CLEAR_MESSAGE,
+    SET_PROJECT_ID,
+    GET_PROJECT_REQUEST,
+    GET_PROJECT_FAILURE,
+    GET_PROJECT_SUCCESS
+
 } from "../types"
 
 export const MaketProjectReducer = (state, action) => {
@@ -13,6 +18,49 @@ export const MaketProjectReducer = (state, action) => {
     switch (action.type) {
 
 
+        case GET_PROJECT_REQUEST:
+
+            return {
+
+                ...state,
+                message: null,
+                stagesProject:[],
+                projectRequest: true,
+                filds:[]
+
+            }
+
+        case GET_PROJECT_FAILURE:
+
+            return {
+
+                ...state,
+                message: action.payload.message,
+                projectRequest: false,
+
+            }
+
+        case GET_PROJECT_SUCCESS:
+
+            return {
+
+                ...state,
+                projectRequest: false,
+                stagesProject: action.payload.stagesProject,
+                filds:action.payload.filds,
+
+            }
+
+
+        case SET_PROJECT_ID:
+
+            return {
+
+                ...state,
+                projectId: action.payload.projectId,
+
+            }
+
         case MAKET_PROJECTS_REQUEST:
 
             return {
@@ -20,6 +68,7 @@ export const MaketProjectReducer = (state, action) => {
                 ...state,
                 message: null,
                 projects: [],
+                filds:[],
                 projectsRequest: true,
 
             }

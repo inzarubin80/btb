@@ -3,11 +3,17 @@ import {
     MAKET_PROJECTS_REQUEST,
     MAKET_PROJECTS_FAILURE,
     MAKET_PROJECTS_SUCCESS,
-    CLEAR_MESSAGE
+    CLEAR_MESSAGE,
+    SET_PROJECT_ID,
+
+    GET_PROJECT_REQUEST,
+    GET_PROJECT_FAILURE,
+    GET_PROJECT_SUCCESS
+
 } from '../types'
 import { MaketProjectContext } from './MaketProjectContext'
 import { MaketProjectReducer } from './MaketProjectReducer'
-import { executorRequests, getProjectsMakets } from '../../api/dataService1c';
+import { executorRequests, getProjectsMakets, getProject } from '../../api/dataService1c';
 
 import { useDispatch } from 'react-redux';
 
@@ -18,7 +24,13 @@ export const MaketProjectState = ({ children }) => {
     const initialState = {
         projects: [],
         projectsRequest: false,
-        message: null
+        message: null,
+        projectId: '',
+        stagesProject: [],
+        projectRequest: false,
+        filds:[]
+
+
     }
 
     const dispatchRedux = useDispatch();
@@ -26,25 +38,60 @@ export const MaketProjectState = ({ children }) => {
     const constStandartLifetime = 3500;
 
     const projectsRequest = () => {
-        return { type: MAKET_PROJECTS_REQUEST }
+        return dispatch({ type: MAKET_PROJECTS_REQUEST })
     }
 
     const projectsFailure = (error) => {
-        return { type: MAKET_PROJECTS_FAILURE, payload: { mesage: createMesage(alertTypes.info, error, clearMessage, constStandartLifetime) } }
+        return dispatch({ type: MAKET_PROJECTS_FAILURE, payload: { mesage: createMesage(alertTypes.info, error, clearMessage, constStandartLifetime) } })
     }
 
-    const projectsSuccess = (projects) => {
-        return { type: MAKET_PROJECTS_SUCCESS, payload: { projects } }
+    const projectsSuccess = (projects, filds) => {
+        return dispatch({ type: MAKET_PROJECTS_SUCCESS, payload: { projects, filds} })
     }
-
 
     const clearMessage = (uid) => {
         dispatch({ type: CLEAR_MESSAGE, payload: { uid } })
     }
 
+    const setProjectId = (projectId) => {
+        
+        dispatch({ type: SET_PROJECT_ID, payload: { projectId } })
+
+
+        if (projectId) {
+
+
+            projectRequest();
+
+
+            const functionRequest = () => {
+                return getProject(projectId)
+            };
+
+            const responseHandlingFunction = (json) => {
+                getProjectSuccess(json.stagesProject, json.filds);
+            }
+
+            const exceptionHandlingFunction = (error) => {
+                getProjectFailure(error);
+            }
+
+            executorRequests(functionRequest, responseHandlingFunction, exceptionHandlingFunction, dispatchRedux);
+        } else {
+
+            getProjectSuccess([], []);
+        }
+
+
+
+
+    }
+
+
+
     const getProjects = () => {
 
-        dispatch(projectsRequest());
+        projectsRequest();
 
 
         const functionRequest = () => {
@@ -53,12 +100,12 @@ export const MaketProjectState = ({ children }) => {
 
         const responseHandlingFunction = (json) => {
 
-           dispatch(projectsSuccess(json.projects));
+            projectsSuccess(json.projects);
 
         }
 
         const exceptionHandlingFunction = (error) => {
-            dispatch(projectsFailure(error));
+            projectsFailure(error);
         }
 
         executorRequests(functionRequest, responseHandlingFunction, exceptionHandlingFunction, dispatchRedux);
@@ -67,13 +114,37 @@ export const MaketProjectState = ({ children }) => {
 
 
 
+
+    const projectRequest = () => {
+        return dispatch({ type: GET_PROJECT_REQUEST })
+    }
+
+
+    const getProjectSuccess = (stagesProject, filds) => {
+        return dispatch({ type: GET_PROJECT_SUCCESS, payload: { stagesProject, filds } })
+    }
+
+
+    const getProjectFailure = (error) => {
+        return dispatch({ type: GET_PROJECT_FAILURE, payload: { mesage: createMesage(alertTypes.info, error, clearMessage, constStandartLifetime) } })
+    }
+
+
+
+
     return (
         <MaketProjectContext.Provider value={{
+            
             projects: state.projects,
             projectsRequest: state.projectsRequest,
             message: state.message,
+            projectId: state.projectId,
+            stagesProject:state.stagesProject,
+            filds:state.filds,
 
             getProjects,
+            setProjectId
+
 
         }}>{children}</MaketProjectContext.Provider>)
 
