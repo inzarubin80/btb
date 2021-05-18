@@ -8,7 +8,14 @@ import {
 
     GET_PROJECT_REQUEST,
     GET_PROJECT_FAILURE,
-    GET_PROJECT_SUCCESS
+    GET_PROJECT_SUCCESS,
+    CHANGE_PROJECT_FIELD,
+
+    NEXT_STAGE_REQUEST,
+    NEXT_STAGE_FAILURE,
+    NEXT_STAGE_SUCCESS
+
+
 
 } from '../types'
 import { MaketProjectContext } from './MaketProjectContext'
@@ -22,20 +29,60 @@ import { createMesage, alertTypes } from '../../utils/utils';
 export const MaketProjectState = ({ children }) => {
 
     const initialState = {
+        
         projects: [],
         projectsRequest: false,
         message: null,
         projectId: '',
         stagesProject: [],
         projectRequest: false,
-        filds:[]
-
+        filds:[],
+        objectImage:{},
+        stageRequest: false,
 
     }
 
     const dispatchRedux = useDispatch();
     const [state, dispatch] = useReducer(MaketProjectReducer, initialState)
     const constStandartLifetime = 3500;
+
+    const nextStageRequest = () => {
+        return dispatch({ type: NEXT_STAGE_REQUEST})
+    }
+    const nextStageFailure = (error) =>{
+        return dispatch({ type: NEXT_STAGE_FAILURE, payload: { mesage: createMesage(alertTypes.info, error, clearMessage, constStandartLifetime) }})
+    }
+
+    const nextStageSuccess = (filds) => {
+        return dispatch({ type: NEXT_STAGE_SUCCESS, payload: {filds}})
+    }
+    
+    const nextStage = () => {
+        
+        nextStageRequest();
+
+        const functionRequest = () => {
+            return getProject()
+        };
+
+        const responseHandlingFunction = (json) => {
+            nextStageSuccess(json.filds);
+        }
+
+        const exceptionHandlingFunction = (error) => {
+            nextStageFailure(error);
+        }
+
+        executorRequests(functionRequest, responseHandlingFunction, exceptionHandlingFunction, dispatchRedux);
+
+    }
+
+
+
+    const changeProjectField = (fildId, fildValue) =>{
+        return dispatch({ type: CHANGE_PROJECT_FIELD, payload: { fildId, fildValue}  })
+    }
+
 
     const projectsRequest = () => {
         return dispatch({ type: MAKET_PROJECTS_REQUEST })
@@ -69,7 +116,7 @@ export const MaketProjectState = ({ children }) => {
             };
 
             const responseHandlingFunction = (json) => {
-                getProjectSuccess(json.stagesProject, json.filds);
+                getProjectSuccess(json.stagesProject, json.filds, json.objectImage);
             }
 
             const exceptionHandlingFunction = (error) => {
@@ -120,8 +167,8 @@ export const MaketProjectState = ({ children }) => {
     }
 
 
-    const getProjectSuccess = (stagesProject, filds) => {
-        return dispatch({ type: GET_PROJECT_SUCCESS, payload: { stagesProject, filds } })
+    const getProjectSuccess = (stagesProject, filds, objectImage) => {
+        return dispatch({ type: GET_PROJECT_SUCCESS, payload: { stagesProject, filds, objectImage} })
     }
 
 
@@ -141,9 +188,11 @@ export const MaketProjectState = ({ children }) => {
             projectId: state.projectId,
             stagesProject:state.stagesProject,
             filds:state.filds,
+            objectImage:state.objectImage,
 
             getProjects,
-            setProjectId
+            setProjectId,
+            changeProjectField
 
 
         }}>{children}</MaketProjectContext.Provider>)

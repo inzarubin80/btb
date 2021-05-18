@@ -6,7 +6,15 @@ import {
     SET_PROJECT_ID,
     GET_PROJECT_REQUEST,
     GET_PROJECT_FAILURE,
-    GET_PROJECT_SUCCESS
+    GET_PROJECT_SUCCESS,
+    CHANGE_PROJECT_FIELD,
+
+    NEXT_STAGE_REQUEST,
+    NEXT_STAGE_FAILURE,
+    NEXT_STAGE_SUCCESS
+
+
+
 
 } from "../types"
 
@@ -17,6 +25,34 @@ export const MaketProjectReducer = (state, action) => {
 
     switch (action.type) {
 
+        case NEXT_STAGE_REQUEST:
+            return {
+                ...state,
+                stageRequest: true,
+            }
+
+        case NEXT_STAGE_FAILURE:
+            return {
+                ...state,
+                message: action.payload.message,
+                stageRequest: false
+            }
+        case NEXT_STAGE_SUCCESS:
+            return {
+                ...state,
+                stageRequest: false,
+                filds: action.payload.filds
+
+            }
+        case CHANGE_PROJECT_FIELD:
+
+            return {
+
+                ...state,
+                objectImage: { ...state.objectImage, [action.payload.fildId]: action.payload.fildValue }
+
+            }
+
 
         case GET_PROJECT_REQUEST:
 
@@ -24,9 +60,10 @@ export const MaketProjectReducer = (state, action) => {
 
                 ...state,
                 message: null,
-                stagesProject:[],
+                stagesProject: [],
                 projectRequest: true,
-                filds:[]
+                filds: [],
+                objectImage: {}
 
             }
 
@@ -47,7 +84,8 @@ export const MaketProjectReducer = (state, action) => {
                 ...state,
                 projectRequest: false,
                 stagesProject: action.payload.stagesProject,
-                filds:action.payload.filds,
+                filds: action.payload.filds,
+                objectImage: action.payload.objectImage,
 
             }
 
@@ -68,7 +106,8 @@ export const MaketProjectReducer = (state, action) => {
                 ...state,
                 message: null,
                 projects: [],
-                filds:[],
+                filds: [],
+                objectImage: {},
                 projectsRequest: true,
 
             }

@@ -79,7 +79,23 @@ const MaketProject = () => {
 
     const [current, setCurrent] = React.useState(0);
     const classes = useStyles();
-    const { message, projects, projectsRequest, getProjects, setProjectId, projectId, stagesProject, filds } = React.useContext(MaketProjectContext);
+    const { message,
+        projects,
+        projectsRequest,
+        getProjects,
+        setProjectId,
+        projectId,
+        stagesProject,
+        filds,
+        changeProjectField,
+        objectImage } = React.useContext(MaketProjectContext);
+
+    console.log("objectImage", objectImage);
+
+    const HendleChangeFild = (fildId, e) => {
+        changeProjectField(fildId, e.target.value)
+    }
+
 
     React.useEffect(() => {
         getProjects()
@@ -160,20 +176,20 @@ const MaketProject = () => {
 
                                         labelId={fild.id}
                                         id={fild.id + 'select'}
-                                        value={''}
-                                        onChange={() => { }}
+                                        value={objectImage[fild.id]}
+                                        onChange={(e) => { HendleChangeFild(fild.id, e) }}
                                         className={classes.select}
                                     >
 
                                         {fild.selectValue.map((fildValue) =>
 
-                                            (<MenuItem value={{ value: fildValue.value, representation: fildValue.representation }}>{fildValue.representation}</MenuItem>))}
+                                            (<MenuItem key={fildValue.value} value={fildValue.value}>{fildValue.representation}</MenuItem>))}
 
 
 
                                     </Select></div>)
                             } else {
-                                return (<h5>ХЗ ЧТО ЭТО!!!</h5>)
+                                return (<h5>хз что это!!!</h5>)
                             }
 
                         })}
