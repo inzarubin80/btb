@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
 
       //  minHeight: '200px',
         marginTop: 20,
-        marginRight: 20,
+       // marginRight: 20,
         textAlign: 'center',
         backgroundColor: '#fafafa',
         border: '1px dashed #e9e9e9',
