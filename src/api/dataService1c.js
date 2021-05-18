@@ -68,7 +68,12 @@ export const getProjectsMakets = () =>{
 export const getProject = (id) =>{
     let config = getConfig({id})
     return fetch(`${API_URL}/?typerequest=getProject`, config);
+}
 
+
+export const nextStepProject = (idProject, currentStage, objectImage, progress) =>{
+    let config = getConfig({idProject, currentStage, objectImage, progress})
+    return fetch(`${API_URL}/?typerequest=nextStepProject`, config);
 }
 
 

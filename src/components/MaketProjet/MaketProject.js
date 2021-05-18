@@ -1,19 +1,12 @@
 import React from 'react';
 import { Steps, Button, message } from 'antd';
-//import './MaketProject.css';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
-//import classes from '*.module.css';
 import InputLabel from '@material-ui/core/InputLabel';
-
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
-
 import { MaketProjectContext } from '../../context/ProjectMaket/MaketProjectContext';
-
 const { Step } = Steps;
-
-
 const useStyles = makeStyles((theme) => ({
 
     title: {
@@ -26,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
 
     stepsContent: {
 
-        minHeight: '200px',
+      //  minHeight: '200px',
         marginTop: 20,
         marginRight: 20,
         textAlign: 'center',
@@ -40,10 +33,17 @@ const useStyles = makeStyles((theme) => ({
     stepsAktion: {
 
         marginTop: 20,
-        marginLeft: 20,
+        //marginLeft: 20,
         textAlign: 'center',
         backgroundColor: '#fafafa',
-        justifyContent: 'left',
+        justifyContent: 'center',
+    },
+
+    buttonsAction: {
+
+        textAlign: 'center',
+        justifyContent: 'center',
+
     },
 
     buttonPrev: {
@@ -58,21 +58,22 @@ const useStyles = makeStyles((theme) => ({
     },
 
     selectProd: {
-
+        marginTop: 5,
         width: 200,
 
     },
 
     select: {
         width: 240
+    },
+
+    fild: {
+         margin:10
     }
 
 
 }),
 );
-
-
-
 
 
 const MaketProject = () => {
@@ -88,7 +89,11 @@ const MaketProject = () => {
         stagesProject,
         filds,
         changeProjectField,
-        objectImage } = React.useContext(MaketProjectContext);
+        objectImage,
+        nextStage,
+        currentStage
+
+    } = React.useContext(MaketProjectContext);
 
     console.log("objectImage", objectImage);
 
@@ -97,29 +102,23 @@ const MaketProject = () => {
     }
 
 
+
+
     React.useEffect(() => {
         getProjects()
     }, []);
 
 
     const next = () => {
-        setCurrent((pref) => {
-            if (pref == stagesProject.length - 1)
-                return pref
-            else
-                return current + 1
+        if (stagesProject.length - 1 > currentStage && !projectsRequest) {
+            nextStage(true);
         }
-        );
     };
 
     const prev = () => {
-        setCurrent((pref) => {
-            if (pref == 0)
-                return 0
-            else
-                return current - 1
+        if (currentStage > 0 && !projectsRequest) {
+            nextStage(false);
         }
-        );
     };
 
 
@@ -130,8 +129,8 @@ const MaketProject = () => {
 
                 <Grid item xs={12} className={classes.title}>
 
-                    <InputLabel htmlFor="grouped-native-select">Выберите вид продукции</InputLabel>
-                    <Select native id="grouped-native-select" value={projectId} onChange={(event) => setProjectId(event.target.value)} className={classes.select}>
+                    <InputLabel htmlFor="grouped-native-select">Вид продукции</InputLabel>
+                    <Select native id="grouped-native-select" value={projectId} onChange={(event) => setProjectId(event.target.value)} className={classes.selectProd}>
 
                         <option aria-label="None" value="" />
 
@@ -140,30 +139,39 @@ const MaketProject = () => {
 
                 </Grid>
 
-                <Grid item xs={4}>
+
+
+                <Grid item xs={3} />
+
+                <Grid item xs={6}>
 
                     <div className={classes.stepsAktion}>
 
 
-                        <Steps direction="vertical" current={current}>
+                        <Steps current={currentStage}>
                             {stagesProject.map(item => (
                                 <Step key={item.id} title={item.name} />
                             ))}
                         </Steps>
 
-                        <Button className={classes.buttonPrev} onClick={() => prev()}>
-                            Предыдущий
-                           </Button>
 
-                        <Button type="primary" className={classes.buttonNext} onClick={() => next()}>
-                            Следующий
-                        </Button>
 
                     </div>
 
+
+
                 </Grid>
 
-                <Grid item xs={8} >
+                <Grid item xs={3} />
+
+
+
+                <Grid item xs={1} />
+
+
+                <Grid item xs={10} >
+
+
 
                     <div className={classes.stepsContent}>
 
@@ -171,14 +179,16 @@ const MaketProject = () => {
                         {filds.map((fild) => {
 
                             if (fild.type == 'select') {
-                                return (<div key={fild.id}><InputLabel id={fild.id}>{fild.name}</InputLabel>
+                                return (<div key={fild.id}><InputLabel id={fild.id} className={classes.fild} >{fild.name}</InputLabel>
                                     <Select
 
                                         labelId={fild.id}
                                         id={fild.id + 'select'}
                                         value={objectImage[fild.id]}
                                         onChange={(e) => { HendleChangeFild(fild.id, e) }}
-                                        className={classes.select}
+                                      
+                                        className={classes.fild}
+
                                     >
 
                                         {fild.selectValue.map((fildValue) =>
@@ -187,16 +197,36 @@ const MaketProject = () => {
 
 
 
-                                    </Select></div>)
+                                    </Select>
+                                </div>)
                             } else {
                                 return (<h5>хз что это!!!</h5>)
                             }
 
                         })}
 
+
+
                     </div>
 
+
+                    <div className={classes.buttonsAction}>
+                    <Button className={classes.buttonPrev} onClick={() => prev()}>
+                        Предыдущий
+                           </Button>
+
+                    <Button type="primary" className={classes.buttonNext} onClick={() => next()}>
+                        Следующий
+                        </Button>
+                    </div>
+                   
+
+
                 </Grid>
+
+                <Grid item xs={1} />
+
+
 
             </Grid>
         </>

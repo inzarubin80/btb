@@ -20,7 +20,7 @@ import {
 } from '../types'
 import { MaketProjectContext } from './MaketProjectContext'
 import { MaketProjectReducer } from './MaketProjectReducer'
-import { executorRequests, getProjectsMakets, getProject } from '../../api/dataService1c';
+import { executorRequests, getProjectsMakets, getProject,nextStepProject} from '../../api/dataService1c';
 
 import { useDispatch } from 'react-redux';
 
@@ -39,6 +39,7 @@ export const MaketProjectState = ({ children }) => {
         filds:[],
         objectImage:{},
         stageRequest: false,
+        currentStage: 0
 
     }
 
@@ -53,20 +54,27 @@ export const MaketProjectState = ({ children }) => {
         return dispatch({ type: NEXT_STAGE_FAILURE, payload: { mesage: createMesage(alertTypes.info, error, clearMessage, constStandartLifetime) }})
     }
 
-    const nextStageSuccess = (filds) => {
-        return dispatch({ type: NEXT_STAGE_SUCCESS, payload: {filds}})
+    const nextStageSuccess = (filds, currentStage) => {
+        return dispatch({ type: NEXT_STAGE_SUCCESS, payload: {filds, currentStage}})
     }
     
-    const nextStage = () => {
+    const nextStage = (progress) => {
         
         nextStageRequest();
 
         const functionRequest = () => {
-            return getProject()
+            return nextStepProject(state.projectId, state.currentStage, state.objectImage, progress)
         };
 
         const responseHandlingFunction = (json) => {
-            nextStageSuccess(json.filds);
+            
+            if (json.error) {
+                nextStageFailure(json.error);
+            }else
+            {
+                nextStageSuccess(json.filds, json.currentStage); 
+            }
+            
         }
 
         const exceptionHandlingFunction = (error) => {
@@ -128,10 +136,6 @@ export const MaketProjectState = ({ children }) => {
 
             getProjectSuccess([], []);
         }
-
-
-
-
     }
 
 
@@ -177,8 +181,6 @@ export const MaketProjectState = ({ children }) => {
     }
 
 
-
-
     return (
         <MaketProjectContext.Provider value={{
             
@@ -189,10 +191,11 @@ export const MaketProjectState = ({ children }) => {
             stagesProject:state.stagesProject,
             filds:state.filds,
             objectImage:state.objectImage,
-
+            currentStage:state.currentStage,
             getProjects,
             setProjectId,
-            changeProjectField
+            changeProjectField,
+            nextStage
 
 
         }}>{children}</MaketProjectContext.Provider>)

@@ -41,7 +41,8 @@ export const MaketProjectReducer = (state, action) => {
             return {
                 ...state,
                 stageRequest: false,
-                filds: action.payload.filds
+                filds: action.payload.filds,
+                currentStage:action.payload.currentStage,
 
             }
         case CHANGE_PROJECT_FIELD:
@@ -63,7 +64,8 @@ export const MaketProjectReducer = (state, action) => {
                 stagesProject: [],
                 projectRequest: true,
                 filds: [],
-                objectImage: {}
+                objectImage: {},
+                currentStage:0
 
             }
 
@@ -86,6 +88,7 @@ export const MaketProjectReducer = (state, action) => {
                 stagesProject: action.payload.stagesProject,
                 filds: action.payload.filds,
                 objectImage: action.payload.objectImage,
+                currentStage:0
 
             }
 
@@ -109,6 +112,7 @@ export const MaketProjectReducer = (state, action) => {
                 filds: [],
                 objectImage: {},
                 projectsRequest: true,
+                currentStage:0
 
             }
 
