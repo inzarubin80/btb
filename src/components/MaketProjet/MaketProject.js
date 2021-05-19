@@ -80,7 +80,7 @@ const useStyles = makeStyles((theme) => ({
     },
 
     inputSelect: {
-        margin: 20,
+        margin: 30,
     
     }
 
