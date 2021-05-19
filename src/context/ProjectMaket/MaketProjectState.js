@@ -13,9 +13,10 @@ import {
 
     NEXT_STAGE_REQUEST,
     NEXT_STAGE_FAILURE,
-    NEXT_STAGE_SUCCESS
+    NEXT_STAGE_SUCCESS,
 
-
+    ADD_PROJECT_FILE,
+    REMOVE_PROJECT_FILE
 
 } from '../types'
 import { MaketProjectContext } from './MaketProjectContext'
@@ -46,6 +47,19 @@ export const MaketProjectState = ({ children }) => {
     const dispatchRedux = useDispatch();
     const [state, dispatch] = useReducer(MaketProjectReducer, initialState)
     const constStandartLifetime = 3500;
+
+
+
+    const addProjectFile = (file) => {
+        dispatch({ type: ADD_PROJECT_FILE, payload: file })
+    }
+
+
+    const removeProjectFile = (uid) => {
+        dispatch({ type: REMOVE_PROJECT_FILE, payload: uid })
+    }
+
+
 
     const nextStageRequest = () => {
         return dispatch({ type: NEXT_STAGE_REQUEST})
@@ -195,7 +209,9 @@ export const MaketProjectState = ({ children }) => {
             getProjects,
             setProjectId,
             changeProjectField,
-            nextStage
+            nextStage,
+            addProjectFile,
+            removeProjectFile
 
 
         }}>{children}</MaketProjectContext.Provider>)

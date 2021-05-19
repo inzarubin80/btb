@@ -11,9 +11,10 @@ import {
 
     NEXT_STAGE_REQUEST,
     NEXT_STAGE_FAILURE,
-    NEXT_STAGE_SUCCESS
+    NEXT_STAGE_SUCCESS,
 
-
+    ADD_PROJECT_FILE,
+    REMOVE_PROJECT_FILE
 
 
 } from "../types"
@@ -21,9 +22,26 @@ import {
 export const MaketProjectReducer = (state, action) => {
 
 
-    console.log(action);
+    console.log('action*************', action);
+    console.log('state******************************', state);
+    
 
     switch (action.type) {
+
+
+        case REMOVE_PROJECT_FILE:
+            return {
+                ...state,
+                objectImage: { ...state.objectImage, files: state.objectImage.files.filter((file) => file.uid != action.payload) },     
+            }
+
+        case ADD_PROJECT_FILE:
+            return {
+                ...state,
+                objectImage: { ...state.objectImage, files: [...state.objectImage.files,  action.payload]},                
+            }
+
+
 
         case NEXT_STAGE_REQUEST:
             return {

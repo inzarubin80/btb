@@ -23,7 +23,7 @@ export const getListReports = (id) => {
 }
 
 export const setMaketStatus = (id, uidState) => {
-    const config = getConfig({uidState});
+    const config = getConfig({ uidState });
     return fetch(`${API_URL}/?typerequest=setMaketStatus&id=${id}`, config);
 }
 
@@ -54,26 +54,44 @@ export const removeTask = (id, uid) => {
 
 
 export const getReportHTML = (id) => {
-    let config = getConfig({id:id})
+    let config = getConfig({ id: id })
     return fetch(`${API_URL}/?typerequest=getReportHTML`, config);
 }
 
-export const getProjectsMakets = () =>{
+export const getProjectsMakets = () => {
 
     let config = getConfig({})
     return fetch(`${API_URL}/?typerequest=getProjectsMakets`, config);
 
 }
 
-export const getProject = (id) =>{
-    let config = getConfig({id})
+export const getProject = (id) => {
+    let config = getConfig({ id })
     return fetch(`${API_URL}/?typerequest=getProject`, config);
 }
 
 
-export const nextStepProject = (idProject, currentStage, objectImage, progress) =>{
-    let config = getConfig({idProject, currentStage, objectImage, progress})
+export const nextStepProject = (idProject, currentStage, objectImage, progress) => {
+
+
+    let objectImageR;
+
+
+    //cut the contents of the files
+    if (objectImage.hasOwnProperty('files')) {
+        objectImageR = { ...objectImage, files:objectImage.files.map(file => file.uid) };
+    }
+    else {
+        objectImageR = objectImage;
+    }
+    //cut the contents of the files
+    
+
+
+    let config = getConfig({ idProject, currentStage, objectImage: objectImageR, progress })
     return fetch(`${API_URL}/?typerequest=nextStepProject`, config);
+
+
 }
 
 
@@ -93,7 +111,7 @@ const getConfig = (body = {}) => {
 
     body.key = localStorage.getItem('key');
     body.messageRecipientKey = localStorage.getItem('messageRecipientKey');
-    
+
     let config = {
         method: 'post',
         headers: new Headers({

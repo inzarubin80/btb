@@ -64,7 +64,7 @@ function App() {
                             </ReportsState>
                         </PrivateRoute>
 
-                        <PrivateRoute exact path="/projectMaket">
+                        <PrivateRoute exact path="/new-maket">
                             <MaketProjectState>
                                 <MaketProject />
                             </MaketProjectState>

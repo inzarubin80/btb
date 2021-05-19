@@ -6,6 +6,12 @@ import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import { MaketProjectContext } from '../../context/ProjectMaket/MaketProjectContext';
+
+
+import AttachedFiles from '../AttachedFiles/AttachedFiles'
+
+import TextField from '@material-ui/core/TextField';
+
 const { Step } = Steps;
 const useStyles = makeStyles((theme) => ({
 
@@ -19,9 +25,9 @@ const useStyles = makeStyles((theme) => ({
 
     stepsContent: {
 
-      //  minHeight: '200px',
+        //  minHeight: '200px',
         marginTop: 20,
-       // marginRight: 20,
+        // marginRight: 20,
         textAlign: 'center',
         backgroundColor: '#fafafa',
         border: '1px dashed #e9e9e9',
@@ -67,8 +73,15 @@ const useStyles = makeStyles((theme) => ({
         width: 240
     },
 
+    inputString: {
+        width: '80%'
+
+
+
+    },
+
     fild: {
-         margin:10
+        margin: 10
     }
 
 
@@ -91,7 +104,9 @@ const MaketProject = () => {
         changeProjectField,
         objectImage,
         nextStage,
-        currentStage
+        currentStage,
+        addProjectFile,
+        removeProjectFile
 
     } = React.useContext(MaketProjectContext);
 
@@ -171,14 +186,10 @@ const MaketProject = () => {
 
                 <Grid item xs={10} >
 
-
-
                     <div className={classes.stepsContent}>
 
-
                         {filds.map((fild) => {
-
-                            if (fild.type == 'select') {
+                            if (fild.type == 'inputSelect') {
                                 return (<div key={fild.id}><InputLabel id={fild.id} className={classes.fild} >{fild.name}</InputLabel>
                                     <Select
 
@@ -186,21 +197,42 @@ const MaketProject = () => {
                                         id={fild.id + 'select'}
                                         value={objectImage[fild.id]}
                                         onChange={(e) => { HendleChangeFild(fild.id, e) }}
-                                      
                                         className={classes.fild}
-
                                     >
 
                                         {fild.selectValue.map((fildValue) =>
 
                                             (<MenuItem key={fildValue.value} value={fildValue.value}>{fildValue.representation}</MenuItem>))}
 
-
-
                                     </Select>
                                 </div>)
-                            } else {
-                                return (<h5>хз что это!!!</h5>)
+                            } else if (fild.type == 'inputString') {
+                                return (<div key={fild.id}>
+
+                                    <TextField
+                                        id={fild.id}
+                                        label={fild.name}
+                                        multiline
+                                        value={objectImage[fild.id]}
+                                        rows={2}
+                                        className={classes.inputString}
+                                        defaultValue="Default Value"
+                                        onChange={(e) => { HendleChangeFild(fild.id, e) }}
+
+                                    />
+
+                                </div>)
+                            } else if (fild.type == 'inputFiles') {
+                                return (<div key={fild.id}>
+
+                                    <AttachedFiles files={objectImage[fild.id]} removeFile={removeProjectFile} addFile={addProjectFile} />
+
+                                </div>)
+                            }
+
+
+                            else {
+                                return (<h5>не известный вид поля...!!!</h5>)
                             }
 
                         })}
@@ -211,15 +243,15 @@ const MaketProject = () => {
 
 
                     <div className={classes.buttonsAction}>
-                    <Button className={classes.buttonPrev} onClick={() => prev()}>
-                        Предыдущий
+                        <Button className={classes.buttonPrev} onClick={() => prev()}>
+                            Предыдущий
                            </Button>
 
-                    <Button type="primary" className={classes.buttonNext} onClick={() => next()}>
-                        Следующий
+                        <Button type="primary" className={classes.buttonNext} onClick={() => next()}>
+                            Следующий
                         </Button>
                     </div>
-                   
+
 
 
                 </Grid>

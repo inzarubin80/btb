@@ -47,9 +47,14 @@ export const GET_PROJECT_FAILURE            = 'GET_PROJECT_FAILURE'
 export const GET_PROJECT_SUCCESS            = 'GET_PROJECT_SUCCESS'
 export const SET_PROJECT_ID                 = 'SET_PROJECT_ID'
 export const CHANGE_PROJECT_FIELD           = 'CHANGE_PROJECT_FIELD'
+
 export const NEXT_STAGE_REQUEST             = 'NEXT_STAGE_REQUEST'
 export const NEXT_STAGE_FAILURE             = 'NEXT_STAGE_FAILURE'
 export const NEXT_STAGE_SUCCESS             = 'NEXT_STAGE_SUCCESS'
+
+export const  ADD_PROJECT_FILE              = 'ADD_PROJECT_FILE'
+export const  REMOVE_PROJECT_FILE           = 'REMOVE_PROJECT_FILE'
+
 
 
 
