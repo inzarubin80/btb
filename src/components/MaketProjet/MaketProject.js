@@ -74,14 +74,14 @@ const useStyles = makeStyles((theme) => ({
     },
 
     inputString: {
-        width: '80%'
-
-
-
+        width: '80%',
+        margin: 10,
+    
     },
 
-    fild: {
-        margin: 10
+    inputSelect: {
+        margin: 20,
+    
     }
 
 
@@ -190,14 +190,14 @@ const MaketProject = () => {
 
                         {filds.map((fild) => {
                             if (fild.type == 'inputSelect') {
-                                return (<div key={fild.id}><InputLabel id={fild.id} className={classes.fild} >{fild.name}</InputLabel>
+                                return (<div key={fild.id}  className={classes.inputSelect}><InputLabel id={fild.id} className={classes.fild} >{fild.name}</InputLabel>
                                     <Select
 
                                         labelId={fild.id}
                                         id={fild.id + 'select'}
                                         value={objectImage[fild.id]}
                                         onChange={(e) => { HendleChangeFild(fild.id, e) }}
-                                        className={classes.fild}
+                                       
                                     >
 
                                         {fild.selectValue.map((fildValue) =>
@@ -216,7 +216,7 @@ const MaketProject = () => {
                                         value={objectImage[fild.id]}
                                         rows={2}
                                         className={classes.inputString}
-                                        defaultValue="Default Value"
+                                      //  defaultValue="Default Value"
                                         onChange={(e) => { HendleChangeFild(fild.id, e) }}
 
                                     />
