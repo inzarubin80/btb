@@ -22,8 +22,8 @@ import {
 export const MaketProjectReducer = (state, action) => {
 
 
-    console.log('action*************', action);
-    console.log('state******************************', state);
+    //console.log('action*************', action);
+    //console.log('state******************************', state);
     
 
     switch (action.type) {

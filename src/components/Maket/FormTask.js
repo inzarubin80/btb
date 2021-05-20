@@ -51,7 +51,7 @@ const FormTask = () => {
   const { maket, idTaskChange, taskChangeFiles, editorState, removeTaskFile, addTaskFile, editingHtmlText, handleSaveTask, cancelTaskEditing,taskSaved} = React.useContext(MaketCardContext);
   const task = maket.tasks.find((task) => task.uid == idTaskChange);
 
-  console.log('taskSaved', taskSaved);
+ // console.log('taskSaved', taskSaved);
 
   return (
     <div className={classes.taskСhanges}>

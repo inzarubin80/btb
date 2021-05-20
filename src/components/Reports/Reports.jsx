@@ -53,7 +53,7 @@ export default function Reports(props) {
 
 
 
-    console.log('reportGroups', reportGroups);
+   // console.log('reportGroups', reportGroups);
 
 
     const folderIsOpen = (id) => {

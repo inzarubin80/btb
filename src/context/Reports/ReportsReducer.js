@@ -17,7 +17,7 @@ import {
 export const ReportsReducer = (state, action) => {
 
 
-    console.log('action', action);
+   // console.log('action', action);
 
     switch (action.type) {
 

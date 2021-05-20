@@ -6,8 +6,8 @@ import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import { MaketProjectContext } from '../../context/ProjectMaket/MaketProjectContext';
-
-
+import NumberFormat from 'react-number-format';
+import PropTypes from 'prop-types';
 import AttachedFiles from '../AttachedFiles/AttachedFiles'
 
 import TextField from '@material-ui/core/TextField';
@@ -75,23 +75,54 @@ const useStyles = makeStyles((theme) => ({
 
     inputString: {
         width: '80%',
-        margin: 10,
-    
+        marginTop: 10,
+
+    },
+
+    inputNumber:{
+        marginTop: 10,
     },
 
     inputSelect: {
-        margin: 30,
-    
+        marginTop: 10,
+
     }
 
 
 }),
 );
 
+function NumberFormatCustom(props) {
+    const { inputRef, onChange, ...other } = props;
+  
+    return (
+      <NumberFormat
+        {...other}
+        getInputRef={inputRef}
+        onValueChange={(values) => {
+          onChange({
+            target: {
+              name: props.name,
+              value: values.value,
+            },
+          });
+        }}
+      //  thousandSeparator
+        isNumericString
+       // prefix="$"
+      />
+    );
+  }
+  
+  NumberFormatCustom.propTypes = {
+    inputRef: PropTypes.func.isRequired,
+    name: PropTypes.string.isRequired,
+    onChange: PropTypes.func.isRequired,
+  };
+
 
 const MaketProject = () => {
 
-    const [current, setCurrent] = React.useState(0);
     const classes = useStyles();
     const { message,
         projects,
@@ -110,13 +141,29 @@ const MaketProject = () => {
 
     } = React.useContext(MaketProjectContext);
 
-    console.log("objectImage", objectImage);
+   // console.log("objectImage", objectImage);
 
     const HendleChangeFild = (fildId, e) => {
         changeProjectField(fildId, e.target.value)
     }
 
+    const fildIsVisible = (fild) => {
 
+
+        if (!fild.visibilityСonditions.length){
+            return true;
+        }
+
+
+        for (let i = 0; i < fild.visibilityСonditions.length; i++) {
+            if (objectImage[fild.visibilityСonditions[i].idFieldParent] == fild.visibilityСonditions[i].valueParent) {
+                return true;
+            }
+        }
+
+        return false;
+
+    }
 
 
     React.useEffect(() => {
@@ -189,15 +236,18 @@ const MaketProject = () => {
                     <div className={classes.stepsContent}>
 
                         {filds.map((fild) => {
-                            if (fild.type == 'inputSelect') {
-                                return (<div key={fild.id}  className={classes.inputSelect}><InputLabel id={fild.id} className={classes.fild} >{fild.name}</InputLabel>
+
+                            if (!fildIsVisible(fild)) {
+                                return (<div key={fild.id}/>)
+                            } else if (fild.type == 'inputSelect') {
+                                return (<div key={fild.id} className={classes.inputSelect}><InputLabel id={fild.id} className={classes.fild} >{fild.name}</InputLabel>
                                     <Select
 
                                         labelId={fild.id}
                                         id={fild.id + 'select'}
                                         value={objectImage[fild.id]}
                                         onChange={(e) => { HendleChangeFild(fild.id, e) }}
-                                       
+
                                     >
 
                                         {fild.selectValue.map((fildValue) =>
@@ -205,6 +255,24 @@ const MaketProject = () => {
                                             (<MenuItem key={fildValue.value} value={fildValue.value}>{fildValue.representation}</MenuItem>))}
 
                                     </Select>
+                                </div>)
+                            } else if (fild.type == 'inputNumber') {
+                                return (<div key={fild.id}>
+
+                                    <TextField
+                                        id={fild.id}
+                                        label={fild.name}
+                                        value={objectImage[fild.id]}
+                                        rows={1}
+                                        className={classes.inputNumber}
+                                        name="numberformat"
+                                        onChange={(e) => { HendleChangeFild(fild.id, e) }}
+                                        InputProps={{
+                                            inputComponent: NumberFormatCustom,
+                                          }}
+
+                                    />
+
                                 </div>)
                             } else if (fild.type == 'inputString') {
                                 return (<div key={fild.id}>
@@ -214,9 +282,9 @@ const MaketProject = () => {
                                         label={fild.name}
                                         multiline
                                         value={objectImage[fild.id]}
-                                        rows={2}
+                                        rows={1}
                                         className={classes.inputString}
-                                      //  defaultValue="Default Value"
+                                        //  defaultValue="Default Value"
                                         onChange={(e) => { HendleChangeFild(fild.id, e) }}
 
                                     />
