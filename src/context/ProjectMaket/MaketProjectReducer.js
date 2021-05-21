@@ -14,33 +14,29 @@ import {
     NEXT_STAGE_SUCCESS,
 
     ADD_PROJECT_FILE,
-    REMOVE_PROJECT_FILE
+    REMOVE_PROJECT_FILE,
+
+    EDITING_HTML_TEXT
+
 
 
 } from "../types"
 
 export const MaketProjectReducer = (state, action) => {
 
-
-    console.log('action*************', action);
-    console.log('state******************************', state);
-    
-
     switch (action.type) {
-
 
         case REMOVE_PROJECT_FILE:
             return {
                 ...state,
-                objectImage: { ...state.objectImage, files: state.objectImage.files.filter((file) => file.uid != action.payload) },     
+                objectImage: { ...state.objectImage, files: state.objectImage.files.filter((file) => file.uid != action.payload) },
             }
 
         case ADD_PROJECT_FILE:
             return {
                 ...state,
-                objectImage: { ...state.objectImage, files: [...state.objectImage.files,  action.payload]},                
+                objectImage: { ...state.objectImage, files: [...state.objectImage.files, action.payload] },
             }
-
 
 
         case NEXT_STAGE_REQUEST:
@@ -60,7 +56,7 @@ export const MaketProjectReducer = (state, action) => {
                 ...state,
                 stageRequest: false,
                 filds: action.payload.filds,
-                currentStage:action.payload.currentStage,
+                currentStage: action.payload.currentStage,
                 objectImage: action.payload.objectImage,
 
             }
@@ -81,10 +77,11 @@ export const MaketProjectReducer = (state, action) => {
                 ...state,
                 message: null,
                 stagesProject: [],
+                editorState:null,
                 projectRequest: true,
                 filds: [],
                 objectImage: {},
-                currentStage:0
+                currentStage: 0
 
             }
 
@@ -107,7 +104,7 @@ export const MaketProjectReducer = (state, action) => {
                 stagesProject: action.payload.stagesProject,
                 filds: action.payload.filds,
                 objectImage: action.payload.objectImage,
-                currentStage:0
+                currentStage: 0
 
             }
 
@@ -130,8 +127,9 @@ export const MaketProjectReducer = (state, action) => {
                 projects: [],
                 filds: [],
                 objectImage: {},
+                editorState:null,
                 projectsRequest: true,
-                currentStage:0
+                currentStage: 0
 
             }
 

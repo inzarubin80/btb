@@ -11,9 +11,9 @@ import PropTypes from 'prop-types';
 import AttachedFiles from '../AttachedFiles/AttachedFiles'
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
-
-
 import TextField from '@material-ui/core/TextField';
+import HTMLEditor from '../Maket/HTMLEditor'
+
 
 const { Step } = Steps;
 const useStyles = makeStyles((theme) => ({
@@ -49,7 +49,7 @@ const useStyles = makeStyles((theme) => ({
     },
 
     buttonsAction: {
-
+        marginTop: 10,
         textAlign: 'center',
         justifyContent: 'center',
 
@@ -140,13 +140,17 @@ const MaketProject = () => {
         nextStage,
         currentStage,
         addProjectFile,
-        removeProjectFile
+        removeProjectFile,
+
 
     } = React.useContext(MaketProjectContext);
 
 
-    const HendleChangeFild = (fildId,  value) => {
-         changeProjectField(fildId.trim(), value)
+    console.log('filds', filds);
+
+
+    const HendleChangeFild = (fildId, value) => {
+        changeProjectField(fildId.trim(), value)
     }
 
     const fildIsVisible = (fild) => {
@@ -200,48 +204,31 @@ const MaketProject = () => {
 
                         {projects.map((project) => (<option key={project.id} value={project.id}>{project.name}</option>))}
                     </Select>
-
                 </Grid>
 
-
-
                 <Grid item xs={3} />
-
                 <Grid item xs={6}>
-
                     <div className={classes.stepsAktion}>
-
-
                         <Steps current={currentStage}>
                             {stagesProject.map(item => (
                                 <Step key={item.id} title={item.name} />
                             ))}
                         </Steps>
-
-
-
                     </div>
-
-
-
                 </Grid>
 
                 <Grid item xs={3} />
-
-
-
                 <Grid item xs={1} />
-
-
                 <Grid item xs={10} >
 
                     <div className={classes.stepsContent}>
 
                         {filds.map((fild) => {
 
+
                             if (!fildIsVisible(fild)) {
                                 return (<div key={fild.id} />)
-                        
+
                             } else if (fild.type == 'inputSelect') {
                                 return (<div key={fild.id} className={classes.inputSelect}><InputLabel id={fild.id} className={classes.fild} >{fild.name}</InputLabel>
                                     <Select
@@ -269,7 +256,7 @@ const MaketProject = () => {
                                         rows={1}
                                         className={classes.inputNumber}
                                         name="numberformat"
-                                        onChange={(e) => {HendleChangeFild(fild.id, e.target.value) }}
+                                        onChange={(e) => { HendleChangeFild(fild.id, e.target.value) }}
                                         InputProps={{
                                             inputComponent: NumberFormatCustom,
                                         }}
@@ -285,7 +272,7 @@ const MaketProject = () => {
                                         label={fild.name}
                                         multiline
                                         value={objectImage[fild.id]}
-                                        rows={1}
+                                        rows={fild.rows}
                                         className={classes.inputString}
                                         //  defaultValue="Default Value"
                                         onChange={(e) => { HendleChangeFild(fild.id, e.target.value) }}
@@ -300,7 +287,7 @@ const MaketProject = () => {
                                         control={
                                             <Checkbox
                                                 checked={objectImage[fild.id]}
-                                                onChange={(e)=>HendleChangeFild(fild.id, e.target.checked)}
+                                                onChange={(e) => HendleChangeFild(fild.id, e.target.checked)}
                                                 name={fild.name}
                                                 color="primary"
                                             />
@@ -309,16 +296,24 @@ const MaketProject = () => {
                                     />
 
                                 </div>)
-                            }
-
-                            else if (fild.type == 'inputFiles') {
+                            } else if (fild.type == 'inputFiles') {
                                 return (<div key={fild.id}>
 
                                     <AttachedFiles files={objectImage[fild.id]} removeFile={removeProjectFile} addFile={addProjectFile} />
 
                                 </div>)
-                            }
+                            } else if (fild.type == 'htmlText') {
+                                return (<div key={fild.id}>
+                                    <FormControlLabel
+                                        labelPlacement='top'
+                                        control={
+                                            <HTMLEditor editorState={objectImage[fild.id]} setEditorState={(newState) => { HendleChangeFild(fild.id, newState) }} />
+                                        }
+                                        label={fild.name}
+                                    />
 
+                                </div>)
+                            }
 
                             else {
                                 return (<h5>не известный вид поля...!!!</h5>)

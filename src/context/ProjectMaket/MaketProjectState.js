@@ -16,31 +16,35 @@ import {
     NEXT_STAGE_SUCCESS,
 
     ADD_PROJECT_FILE,
-    REMOVE_PROJECT_FILE
+    REMOVE_PROJECT_FILE,
+    EDITING_HTML_TEXT
 
 } from '../types'
+
 import { MaketProjectContext } from './MaketProjectContext'
 import { MaketProjectReducer } from './MaketProjectReducer'
-import { executorRequests, getProjectsMakets, getProject,nextStepProject} from '../../api/dataService1c';
-
+import { executorRequests, getProjectsMakets, getProject, nextStepProject } from '../../api/dataService1c';
 import { useDispatch } from 'react-redux';
-
 import { createMesage, alertTypes } from '../../utils/utils';
+
+import { EditorState, ContentState, convertToRaw } from 'draft-js';
+import htmlToDraft from 'html-to-draftjs';
+import draftToHtml from 'draftjs-to-html'
 
 export const MaketProjectState = ({ children }) => {
 
     const initialState = {
-        
+
         projects: [],
         projectsRequest: false,
         message: null,
         projectId: '',
         stagesProject: [],
         projectRequest: false,
-        filds:[],
-        objectImage:{},
+        filds: [],
+        objectImage: {},
         stageRequest: false,
-        currentStage: 0
+        currentStage: 0,
 
     }
 
@@ -49,7 +53,7 @@ export const MaketProjectState = ({ children }) => {
     const constStandartLifetime = 3500;
 
 
-
+   
     const addProjectFile = (file) => {
         dispatch({ type: ADD_PROJECT_FILE, payload: file })
     }
@@ -62,33 +66,38 @@ export const MaketProjectState = ({ children }) => {
 
 
     const nextStageRequest = () => {
-        return dispatch({ type: NEXT_STAGE_REQUEST})
+        return dispatch({ type: NEXT_STAGE_REQUEST })
     }
-    const nextStageFailure = (error) =>{
-        return dispatch({ type: NEXT_STAGE_FAILURE, payload: { mesage: createMesage(alertTypes.info, error, clearMessage, constStandartLifetime) }})
+    const nextStageFailure = (error) => {
+        return dispatch({ type: NEXT_STAGE_FAILURE, payload: { mesage: createMesage(alertTypes.info, error, clearMessage, constStandartLifetime) } })
     }
 
-    const nextStageSuccess = (filds, currentStage, objectImage) => {
-        return dispatch({ type: NEXT_STAGE_SUCCESS, payload: {filds, currentStage, objectImage}})
+    const nextStageSuccess = (filds, currentStage, objectImage1c) => {
+
+        let objectImage = transformObjectImageFrom1c(filds, objectImage1c);
+        objectImage.files = state.objectImage.files;
+        return dispatch({ type: NEXT_STAGE_SUCCESS, payload: { filds, currentStage, objectImage } })
+
     }
-    
+
     const nextStage = (progress) => {
-        
+
         nextStageRequest();
 
+        let objectImage1c =  transformObjectImageTo1c(state.filds, state.objectImage);
+       
         const functionRequest = () => {
-            return nextStepProject(state.projectId, state.currentStage, state.objectImage, progress)
+            return nextStepProject(state.projectId, state.currentStage, objectImage1c, progress)
         };
 
         const responseHandlingFunction = (json) => {
-            
+
             if (json.error) {
                 nextStageFailure(json.error);
-            }else
-            {
-                nextStageSuccess(json.filds, json.currentStage,  json.objectImage); 
+            } else {
+                nextStageSuccess(json.filds, json.currentStage, json.objectImage);
             }
-            
+
         }
 
         const exceptionHandlingFunction = (error) => {
@@ -101,9 +110,9 @@ export const MaketProjectState = ({ children }) => {
 
 
 
-    const changeProjectField = (fildId, fildValue) =>{
+    const changeProjectField = (fildId, fildValue) => {
 
-        return dispatch({ type: CHANGE_PROJECT_FIELD, payload: { fildId, fildValue}  })
+        return dispatch({ type: CHANGE_PROJECT_FIELD, payload: { fildId, fildValue } })
     }
 
 
@@ -116,7 +125,11 @@ export const MaketProjectState = ({ children }) => {
     }
 
     const projectsSuccess = (projects, filds) => {
-        return dispatch({ type: MAKET_PROJECTS_SUCCESS, payload: { projects, filds} })
+
+
+        return dispatch({ type: MAKET_PROJECTS_SUCCESS, payload: { projects, filds } })
+
+
     }
 
     const clearMessage = (uid) => {
@@ -124,7 +137,7 @@ export const MaketProjectState = ({ children }) => {
     }
 
     const setProjectId = (projectId) => {
-        
+
         dispatch({ type: SET_PROJECT_ID, payload: { projectId } })
 
 
@@ -139,6 +152,8 @@ export const MaketProjectState = ({ children }) => {
             };
 
             const responseHandlingFunction = (json) => {
+
+                console.log('filds from 1c.......', json);
                 getProjectSuccess(json.stagesProject, json.filds, json.objectImage);
             }
 
@@ -178,16 +193,55 @@ export const MaketProjectState = ({ children }) => {
 
     };
 
-
-
-
     const projectRequest = () => {
         return dispatch({ type: GET_PROJECT_REQUEST })
     }
 
 
-    const getProjectSuccess = (stagesProject, filds, objectImage) => {
-        return dispatch({ type: GET_PROJECT_SUCCESS, payload: { stagesProject, filds, objectImage} })
+    const transformObjectImageFrom1c = (filds, objectImage1c) =>{
+
+        let objectImage = {...objectImage1c};
+
+        filds.forEach(fild => {
+
+            if (fild.type == 'htmlText'){
+            const contentBlock = htmlToDraft(objectImage1c[fild.id]);
+            
+            if (contentBlock) {
+                const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
+                objectImage[fild.id]  = EditorState.createWithContent(contentState);
+            } else {
+                objectImage[fild.id]  = EditorState.createEmpty();
+            }
+        }    
+        });
+
+        return objectImage;
+
+    }
+
+
+    const transformObjectImageTo1c = (filds, objectImage) =>{
+
+        let objectImage1c = {...objectImage};
+
+        filds.forEach(fild => {
+            if (fild.type == 'htmlText'){
+            objectImage1c[fild.id]  = draftToHtml(convertToRaw(objectImage1c[fild.id].getCurrentContent()));
+        }    
+        });
+        
+        return objectImage1c;
+
+    }
+
+
+
+    const getProjectSuccess = (stagesProject, filds, objectImage1c) => {
+
+        let objectImage =  transformObjectImageFrom1c(filds, objectImage1c);
+        return dispatch({ type: GET_PROJECT_SUCCESS, payload: { stagesProject, filds, objectImage}})
+
     }
 
 
@@ -198,15 +252,15 @@ export const MaketProjectState = ({ children }) => {
 
     return (
         <MaketProjectContext.Provider value={{
-            
+
             projects: state.projects,
             projectsRequest: state.projectsRequest,
             message: state.message,
             projectId: state.projectId,
-            stagesProject:state.stagesProject,
-            filds:state.filds,
-            objectImage:state.objectImage,
-            currentStage:state.currentStage,
+            stagesProject: state.stagesProject,
+            filds: state.filds,
+            objectImage: state.objectImage,
+            currentStage: state.currentStage,
             getProjects,
             setProjectId,
             changeProjectField,
