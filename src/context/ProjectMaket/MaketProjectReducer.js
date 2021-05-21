@@ -61,6 +61,7 @@ export const MaketProjectReducer = (state, action) => {
                 stageRequest: false,
                 filds: action.payload.filds,
                 currentStage:action.payload.currentStage,
+                objectImage: action.payload.objectImage,
 
             }
         case CHANGE_PROJECT_FIELD:

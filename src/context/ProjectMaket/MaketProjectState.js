@@ -68,8 +68,8 @@ export const MaketProjectState = ({ children }) => {
         return dispatch({ type: NEXT_STAGE_FAILURE, payload: { mesage: createMesage(alertTypes.info, error, clearMessage, constStandartLifetime) }})
     }
 
-    const nextStageSuccess = (filds, currentStage) => {
-        return dispatch({ type: NEXT_STAGE_SUCCESS, payload: {filds, currentStage}})
+    const nextStageSuccess = (filds, currentStage, objectImage) => {
+        return dispatch({ type: NEXT_STAGE_SUCCESS, payload: {filds, currentStage, objectImage}})
     }
     
     const nextStage = (progress) => {
@@ -86,7 +86,7 @@ export const MaketProjectState = ({ children }) => {
                 nextStageFailure(json.error);
             }else
             {
-                nextStageSuccess(json.filds, json.currentStage); 
+                nextStageSuccess(json.filds, json.currentStage,  json.objectImage); 
             }
             
         }
