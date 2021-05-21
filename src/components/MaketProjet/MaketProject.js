@@ -9,6 +9,9 @@ import { MaketProjectContext } from '../../context/ProjectMaket/MaketProjectCont
 import NumberFormat from 'react-number-format';
 import PropTypes from 'prop-types';
 import AttachedFiles from '../AttachedFiles/AttachedFiles'
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
+
 
 import TextField from '@material-ui/core/TextField';
 
@@ -79,7 +82,7 @@ const useStyles = makeStyles((theme) => ({
 
     },
 
-    inputNumber:{
+    inputNumber: {
         marginTop: 10,
     },
 
@@ -94,31 +97,31 @@ const useStyles = makeStyles((theme) => ({
 
 function NumberFormatCustom(props) {
     const { inputRef, onChange, ...other } = props;
-  
+
     return (
-      <NumberFormat
-        {...other}
-        getInputRef={inputRef}
-        onValueChange={(values) => {
-          onChange({
-            target: {
-              name: props.name,
-              value: values.value,
-            },
-          });
-        }}
-      //  thousandSeparator
-        isNumericString
-       // prefix="$"
-      />
+        <NumberFormat
+            {...other}
+            getInputRef={inputRef}
+            onValueChange={(values) => {
+                onChange({
+                    target: {
+                        name: props.name,
+                        value: values.value,
+                    },
+                });
+            }}
+            //  thousandSeparator
+            isNumericString
+        // prefix="$"
+        />
     );
-  }
-  
-  NumberFormatCustom.propTypes = {
+}
+
+NumberFormatCustom.propTypes = {
     inputRef: PropTypes.func.isRequired,
     name: PropTypes.string.isRequired,
     onChange: PropTypes.func.isRequired,
-  };
+};
 
 
 const MaketProject = () => {
@@ -141,16 +144,15 @@ const MaketProject = () => {
 
     } = React.useContext(MaketProjectContext);
 
-   
-    const HendleChangeFild = (fildId, e) => {
-        
-        changeProjectField(fildId.trim(), e.target.value)
+
+    const HendleChangeFild = (fildId,  value) => {
+         changeProjectField(fildId.trim(), value)
     }
 
     const fildIsVisible = (fild) => {
 
 
-        if (!fild.visibilityСonditions.length){
+        if (!fild.visibilityСonditions.length) {
             return true;
         }
 
@@ -238,7 +240,8 @@ const MaketProject = () => {
                         {filds.map((fild) => {
 
                             if (!fildIsVisible(fild)) {
-                                return (<div key={fild.id}/>)
+                                return (<div key={fild.id} />)
+                        
                             } else if (fild.type == 'inputSelect') {
                                 return (<div key={fild.id} className={classes.inputSelect}><InputLabel id={fild.id} className={classes.fild} >{fild.name}</InputLabel>
                                     <Select
@@ -246,7 +249,7 @@ const MaketProject = () => {
                                         labelId={fild.id}
                                         id={fild.id + 'select'}
                                         value={objectImage[fild.id]}
-                                        onChange={(e) => { HendleChangeFild(fild.id, e) }}
+                                        onChange={(e) => { HendleChangeFild(fild.id, e.target.value) }}
 
                                     >
 
@@ -266,10 +269,10 @@ const MaketProject = () => {
                                         rows={1}
                                         className={classes.inputNumber}
                                         name="numberformat"
-                                        onChange={(e) => {HendleChangeFild(fild.id, e) }}
+                                        onChange={(e) => {HendleChangeFild(fild.id, e.target.value) }}
                                         InputProps={{
                                             inputComponent: NumberFormatCustom,
-                                          }}
+                                        }}
 
                                     />
 
@@ -285,12 +288,30 @@ const MaketProject = () => {
                                         rows={1}
                                         className={classes.inputString}
                                         //  defaultValue="Default Value"
-                                        onChange={(e) => { HendleChangeFild(fild.id, e) }}
+                                        onChange={(e) => { HendleChangeFild(fild.id, e.target.value) }}
 
                                     />
 
                                 </div>)
-                            } else if (fild.type == 'inputFiles') {
+                            } else if (fild.type == 'inputBoolean') {
+                                return (<div key={fild.id}>
+
+                                    <FormControlLabel
+                                        control={
+                                            <Checkbox
+                                                checked={objectImage[fild.id]}
+                                                onChange={(e)=>HendleChangeFild(fild.id, e.target.checked)}
+                                                name={fild.name}
+                                                color="primary"
+                                            />
+                                        }
+                                        label={fild.name}
+                                    />
+
+                                </div>)
+                            }
+
+                            else if (fild.type == 'inputFiles') {
                                 return (<div key={fild.id}>
 
                                     <AttachedFiles files={objectImage[fild.id]} removeFile={removeProjectFile} addFile={addProjectFile} />
