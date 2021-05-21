@@ -17,7 +17,6 @@ import {
 
     ADD_PROJECT_FILE,
     REMOVE_PROJECT_FILE,
-    EDITING_HTML_TEXT
 
 } from '../types'
 
