@@ -84,15 +84,15 @@ const AttachedFiles = ({ files, removeFile, addFile }) => {
                 onChange={(e) => {
                     if (e.target.files) {
 
-
                         const file = e.target.files[0];
-
+     
                         getBase64(file)
                             .then(base64 => {
 
-                                const newFile = { name: file.name, uid: uuidv4(), fileBase64: base64 };
-                                addFile(newFile);
-
+                                if (base64) {
+                                    const newFile = { name: file.name, uid: uuidv4(), fileBase64: base64 };
+                                    addFile(newFile);
+                                }
 
 
                             }).catch((err) => {

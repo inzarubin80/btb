@@ -102,7 +102,18 @@ export const MaketProjectState = ({ children }) => {
 
 
     const changeProjectField = (fildId, fildValue) =>{
-        return dispatch({ type: CHANGE_PROJECT_FIELD, payload: { fildId, fildValue}  })
+
+      // console.log|('fildId', fildId);
+        //console.log|("fildValue", fildValue);
+        
+
+        console.log('changeProjectField',fildId);
+
+        ///fildId = fildId.replace(/"/g);
+
+        console.log('changeProjectField',fildId);
+
+        return dispatch({ type: CHANGE_PROJECT_FIELD, payload: {fildId, fildValue}  })
     }
 
 

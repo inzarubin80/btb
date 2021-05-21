@@ -141,10 +141,10 @@ const MaketProject = () => {
 
     } = React.useContext(MaketProjectContext);
 
-   // console.log("objectImage", objectImage);
-
+   
     const HendleChangeFild = (fildId, e) => {
-        changeProjectField(fildId, e.target.value)
+        
+        changeProjectField(fildId.trim(), e.target.value)
     }
 
     const fildIsVisible = (fild) => {
@@ -266,7 +266,7 @@ const MaketProject = () => {
                                         rows={1}
                                         className={classes.inputNumber}
                                         name="numberformat"
-                                        onChange={(e) => { HendleChangeFild(fild.id, e) }}
+                                        onChange={(e) => {HendleChangeFild(fild.id, e) }}
                                         InputProps={{
                                             inputComponent: NumberFormatCustom,
                                           }}

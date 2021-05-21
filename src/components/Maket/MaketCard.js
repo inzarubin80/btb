@@ -106,18 +106,7 @@ const MaketCard = (props) => {
   };
 
 
-  {/*
-  React.useEffect(() => {
-    
-    if (props.match.params.id!='new') {
-      openCard(props.match.params.id)
-    }
-   
 
-  }, [props.match.params.id]);
-*/}
-
- 
   return (
   
   

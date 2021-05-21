@@ -43,6 +43,10 @@ export const saveFileСonfirmation = (id, fileName, shortfileName, fileBase64) =
 }
 
 export const saveTask = (id, uid, number, taskText, taskFiles) => {
+
+
+    console.log("taskFiles", taskFiles);
+
     let config = getConfig({ taskText, uid, number, taskFiles })
     return fetch(`${API_URL}/?typerequest=saveTask&id=${id}`, config);
 }
