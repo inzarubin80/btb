@@ -4,7 +4,7 @@ import {
     MAKET_PROJECTS_FAILURE,
     MAKET_PROJECTS_SUCCESS,
     CLEAR_MESSAGE,
-    SET_PROJECT_ID,
+ 
 
     GET_PROJECT_REQUEST,
     GET_PROJECT_FAILURE,
@@ -22,7 +22,7 @@ import {
 
 import { MaketProjectContext } from './MaketProjectContext'
 import { MaketProjectReducer } from './MaketProjectReducer'
-import { executorRequests, getProjectsMakets, getProject, nextStepProject } from '../../api/dataService1c';
+import { executorRequests, getProjectsMakets, getProjectApi, nextStepProject } from '../../api/dataService1c';
 import { useDispatch } from 'react-redux';
 import { createMesage, alertTypes } from '../../utils/utils';
 
@@ -44,6 +44,7 @@ export const MaketProjectState = ({ children }) => {
         objectImage: {},
         stageRequest: false,
         currentStage: 0,
+        uidTask: ''
 
     }
 
@@ -204,9 +205,9 @@ export const MaketProjectState = ({ children }) => {
         return dispatch({ type: GET_PROJECT_REQUEST })
     }
 
-    const getProjectSuccess = (stagesProject, filds, objectImage1c) => {
+    const getProjectSuccess = (stagesProject, filds, objectImage1c,projectId,projects, uidTask) => {
         let objectImage =  transformObjectImageFrom1c(filds, objectImage1c);
-        return dispatch({ type: GET_PROJECT_SUCCESS, payload: { stagesProject, filds, objectImage}})
+        return dispatch({ type: GET_PROJECT_SUCCESS, payload: { stagesProject, filds, objectImage, projectId, projects, uidTask}})
     }
 
 
@@ -215,25 +216,24 @@ export const MaketProjectState = ({ children }) => {
     }
 
 
-    const setProjectId = (projectId) => {
+    const getProject = (projectId='', maketId='') => {
 
-        dispatch({ type: SET_PROJECT_ID, payload: { projectId } })
+      console.log('getProject***********',projectId);
 
-
-        if (projectId) {
+        if (projectId || maketId) {
 
 
             projectRequest();
 
 
             const functionRequest = () => {
-                return getProject(projectId)
+                return getProjectApi(projectId, maketId)
             };
 
             const responseHandlingFunction = (json) => {
 
                 console.log('filds from 1c.......', json);
-                getProjectSuccess(json.stagesProject, json.filds, json.objectImage);
+                getProjectSuccess(json.stagesProject, json.filds, json.objectImage, json.projectId, json.projects);
             }
 
             const exceptionHandlingFunction = (error) => {
@@ -262,7 +262,7 @@ export const MaketProjectState = ({ children }) => {
             objectImage: state.objectImage,
             currentStage: state.currentStage,
             getProjects,
-            setProjectId,
+            getProject,
             changeProjectField,
             nextStage,
             addProjectFile,

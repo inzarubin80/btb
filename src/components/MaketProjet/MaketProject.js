@@ -13,7 +13,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import TextField from '@material-ui/core/TextField';
 import HTMLEditor from '../Maket/HTMLEditor'
-
+import { withRouter } from "react-router-dom";
 
 const { Step } = Steps;
 const useStyles = makeStyles((theme) => ({
@@ -124,14 +124,14 @@ NumberFormatCustom.propTypes = {
 };
 
 
-const MaketProject = () => {
+const MaketProject = (props) => {
 
     const classes = useStyles();
     const { message,
         projects,
         projectsRequest,
         getProjects,
-        setProjectId,
+        getProject,
         projectId,
         stagesProject,
         filds,
@@ -160,25 +160,28 @@ const MaketProject = () => {
             return true;
         }
 
-
         for (let i = 0; i < fild.visibilityСonditions.length; i++) {
             if (objectImage[fild.visibilityСonditions[i].idFieldParent] == fild.visibilityСonditions[i].valueParent) {
                 return true;
             }
         }
-
         return false;
-
     }
 
-
     React.useEffect(() => {
-        getProjects()
-    }, []);
+        if (props.match.params.id == 'new') {
+            getProjects()
+        } else {
+            console.log('useEffect');
+            getProject("", props.match.params.id)
+
+        }
+
+    }, [props.match.params]);
 
 
     const next = () => {
-        if (stagesProject.length - 1 > currentStage && !projectsRequest) {
+        if (stagesProject.length - 1 >= currentStage && !projectsRequest) {
             nextStage(true);
         }
     };
@@ -197,13 +200,16 @@ const MaketProject = () => {
 
                 <Grid item xs={12} className={classes.title}>
 
-                    <InputLabel htmlFor="grouped-native-select">Вид продукции</InputLabel>
-                    <Select native id="grouped-native-select" value={projectId} onChange={(event) => setProjectId(event.target.value)} className={classes.selectProd}>
 
-                        <option aria-label="None" value="" />
+                    {projects && <div>
+                        <InputLabel htmlFor="grouped-native-select">Вид продукции</InputLabel>
+                        <Select native id="grouped-native-select" value={projectId} onChange={(event) => getProject(event.target.value, props.match.params.id)} className={classes.selectProd}>
 
-                        {projects.map((project) => (<option key={project.id} value={project.id}>{project.name}</option>))}
-                    </Select>
+                            <option aria-label="None" value="" />
+
+                            {projects.map((project) => (<option key={project.id} value={project.id}>{project.name}</option>))}
+                        </Select>
+                    </div>}
                 </Grid>
 
                 <Grid item xs={3} />
@@ -327,13 +333,17 @@ const MaketProject = () => {
 
 
                     <div className={classes.buttonsAction}>
+
                         <Button className={classes.buttonPrev} onClick={() => prev()}>
                             Предыдущий
                            </Button>
 
                         <Button type="primary" className={classes.buttonNext} onClick={() => next()}>
-                            Следующий
+                            {stagesProject.length - 1 == currentStage ? 'Записать' : 'Следующий'}
                         </Button>
+
+
+
                     </div>
 
 
@@ -351,4 +361,5 @@ const MaketProject = () => {
 
 }
 
-export default MaketProject;
+
+export default withRouter(MaketProject)

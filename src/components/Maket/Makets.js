@@ -74,11 +74,25 @@ const useStyles = makeStyles((theme) => ({
 
 const columns = [
   {
-    field: 'code', headerName: 'Код', width: 80, type: 'string', renderCell: (params) => (
-      <strong>
-        <Link to={`/makets/${params.value}`}>{params.value}</Link>
-      </strong>
-    ),
+    field: 'code', headerName: 'Код', width: 80, type: 'string', renderCell: (params) => {
+
+     // console.log('params*************************', params);
+     return params.row.status == 'Проект' ?
+        (
+          <strong>
+            {<Link to={`/maket-project/${params.value}`}>{params.value}</Link>}
+          </strong>
+        )
+        :
+        (
+          <strong>
+            {<Link to={`/makets/${params.value}`}>{params.value}</Link>}
+          </strong>
+        )
+
+       
+
+    },
   },
 
   { field: 'product', headerName: 'Продукт', width: 450, type: 'string' },
@@ -129,27 +143,24 @@ export default function Makets() {
       <Grid container spacing={0}>
         <Grid item xs={12} value={2}>
           <div className={classes.actions}>
-         
-          <Link to="/new-maket">
 
-            <Button
-              className={classes.buttonAdd}
-              startIcon={<AddCircleIcon />}
-       
-              variant="contained"
-              color="primary"
-              size="small"
-            >
-              Добавить макет
+            <Link to="maket-project/new">
+
+              <Button
+                className={classes.buttonAdd}
+                startIcon={<AddCircleIcon />}
+
+                variant="contained"
+                color="primary"
+                size="small"
+              >
+                Добавить макет
           </Button>
-          
-          </Link>
+
+            </Link>
           </div>
         </Grid>
       </Grid>
-
-
-
 
 
       <DataGrid

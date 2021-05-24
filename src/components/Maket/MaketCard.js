@@ -106,6 +106,10 @@ const MaketCard = (props) => {
   };
 
 
+  React.useEffect(() => {
+        openCard(props.match.params.id)
+}, [props.match.params.id]);
+
 
   return (
   

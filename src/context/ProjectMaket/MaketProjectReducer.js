@@ -3,7 +3,7 @@ import {
     MAKET_PROJECTS_FAILURE,
     MAKET_PROJECTS_SUCCESS,
     CLEAR_MESSAGE,
-    SET_PROJECT_ID,
+
     GET_PROJECT_REQUEST,
     GET_PROJECT_FAILURE,
     GET_PROJECT_SUCCESS,
@@ -15,10 +15,6 @@ import {
 
     ADD_PROJECT_FILE,
     REMOVE_PROJECT_FILE,
-
-    EDITING_HTML_TEXT
-
-
 
 } from "../types"
 
@@ -81,7 +77,9 @@ export const MaketProjectReducer = (state, action) => {
                 projectRequest: true,
                 filds: [],
                 objectImage: {},
-                currentStage: 0
+                currentStage: 0,
+                uidTask:''
+
 
             }
 
@@ -104,19 +102,16 @@ export const MaketProjectReducer = (state, action) => {
                 stagesProject: action.payload.stagesProject,
                 filds: action.payload.filds,
                 objectImage: action.payload.objectImage,
+                projectId: action.payload.projectId,
+                projects:action.payload.projects,
+                uidTask:action.payload.uidTask,
+
+                
                 currentStage: 0
 
             }
 
 
-        case SET_PROJECT_ID:
-
-            return {
-
-                ...state,
-                projectId: action.payload.projectId,
-
-            }
 
         case MAKET_PROJECTS_REQUEST:
 
@@ -129,7 +124,9 @@ export const MaketProjectReducer = (state, action) => {
                 objectImage: {},
                 editorState:null,
                 projectsRequest: true,
-                currentStage: 0
+                currentStage: 0,
+                uidTask:''
+                
 
             }
 
