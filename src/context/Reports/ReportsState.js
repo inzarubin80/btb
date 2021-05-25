@@ -15,7 +15,7 @@ import {
 } from '../types'
 import { ReportsContext } from './ReportsContext'
 import { ReportsReducer } from './ReportsReducer'
-import { createMesage, alertTypes } from '../../utils/utils';
+import { createMessage, alertTypes } from '../../utils/utils';
 import { executorRequests, getListReports, getReportHTML } from '../../api/dataService1c';
 import { useDispatch} from 'react-redux';
 
@@ -48,7 +48,7 @@ export const ReportsState = ({ children }) => {
     }
 
     const reportFailure = (err) => {
-        dispatch({ type: REPORT_FAILURE, payload: { message: createMesage(alertTypes.info, err, clearMessage, constStandartLifetime) } })
+        dispatch({ type: REPORT_FAILURE, payload: { message: createMessage(alertTypes.info, err, clearMessage, constStandartLifetime) } })
     }
 
     const hendleGetReport = (id) => {
@@ -93,7 +93,7 @@ export const ReportsState = ({ children }) => {
         dispatch({ type: REPORTS_SUCCESS, payload: { listReports, reportGroups} })
     }
     const reportsFailure = (err) => {
-        dispatch({ type: REPORTS_FAILURE, payload: { message: createMesage(alertTypes.info, err, clearMessage, constStandartLifetime) } })
+        dispatch({ type: REPORTS_FAILURE, payload: { message: createMessage(alertTypes.info, err, clearMessage, constStandartLifetime) } })
     }
 
     const hendleGetReportList = () => {

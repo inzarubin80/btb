@@ -14,6 +14,9 @@ import Checkbox from '@material-ui/core/Checkbox';
 import TextField from '@material-ui/core/TextField';
 import HTMLEditor from '../Maket/HTMLEditor'
 import { withRouter } from "react-router-dom";
+import Modal from '@material-ui/core/Modal';
+import MuiAlert from '@material-ui/lab/Alert';
+
 
 const { Step } = Steps;
 const useStyles = makeStyles((theme) => ({
@@ -89,11 +92,27 @@ const useStyles = makeStyles((theme) => ({
     inputSelect: {
         marginTop: 10,
 
-    }
+    },
 
+    messageBox: {
+        'position': 'absolute',
+        'top': '0',
+        'bottom': '0',
+        'left': '0',
+        'right': '0',
+        'width': '50%',
+        'height': '30%',
+        'margin': 'auto',
+      },
+    
 
 }),
 );
+
+
+function Alert(props) {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+  }
 
 function NumberFormatCustom(props) {
     const { inputRef, onChange, ...other } = props;
@@ -141,12 +160,13 @@ const MaketProject = (props) => {
         currentStage,
         addProjectFile,
         removeProjectFile,
+        clearMessage
 
 
     } = React.useContext(MaketProjectContext);
 
 
-    console.log('filds', filds);
+    console.log('message', message);
 
 
     const HendleChangeFild = (fildId, value) => {
@@ -182,13 +202,13 @@ const MaketProject = (props) => {
 
     const next = () => {
         if (stagesProject.length - 1 >= currentStage && !projectsRequest) {
-            nextStage(true);
+            nextStage(true,props.match.params.id);
         }
     };
 
     const prev = () => {
         if (currentStage > 0 && !projectsRequest) {
-            nextStage(false);
+            nextStage(false, props.match.params.id);
         }
     };
 
@@ -197,6 +217,20 @@ const MaketProject = (props) => {
         <>
 
             <Grid container spacing={0}>
+
+            <Grid item xs={12} >
+            <Modal
+                  open={message ? true : false}
+                  onClose={() => { }}
+                  aria-labelledby="simple-modal-title"
+                  aria-describedby="simple-modal-description"
+                >
+
+                  <div className={classes.messageBox}>
+                    {message && <Alert onClose={() => { clearMessage(message.uid) }} severity={message.type}>{message.str}</Alert>}
+                  </div>
+                </Modal>
+                </Grid>
 
                 <Grid item xs={12} className={classes.title}>
 

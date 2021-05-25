@@ -24,7 +24,7 @@ import { MaketProjectContext } from './MaketProjectContext'
 import { MaketProjectReducer } from './MaketProjectReducer'
 import { executorRequests, getProjectsMakets, getProjectApi, nextStepProject } from '../../api/dataService1c';
 import { useDispatch } from 'react-redux';
-import { createMesage, alertTypes } from '../../utils/utils';
+import { createMessage, alertTypes } from '../../utils/utils';
 
 import { EditorState, ContentState, convertToRaw } from 'draft-js';
 import htmlToDraft from 'html-to-draftjs';
@@ -106,7 +106,13 @@ export const MaketProjectState = ({ children }) => {
         return dispatch({ type: NEXT_STAGE_REQUEST })
     }
     const nextStageFailure = (error) => {
-        return dispatch({ type: NEXT_STAGE_FAILURE, payload: { mesage: createMesage(alertTypes.info, error, clearMessage, constStandartLifetime) } })
+
+        const message = createMessage(alertTypes.info, error, clearMessage, constStandartLifetime);
+
+        console.log(message);
+
+        return dispatch({ type: NEXT_STAGE_FAILURE, payload: {message}})
+
     }
 
     const nextStageSuccess = (filds, currentStage, objectImage1c) => {
@@ -115,21 +121,29 @@ export const MaketProjectState = ({ children }) => {
         return dispatch({ type: NEXT_STAGE_SUCCESS, payload: { filds, currentStage, objectImage } })
     }
 
-    const nextStage = (progress) => {
+    const nextStage = (progress, idMaket) => {
 
         nextStageRequest();
 
         let objectImage1c =  transformObjectImageTo1c(state.filds, state.objectImage);
        
+        
+ 
+        const objectsRecipients = {idMaket:idMaket, uidTask: state.uidTask};
+
+
         const functionRequest = () => {
-            return nextStepProject(state.projectId, state.currentStage, objectImage1c, progress)
+            return nextStepProject(state.projectId, state.currentStage, objectImage1c, progress, objectsRecipients)
         };
 
         const responseHandlingFunction = (json) => {
 
             if (json.error) {
+           
                 nextStageFailure(json.error);
+           
             } else {
+
                 nextStageSuccess(json.filds, json.currentStage, json.objectImage);
             }
 
@@ -160,7 +174,7 @@ export const MaketProjectState = ({ children }) => {
     }
 
     const projectsFailure = (error) => {
-        return dispatch({ type: MAKET_PROJECTS_FAILURE, payload: { mesage: createMesage(alertTypes.info, error, clearMessage, constStandartLifetime) } })
+        return dispatch({ type: MAKET_PROJECTS_FAILURE, payload: { message: createMessage(alertTypes.info, error, clearMessage, constStandartLifetime) } })
     }
 
     const projectsSuccess = (projects, filds) => {
@@ -212,13 +226,11 @@ export const MaketProjectState = ({ children }) => {
 
 
     const getProjectFailure = (error) => {
-        return dispatch({ type: GET_PROJECT_FAILURE, payload: { mesage: createMesage(alertTypes.info, error, clearMessage, constStandartLifetime) } })
+        return dispatch({ type: GET_PROJECT_FAILURE, payload: { message: createMessage(alertTypes.info, error, clearMessage, constStandartLifetime) } })
     }
 
 
     const getProject = (projectId='', maketId='') => {
-
-      console.log('getProject***********',projectId);
 
         if (projectId || maketId) {
 
@@ -232,8 +244,7 @@ export const MaketProjectState = ({ children }) => {
 
             const responseHandlingFunction = (json) => {
 
-                console.log('filds from 1c.......', json);
-                getProjectSuccess(json.stagesProject, json.filds, json.objectImage, json.projectId, json.projects);
+                getProjectSuccess(json.stagesProject, json.filds, json.objectImage, json.projectId, json.projects, json.uidTask);
             }
 
             const exceptionHandlingFunction = (error) => {
@@ -266,7 +277,8 @@ export const MaketProjectState = ({ children }) => {
             changeProjectField,
             nextStage,
             addProjectFile,
-            removeProjectFile
+            removeProjectFile,
+            clearMessage
 
 
         }}>{children}</MaketProjectContext.Provider>)

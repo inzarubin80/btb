@@ -42,7 +42,7 @@ import { executorRequests, getMaket, getImgMaket, saveFileСonfirmation, setMake
 import htmlToDraft from 'html-to-draftjs';
 import { useDispatch } from 'react-redux';
 import draftToHtml from 'draftjs-to-html'
-import { b64toBlob, getBase64, createMesage, alertTypes} from '../../utils/utils';
+import { b64toBlob, getBase64, createMessage, alertTypes} from '../../utils/utils';
 import { saveAs } from 'file-saver';
 import {maketsUpdateStatusRequired} from '../../redux/makets/maketsActions'
 
@@ -97,12 +97,12 @@ export const MaketCardState = ({ children }) => {
     }
 
     const setMaketStatusFailure = (message, maket = null) => {
-        dispatch({ type: SET_MAKET_STATUS_FAILURE, payload: { message: createMesage(alertTypes.info, message, clearMessage, constStandartLifetime), maket } })
+        dispatch({ type: SET_MAKET_STATUS_FAILURE, payload: { message: createMessage(alertTypes.info, message, clearMessage, constStandartLifetime), maket } })
     }
 
     const setMaketStatusSuccess = (maket) => {
 
-        const message = createMesage(alertTypes.success, 'Статус макета успешно изменен', clearMessage, 1500);
+        const message = createMessage(alertTypes.success, 'Статус макета успешно изменен', clearMessage, 1500);
         dispatch({ type: SET_MAKET_STATUS_SUCCESS, payload: { maket, message } })
         dispatchRedux(maketsUpdateStatusRequired());
 
@@ -144,7 +144,7 @@ export const MaketCardState = ({ children }) => {
     }
 
     const downloadFileTaskFailure = (idFile, message) => {
-        dispatch({ type: DOWNLOAD_FILE_TASK_FAILURE, payload: { idFile, message: createMesage(alertTypes.info, message,clearMessage, constStandartLifetime) } })
+        dispatch({ type: DOWNLOAD_FILE_TASK_FAILURE, payload: { idFile, message: createMessage(alertTypes.info, message,clearMessage, constStandartLifetime) } })
     }
 
     const downloadFileTaskSuccess = (idFile) => {
@@ -182,7 +182,7 @@ export const MaketCardState = ({ children }) => {
         dispatch({ type: UPLOAD_FILE_MAKET_REQUEST, payload: { idFile } })
     }
     const uploadFileMaketFailure = (idFile, message, maket = null) => {
-        dispatch({ type: UPLOAD_FILE_MAKET_FAILURE, payload: { idFile, message: createMesage(alertTypes.info, message, clearMessage, constStandartLifetime), maket } })
+        dispatch({ type: UPLOAD_FILE_MAKET_FAILURE, payload: { idFile, message: createMessage(alertTypes.info, message, clearMessage, constStandartLifetime), maket } })
     }
     const uploadFileMaketSuccess = (idFile, maket) => {
         dispatch({ type: UPLOAD_FILE_MAKET_SUCCESS, payload: { idFile, maket } })
@@ -226,7 +226,7 @@ export const MaketCardState = ({ children }) => {
         dispatch({ type: DOWNLOAD_FILE_MAKET_REQUEST, payload: { idFile } })
     }
     const downloadFileMaketFailure = (idFile, message) => {
-        dispatch({ type: DOWNLOAD_FILE_MAKET_FAILURE, payload: { idFile, message: createMesage(alertTypes.info, message, clearMessage, constStandartLifetime) } })
+        dispatch({ type: DOWNLOAD_FILE_MAKET_FAILURE, payload: { idFile, message: createMessage(alertTypes.info, message, clearMessage, constStandartLifetime) } })
     }
     const downloadFileMaketSuccess = (idFile) => {
         dispatch({ type: DOWNLOAD_FILE_MAKET_SUCCESS, payload: { idFile } })
@@ -268,10 +268,10 @@ export const MaketCardState = ({ children }) => {
 
     const removeTaskFailure = (err, maket = null) => {
         if (maket) {
-            dispatch({ type: REMOVE_TASK_FAILURE, payload: { message: createMesage(alertTypes.info, err, clearMessage,constStandartLifetime), maket } })
+            dispatch({ type: REMOVE_TASK_FAILURE, payload: { message: createMessage(alertTypes.info, err, clearMessage,constStandartLifetime), maket } })
 
         } else {
-            dispatch({ type: REMOVE_TASK_FAILURE, payload: { message: createMesage(alertTypes.info, err, clearMessage,constStandartLifetime) } })
+            dispatch({ type: REMOVE_TASK_FAILURE, payload: { message: createMessage(alertTypes.info, err, clearMessage,constStandartLifetime) } })
         }
     }
 
@@ -332,9 +332,9 @@ export const MaketCardState = ({ children }) => {
 
     const requestEditFailure = (err, maket = null) => {
         if (maket) {
-            dispatch({ type: OPEN_EDIT_TASK_FAILURE, payload: { message: createMesage(alertTypes.info, err, clearMessage,constStandartLifetime), maket } })
+            dispatch({ type: OPEN_EDIT_TASK_FAILURE, payload: { message: createMessage(alertTypes.info, err, clearMessage,constStandartLifetime), maket } })
         } else {
-            dispatch({ type: OPEN_EDIT_TASK_FAILURE, payload: { message: createMesage(alertTypes.info, err, clearMessage,constStandartLifetime) } })
+            dispatch({ type: OPEN_EDIT_TASK_FAILURE, payload: { message: createMessage(alertTypes.info, err, clearMessage,constStandartLifetime) } })
         }
     };
 
@@ -346,7 +346,7 @@ export const MaketCardState = ({ children }) => {
         dispatch({ type: OPEN_CARD_MAKET_REQUEST, payload: { ...initialState, maketRequest: true } })
     }
     const openCardMaketFailure = (message) => {
-        dispatch({ type: OPEN_CARD_MAKET_FAILURE, payload: { message: createMesage(alertTypes.info, message, clearMessage,constStandartLifetime) } })
+        dispatch({ type: OPEN_CARD_MAKET_FAILURE, payload: { message: createMessage(alertTypes.info, message, clearMessage,constStandartLifetime) } })
     }
     const openCardMaketSuccess = (maket) => {
         dispatch({ type: OPEN_CARD_MAKET_SUCCESS, payload: { maket } })
@@ -421,14 +421,14 @@ export const MaketCardState = ({ children }) => {
     }
     const saveTaskFailure = (err, maket = null) => {
         if (maket) {
-            dispatch({ type: SAVE_TASK_FAILURE, payload: { message: createMesage(alertTypes.info, err, clearMessage,constStandartLifetime), maket } })
+            dispatch({ type: SAVE_TASK_FAILURE, payload: { message: createMessage(alertTypes.info, err, clearMessage,constStandartLifetime), maket } })
         } else {
-            dispatch({ type: SAVE_TASK_FAILURE, payload: { message: createMesage(alertTypes.info, err, clearMessage,constStandartLifetime) } })
+            dispatch({ type: SAVE_TASK_FAILURE, payload: { message: createMessage(alertTypes.info, err, clearMessage,constStandartLifetime) } })
         }
 
     }
     const saveTaskSuccess = (maket) => {
-        dispatch({ type: SAVE_TASK_SUCCESS, payload: { maket, message:createMesage(alertTypes.success, "Задание записано", clearMessage, 1000) } })
+        dispatch({ type: SAVE_TASK_SUCCESS, payload: { maket, message:createMessage(alertTypes.success, "Задание записано", clearMessage, 1000) } })
     }
 
 

@@ -11,6 +11,7 @@
     "@testing-library/react": "^11.2.5",
     "@testing-library/user-event": "^12.8.3",
     "antd": "^4.15.0",
+    "axios": "^0.21.1",
     "babel-polyfill": "^6.26.0",
     "base-64": "^1.0.0",
     "cookie": "^0.4.1",

@@ -36,7 +36,7 @@ export const getBase64 = (file) => {
     });
 };
 
-export const createMesage = (type, str, clearMessage, lifetime = 3000) => {
+export const createMessage = (type, str, clearMessage, lifetime = 3000) => {
     const uid = uuidv4();
     if (lifetime) {
         setTimeout(() => clearMessage(uid), lifetime)
