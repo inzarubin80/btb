@@ -4,7 +4,7 @@ import {
     MAKET_PROJECTS_FAILURE,
     MAKET_PROJECTS_SUCCESS,
     CLEAR_MESSAGE,
- 
+
 
     GET_PROJECT_REQUEST,
     GET_PROJECT_FAILURE,
@@ -18,6 +18,8 @@ import {
     ADD_PROJECT_FILE,
     REMOVE_PROJECT_FILE,
 
+    SAVE_PROJECT_MAKET
+
 } from '../types'
 
 import { MaketProjectContext } from './MaketProjectContext'
@@ -29,6 +31,10 @@ import { createMessage, alertTypes } from '../../utils/utils';
 import { EditorState, ContentState, convertToRaw } from 'draft-js';
 import htmlToDraft from 'html-to-draftjs';
 import draftToHtml from 'draftjs-to-html'
+
+
+import {maketsUpdateStatusRequired} from '../../redux/makets/maketsActions'
+
 
 export const MaketProjectState = ({ children }) => {
 
@@ -44,7 +50,8 @@ export const MaketProjectState = ({ children }) => {
         objectImage: {},
         stageRequest: false,
         currentStage: 0,
-        uidTask: ''
+        uidTask: '',
+        idMaket: ''
 
     }
 
@@ -54,37 +61,37 @@ export const MaketProjectState = ({ children }) => {
 
 
     //utils////////////////////////////////////////////////////////////////////////////////////////////////
-    const transformObjectImageFrom1c = (filds, objectImage1c) =>{
+    const transformObjectImageFrom1c = (filds, objectImage1c) => {
 
-        let objectImage = {...objectImage1c};
+        let objectImage = { ...objectImage1c };
 
         filds.forEach(fild => {
 
-            if (fild.type == 'htmlText'){
-            const contentBlock = htmlToDraft(objectImage1c[fild.id]);
-            
-            if (contentBlock) {
-                const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
-                objectImage[fild.id]  = EditorState.createWithContent(contentState);
-            } else {
-                objectImage[fild.id]  = EditorState.createEmpty();
+            if (fild.type == 'htmlText') {
+                const contentBlock = htmlToDraft(objectImage1c[fild.id]);
+
+                if (contentBlock) {
+                    const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
+                    objectImage[fild.id] = EditorState.createWithContent(contentState);
+                } else {
+                    objectImage[fild.id] = EditorState.createEmpty();
+                }
             }
-        }    
         });
         return objectImage;
     }
 
 
-    const transformObjectImageTo1c = (filds, objectImage) =>{
+    const transformObjectImageTo1c = (filds, objectImage) => {
 
-        let objectImage1c = {...objectImage};
+        let objectImage1c = { ...objectImage };
 
         filds.forEach(fild => {
-            if (fild.type == 'htmlText'){
-            objectImage1c[fild.id]  = draftToHtml(convertToRaw(objectImage1c[fild.id].getCurrentContent()));
-        }    
+            if (fild.type == 'htmlText') {
+                objectImage1c[fild.id] = draftToHtml(convertToRaw(objectImage1c[fild.id].getCurrentContent()));
+            }
         });
-        
+
         return objectImage1c;
 
     }
@@ -101,17 +108,13 @@ export const MaketProjectState = ({ children }) => {
 
 
     //nextStage ////////////////////////////////////////////////////////////////////////////////////////
-
     const nextStageRequest = () => {
         return dispatch({ type: NEXT_STAGE_REQUEST })
     }
     const nextStageFailure = (error) => {
 
         const message = createMessage(alertTypes.info, error, clearMessage, constStandartLifetime);
-
-        console.log(message);
-
-        return dispatch({ type: NEXT_STAGE_FAILURE, payload: {message}})
+        return dispatch({ type: NEXT_STAGE_FAILURE, payload: { message } })
 
     }
 
@@ -121,30 +124,56 @@ export const MaketProjectState = ({ children }) => {
         return dispatch({ type: NEXT_STAGE_SUCCESS, payload: { filds, currentStage, objectImage } })
     }
 
-    const nextStage = (progress, idMaket) => {
+    const clearMessagesaveMaketSuccess = (history) => {
+        return (uid) => {
+            dispatchRedux(maketsUpdateStatusRequired());
+            history.push({pathname: '/makets' })
+            clearMessage(uid);
+        }
+    }
+
+    const saveMaketSuccess = (objectsRecipients, history) => {
+
+        const message = createMessage(alertTypes.success, "Записан макет " + objectsRecipients.idMaket, clearMessagesaveMaketSuccess(history));
+        return dispatch({ type: SAVE_PROJECT_MAKET, payload: { message, idMaket: objectsRecipients.idMaket, uidTask: objectsRecipients.uidTask } })
+
+    }
+
+
+    const nextStage = (progress, history) => {
 
         nextStageRequest();
 
-        let objectImage1c =  transformObjectImageTo1c(state.filds, state.objectImage);
-       
-        
- 
-        const objectsRecipients = {idMaket:idMaket, uidTask: state.uidTask};
+        let objectImage1c = transformObjectImageTo1c(state.filds, state.objectImage);
+        const objectsRecipients = { idMaket: state.idMaket, uidTask: state.uidTask };
 
+      
 
         const functionRequest = () => {
-            return nextStepProject(state.projectId, state.currentStage, objectImage1c, progress, objectsRecipients)
+            const isSave = (state.currentStage == (state.stagesProject.length - 1) && progress);
+            return nextStepProject(state.projectId, state.currentStage, objectImage1c, progress, objectsRecipients, isSave)
         };
 
         const responseHandlingFunction = (json) => {
 
+
+            //let a = 4/0;
+
+            //a.map((id)=>{})
+
             if (json.error) {
-           
+
                 nextStageFailure(json.error);
-           
+
             } else {
 
-                nextStageSuccess(json.filds, json.currentStage, json.objectImage);
+
+                if (!json.objectSaved) {
+                    nextStageSuccess(json.filds, json.currentStage, json.objectImage);
+                } else {
+                    saveMaketSuccess(json.objectsRecipients, history)
+                }
+
             }
 
         }
@@ -158,7 +187,6 @@ export const MaketProjectState = ({ children }) => {
     }
 
     //changeProjectField////////////////////////////////////////////////////////////////////////////////////////////////
-
     const changeProjectField = (fildId, fildValue) => {
 
         return dispatch({ type: CHANGE_PROJECT_FIELD, payload: { fildId, fildValue } })
@@ -167,7 +195,6 @@ export const MaketProjectState = ({ children }) => {
 
 
     //GET PROJECTS LIST///////////////////////////////////////////////////////////////////////////////////////////////////
-    
 
     const projectsRequest = () => {
         return dispatch({ type: MAKET_PROJECTS_REQUEST })
@@ -219,9 +246,9 @@ export const MaketProjectState = ({ children }) => {
         return dispatch({ type: GET_PROJECT_REQUEST })
     }
 
-    const getProjectSuccess = (stagesProject, filds, objectImage1c,projectId,projects, uidTask) => {
-        let objectImage =  transformObjectImageFrom1c(filds, objectImage1c);
-        return dispatch({ type: GET_PROJECT_SUCCESS, payload: { stagesProject, filds, objectImage, projectId, projects, uidTask}})
+    const getProjectSuccess = (stagesProject, filds, objectImage1c, projectId, projects, uidTask, idMaket) => {
+        let objectImage = transformObjectImageFrom1c(filds, objectImage1c);
+        return dispatch({ type: GET_PROJECT_SUCCESS, payload: { stagesProject, filds, objectImage, projectId, projects, uidTask, idMaket } })
     }
 
 
@@ -230,7 +257,7 @@ export const MaketProjectState = ({ children }) => {
     }
 
 
-    const getProject = (projectId='', maketId='') => {
+    const getProject = (projectId = '', maketId = '') => {
 
         if (projectId || maketId) {
 
@@ -243,8 +270,13 @@ export const MaketProjectState = ({ children }) => {
             };
 
             const responseHandlingFunction = (json) => {
-
-                getProjectSuccess(json.stagesProject, json.filds, json.objectImage, json.projectId, json.projects, json.uidTask);
+                
+                if (json.error) {
+                    getProjectFailure(json.error) 
+                }else{
+                    getProjectSuccess(json.stagesProject, json.filds, json.objectImage, json.projectId, json.projects, json.uidTask, json.idMaket);
+                }    
+           
             }
 
             const exceptionHandlingFunction = (error) => {
@@ -258,8 +290,8 @@ export const MaketProjectState = ({ children }) => {
         }
     }
 
- 
-    
+
+
 
     return (
         <MaketProjectContext.Provider value={{

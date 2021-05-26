@@ -16,11 +16,22 @@ import {
     ADD_PROJECT_FILE,
     REMOVE_PROJECT_FILE,
 
+    SAVE_PROJECT_MAKET
+
+
 } from "../types"
 
 export const MaketProjectReducer = (state, action) => {
 
     switch (action.type) {
+
+        case SAVE_PROJECT_MAKET:
+            return {
+                ...state,
+                message: action.payload.message,
+                idMaket:action.payload.idMaket,
+                uidTask:action.payload.uidTask,     
+            }
 
         case REMOVE_PROJECT_FILE:
             return {
@@ -78,7 +89,8 @@ export const MaketProjectReducer = (state, action) => {
                 filds: [],
                 objectImage: {},
                 currentStage: 0,
-                uidTask:''
+                uidTask:'',
+                idMaket: '',
 
 
             }
@@ -105,6 +117,8 @@ export const MaketProjectReducer = (state, action) => {
                 projectId: action.payload.projectId,
                 projects:action.payload.projects,
                 uidTask:action.payload.uidTask,
+                idMaket:action.payload.idMaket,
+                
 
                 
                 currentStage: 0
@@ -125,7 +139,8 @@ export const MaketProjectReducer = (state, action) => {
                 editorState:null,
                 projectsRequest: true,
                 currentStage: 0,
-                uidTask:''
+                uidTask:'',
+                idMaket: '',
                 
 
             }

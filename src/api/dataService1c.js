@@ -1,13 +1,8 @@
 import { API_URL, username, password } from '../Constants'
-import { encode } from 'base-64'
 import { logOut } from '../redux/user/userActions'
 import axios from 'axios'
 
 const auth = {auth: {username, password}} 
-
-export const getToken = () => {
-    return 'Basic ' + encode(username + ":" + password);
-}
 
 export const getMakets = (status) => {
     let body = getBody()
@@ -47,8 +42,7 @@ export const saveFileСonfirmation = (id, fileName, shortfileName, fileBase64) =
 export const saveTask = (id, uid, number, taskText, taskFiles) => {
 
 
-    console.log("taskFiles", taskFiles);
-
+  
     let body = getBody({ taskText, uid, number, taskFiles })
     return axios.post(`${API_URL}/?typerequest=saveTask&id=${id}`,  body,  auth);
 }
@@ -77,12 +71,12 @@ export const getProjectApi = (id, maketId) => {
 }
 
 
-export const nextStepProject = (idProject, currentStage, objectImage, progress, objectsRecipients) => {
+export const nextStepProject = (idProject, currentStage, objectImage, progress, objectsRecipients, isSave) => {
 
 
     let objectImageR;
 
-    if (objectImage.hasOwnProperty('files')) {
+    if (!isSave && objectImage.hasOwnProperty('files')) {
         objectImageR = { ...objectImage, files: objectImage.files.map(file => file.uid) };
     }
     else {
@@ -114,7 +108,12 @@ export const executorRequests = (functionRequest, responseHandlingFunction, exce
     functionRequest()
         .then(response => responseHandlingFunction(response.data))
         .catch((error) => {
-             if (!error.response) {
+
+            console.log('error', {error});
+            
+            if (!error.response && !error.request) {
+                 exceptionHandlingFunction("что то полшло не так..." + error.message);
+            }  else if (!error.response && error.request) {   
                 exceptionHandlingFunction("Проблема соединения")
             }  else if (error.request.status == 401) {
                    dispatch(logOut());
@@ -124,5 +123,5 @@ export const executorRequests = (functionRequest, responseHandlingFunction, exce
 
         })
 
-}
+    }
 

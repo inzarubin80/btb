@@ -53,8 +53,7 @@ export default function Reports(props) {
 
 
 
-   // console.log('reportGroups', reportGroups);
-
+  
 
     const folderIsOpen = (id) => {
         return openFoldersReport.find(id_ => id_ == id) ? true : false;

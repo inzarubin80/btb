@@ -76,7 +76,6 @@ const columns = [
   {
     field: 'code', headerName: 'Код', width: 80, type: 'string', renderCell: (params) => {
 
-     // console.log('params*************************', params);
      return params.row.status == 'Проект' ?
         (
           <strong>

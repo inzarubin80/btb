@@ -61,7 +61,6 @@ export const ReportsState = ({ children }) => {
 
         const responseHandlingFunction = (json) => {
             
-            //console.log('json', json);
             reportSuccess(json.reportHTML, json.nameReport)
 
         };

@@ -166,8 +166,7 @@ const MaketProject = (props) => {
     } = React.useContext(MaketProjectContext);
 
 
-    console.log('message', message);
-
+    
 
     const HendleChangeFild = (fildId, value) => {
         changeProjectField(fildId.trim(), value)
@@ -192,8 +191,7 @@ const MaketProject = (props) => {
         if (props.match.params.id == 'new') {
             getProjects()
         } else {
-            console.log('useEffect');
-            getProject("", props.match.params.id)
+             getProject("", props.match.params.id)
 
         }
 
@@ -202,13 +200,13 @@ const MaketProject = (props) => {
 
     const next = () => {
         if (stagesProject.length - 1 >= currentStage && !projectsRequest) {
-            nextStage(true,props.match.params.id);
+            nextStage(true, props.history);
         }
     };
 
     const prev = () => {
         if (currentStage > 0 && !projectsRequest) {
-            nextStage(false, props.match.params.id);
+            nextStage(false, props.history);
         }
     };
 
@@ -227,7 +225,7 @@ const MaketProject = (props) => {
                 >
 
                   <div className={classes.messageBox}>
-                    {message && <Alert onClose={() => { clearMessage(message.uid) }} severity={message.type}>{message.str}</Alert>}
+                    {message && <Alert onClose={() => {message.clearMessage(message.uid)}} severity={message.type}>{message.str}</Alert>}
                   </div>
                 </Modal>
                 </Grid>

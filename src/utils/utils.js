@@ -36,12 +36,12 @@ export const getBase64 = (file) => {
     });
 };
 
-export const createMessage = (type, str, clearMessage, lifetime = 3000) => {
+export const createMessage = (type, str, clearMessage, lifetime=0) => {
     const uid = uuidv4();
     if (lifetime) {
         setTimeout(() => clearMessage(uid), lifetime)
     }
-    return { type, str, uid }
+    return { type, str, uid, clearMessage}
 }
 
 export const alertTypes = { error: 'error', warning: 'warning', info: 'info', success: 'success' };
