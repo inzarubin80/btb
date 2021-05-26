@@ -177,7 +177,7 @@ const TasksTable = () => {
 
                       <Grid item xs={12}>
                         <CardHeader
-                          title={"№" + task.number + " (" + "*нужно приктурить статус*" + ")"}
+                          title={"№" + task.number + " (" + (task.completed?"выполнено": "в работе") + ")"}
                           subheader={task.documentDate}
                         />
                       </Grid>
@@ -229,15 +229,15 @@ const TasksTable = () => {
                     />
                     <CardActions>
 
-                      {!taskEditingOpens && <IconButton color="primary" onClick={() => { openChangeTask(task.uid) }}>
+                      {!taskEditingOpens && task.сhangeАllowed && <IconButton color="primary" onClick={() => { openChangeTask(task.uid) }}>
                         <EditIcon />
                       </IconButton>}
 
                       {taskEditingOpens && <CircularProgress/>}
 
-                      <IconButton color="secondary" onClick={() => { removeTaskStart(task.uid) }}>
+                      {task.сhangeАllowed && <IconButton color="secondary" onClick={() => { removeTaskStart(task.uid) }}>
                         <DeleteIcon />
-                      </IconButton>
+                      </IconButton>}
 
 
                     </CardActions>
