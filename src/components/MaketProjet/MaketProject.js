@@ -103,8 +103,8 @@ const useStyles = makeStyles((theme) => ({
         'width': '50%',
         'height': '30%',
         'margin': 'auto',
-      },
-    
+    },
+
 
 }),
 );
@@ -112,7 +112,7 @@ const useStyles = makeStyles((theme) => ({
 
 function Alert(props) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
-  }
+}
 
 function NumberFormatCustom(props) {
     const { inputRef, onChange, ...other } = props;
@@ -166,7 +166,7 @@ const MaketProject = (props) => {
     } = React.useContext(MaketProjectContext);
 
 
-    
+
 
     const HendleChangeFild = (fildId, value) => {
         changeProjectField(fildId.trim(), value)
@@ -191,7 +191,7 @@ const MaketProject = (props) => {
         if (props.match.params.id == 'new') {
             getProjects()
         } else {
-             getProject("", props.match.params.id)
+            getProject("", props.match.params.id)
 
         }
 
@@ -216,18 +216,18 @@ const MaketProject = (props) => {
 
             <Grid container spacing={0}>
 
-            <Grid item xs={12} >
-            <Modal
-                  open={message ? true : false}
-                  onClose={() => { }}
-                  aria-labelledby="simple-modal-title"
-                  aria-describedby="simple-modal-description"
-                >
+                <Grid item xs={12} >
+                    <Modal
+                        open={message ? true : false}
+                        onClose={() => { }}
+                        aria-labelledby="simple-modal-title"
+                        aria-describedby="simple-modal-description"
+                    >
 
-                  <div className={classes.messageBox}>
-                    {message && <Alert onClose={() => {message.clearMessage(message.uid)}} severity={message.type}>{message.str}</Alert>}
-                  </div>
-                </Modal>
+                        <div className={classes.messageBox}>
+                            {message && <Alert onClose={() => { message.clearMessage(message.uid) }} severity={message.type}>{message.str}</Alert>}
+                        </div>
+                    </Modal>
                 </Grid>
 
                 <Grid item xs={12} className={classes.title}>
@@ -258,6 +258,21 @@ const MaketProject = (props) => {
                 <Grid item xs={3} />
                 <Grid item xs={1} />
                 <Grid item xs={10} >
+
+
+                    <div className={classes.buttonsAction}>
+
+                        <Button className={classes.buttonPrev} onClick={() => prev()}>
+                            Предыдущий
+   </Button>
+
+                        <Button type="primary" className={classes.buttonNext} onClick={() => next()}>
+                            {stagesProject.length - 1 == currentStage ? 'Записать' : 'Следующий'}
+                        </Button>
+
+
+
+                    </div>
 
                     <div className={classes.stepsContent}>
 
@@ -364,19 +379,7 @@ const MaketProject = (props) => {
                     </div>
 
 
-                    <div className={classes.buttonsAction}>
 
-                        <Button className={classes.buttonPrev} onClick={() => prev()}>
-                            Предыдущий
-                           </Button>
-
-                        <Button type="primary" className={classes.buttonNext} onClick={() => next()}>
-                            {stagesProject.length - 1 == currentStage ? 'Записать' : 'Следующий'}
-                        </Button>
-
-
-
-                    </div>
 
 
 
