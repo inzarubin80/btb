@@ -30,7 +30,9 @@ export const MaketProjectReducer = (state, action) => {
                 ...state,
                 message: action.payload.message,
                 idMaket:action.payload.idMaket,
-                uidTask:action.payload.uidTask,     
+                uidTask:action.payload.uidTask, 
+                stageRequest:false
+
             }
 
         case REMOVE_PROJECT_FILE:

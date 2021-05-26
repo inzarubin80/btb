@@ -16,7 +16,7 @@ import HTMLEditor from '../Maket/HTMLEditor'
 import { withRouter } from "react-router-dom";
 import Modal from '@material-ui/core/Modal';
 import MuiAlert from '@material-ui/lab/Alert';
-
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const { Step } = Steps;
 const useStyles = makeStyles((theme) => ({
@@ -159,8 +159,9 @@ const MaketProject = (props) => {
         nextStage,
         currentStage,
         addProjectFile,
+        stageRequest,
         removeProjectFile,
-        clearMessage
+
 
 
     } = React.useContext(MaketProjectContext);
@@ -199,13 +200,13 @@ const MaketProject = (props) => {
 
 
     const next = () => {
-        if (stagesProject.length - 1 >= currentStage && !projectsRequest) {
+        if (stagesProject.length - 1 >= currentStage && !stageRequest) {
             nextStage(true, props.history);
         }
     };
 
     const prev = () => {
-        if (currentStage > 0 && !projectsRequest) {
+        if (currentStage > 0 && !stageRequest) {
             nextStage(false, props.history);
         }
     };
@@ -262,15 +263,19 @@ const MaketProject = (props) => {
 
                     <div className={classes.buttonsAction}>
 
-                        <Button className={classes.buttonPrev} onClick={() => prev()}>
-                            Предыдущий
-   </Button>
+                        {stageRequest && <CircularProgress />}
 
-                        <Button type="primary" className={classes.buttonNext} onClick={() => next()}>
-                            {stagesProject.length - 1 == currentStage ? 'Записать' : 'Следующий'}
-                        </Button>
+                        {!stageRequest &&
+                            <div>
+                                <Button className={classes.buttonPrev} onClick={() => prev()}>
+                                    Предыдущий
+                            </Button>
 
-
+                                <Button type="primary" className={classes.buttonNext} onClick={() => next()}>
+                                    {stagesProject.length - 1 == currentStage ? 'Записать' : 'Следующий'}
+                                </Button>
+                            </div>
+                        }
 
                     </div>
 

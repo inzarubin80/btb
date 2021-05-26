@@ -156,11 +156,6 @@ export const MaketProjectState = ({ children }) => {
 
         const responseHandlingFunction = (json) => {
 
-
-            //let a = 4/0;
-
-            //a.map((id)=>{})
-
             if (json.error) {
 
                 nextStageFailure(json.error);
@@ -304,6 +299,7 @@ export const MaketProjectState = ({ children }) => {
             filds: state.filds,
             objectImage: state.objectImage,
             currentStage: state.currentStage,
+            stageRequest:state.stageRequest,
             getProjects,
             getProject,
             changeProjectField,

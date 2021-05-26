@@ -21,7 +21,9 @@ import Button from '@material-ui/core/Button';
 
 import Grid from '@material-ui/core/Grid';
 
-import { green, blue, pink } from '@material-ui/core/colors';
+import Alert from '@material-ui/lab/Alert';
+
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -116,6 +118,8 @@ export default function Makets() {
   const maketsAr = useSelector(state => state.makets.makets);
   const statusButtons = useSelector(state => state.makets.statusButtons);
   const updateStatusRequired = useSelector(state => state.makets.updateStatusRequired);
+  const error = useSelector(state => state.makets.error);
+  
 
   const dispatch = useDispatch();
 
@@ -140,6 +144,7 @@ export default function Makets() {
   return (
     <div>
       <Grid container spacing={0}>
+      
         <Grid item xs={12} value={2}>
           <div className={classes.actions}>
 
@@ -161,6 +166,10 @@ export default function Makets() {
         </Grid>
       </Grid>
 
+
+      <Grid item xs={12}>
+       {error && <Alert severity="error">{error}</Alert>}
+      </Grid>
 
       <DataGrid
 
