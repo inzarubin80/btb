@@ -351,7 +351,7 @@ const MaketProject = (props) => {
 
                                     <Autocomplete
                                         id={fild.id}
-                                       // value={objectImage[fild.id]}
+                                        value={objectImage[fild.id]}
                                         freeSolo
                                        
                                         onChange={(e, v) => { HendleChangeFild(fild.id, v) }}

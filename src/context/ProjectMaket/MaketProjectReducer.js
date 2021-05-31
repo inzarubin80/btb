@@ -23,6 +23,9 @@ import {
 
 export const MaketProjectReducer = (state, action) => {
 
+
+    console.log(action);
+    
     switch (action.type) {
 
         case SAVE_PROJECT_MAKET:
