@@ -17,6 +17,11 @@ import { withRouter } from "react-router-dom";
 import Modal from '@material-ui/core/Modal';
 import MuiAlert from '@material-ui/lab/Alert';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import Autocomplete from '@material-ui/lab/Autocomplete';
+
+
 
 const { Step } = Steps;
 const useStyles = makeStyles((theme) => ({
@@ -35,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
         marginTop: 20,
         // marginRight: 20,
         textAlign: 'center',
-        backgroundColor: '#fafafa',
+        // backgroundColor: '#fafafa',
         border: '1px dashed #e9e9e9',
         borderRadius: '2px',
         verticalAlign: 'center'
@@ -80,7 +85,7 @@ const useStyles = makeStyles((theme) => ({
     },
 
     inputString: {
-        width: '80%',
+        width: '100%',
         marginTop: 10,
 
     },
@@ -290,6 +295,7 @@ const MaketProject = (props) => {
                             } else if (fild.type == 'inputSelect') {
                                 return (<div key={fild.id} className={classes.inputSelect}><InputLabel id={fild.id} className={classes.fild} >{fild.name}</InputLabel>
                                     <Select
+                                        autoWidth={true}
 
                                         labelId={fild.id}
                                         id={fild.id + 'select'}
@@ -338,6 +344,29 @@ const MaketProject = (props) => {
                                     />
 
                                 </div>)
+
+                            } else if (fild.type == 'inputStringEndSelect') {
+                                return (<div key={fild.id}>
+
+
+                                    <Autocomplete
+                                        id={fild.id}
+                                       // value={objectImage[fild.id]}
+                                        freeSolo
+                                       //onChange={(e) => { HendleChangeFild(fild.id, e.target.value) }}
+                                       //onChange={(e) => { HendleChangeFild(fild.id, e.target.value) }}
+                                       
+                                        
+                                       options={fild.selectValue.map((option) => option.value)}
+                                        renderInput={(params) => (
+                                            <TextField {...params} label={fild.name} margin="normal" variant="outlined" />
+                                        )}
+                                    />
+
+
+
+                                </div>)
+
                             } else if (fild.type == 'inputBoolean') {
                                 return (<div key={fild.id}>
 

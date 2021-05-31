@@ -76,7 +76,7 @@ const useStyles = makeStyles((theme) => ({
 
 const columns = [
   {
-    field: 'code', headerName: 'Код', width: 80, type: 'string', renderCell: (params) => {
+    field: 'code', headerName: 'Код', width: 100, type: 'string', renderCell: (params) => {
 
      return params.row.status == 'Проект' ?
         (
