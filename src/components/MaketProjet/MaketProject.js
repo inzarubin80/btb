@@ -353,8 +353,9 @@ const MaketProject = (props) => {
                                         id={fild.id}
                                        // value={objectImage[fild.id]}
                                         freeSolo
-                                       //onChange={(e) => { HendleChangeFild(fild.id, e.target.value) }}
-                                       //onChange={(e) => { HendleChangeFild(fild.id, e.target.value) }}
+                                       
+                                        onChange={(e, v) => { HendleChangeFild(fild.id, v) }}
+                                      //onChange={(e, v) => { console.log('value', {e,v})}}
                                        
                                         
                                        options={fild.selectValue.map((option) => option.value)}
