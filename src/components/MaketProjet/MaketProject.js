@@ -405,7 +405,7 @@ const MaketProject = (props) => {
                             }
 
                             else {
-                                return (<h5>не известный вид поля...!!!</h5>)
+                                return (<div key={fild.id}> <h5>не известный вид поля...!!!</h5></div>)
                             }
 
                         })}
