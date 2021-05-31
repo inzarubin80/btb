@@ -356,11 +356,10 @@ const MaketProject = (props) => {
 
                                         getOptionLabel={option => option}
                                        
-                                       // onChange={(e, v) => { HendleChangeFild(fild.id, v) }}
                                       onChange={(e, v) => { HendleChangeFild(fild.id, v) }}
                                       onInputChange={(e, v) => { HendleChangeFild(fild.id, v) }}
                                         
-                                       options={fild.selectValue.map((option) => option.value)}
+                                       options={fild.selectValue.filter((option)=>option.value.includes(objectImage[fild.id]) || !objectImage[fild.id]).map((option) => option.value)}
                                         renderInput={(params) => (
                                             <TextField {...params} label={fild.name} margin="normal" variant="outlined" />
                                         )}
