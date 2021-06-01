@@ -306,7 +306,7 @@ const MaketProject = (props) => {
 
                                     <FormControl required={fild.emptyСontrol} className={classes.margin}>
 
-                                        <InputLabel shrink id={fild.id} className={classes.fild} htmlFor={fild.id}>{fild.name}</InputLabel>
+                                        <InputLabel variant = 'outlined' shrink id={fild.id} className={classes.fild} htmlFor={fild.id}>{fild.name}</InputLabel>
                                         <Select
                                             autoWidth={true}
                                             labelId={fild.id}

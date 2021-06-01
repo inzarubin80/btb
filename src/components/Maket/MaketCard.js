@@ -118,9 +118,9 @@ const MaketCard = (props) => {
       {maket &&
 
         <Grid container spacing={0}>
-          <Grid item xs={2} />
+          <Grid item xs={1} />
 
-          <Grid item xs={8}>
+          <Grid item xs={10}>
 
             <Card >
               <CardContent>
@@ -195,7 +195,7 @@ const MaketCard = (props) => {
             </Card>
 
           </Grid>
-          <Grid item xs={2} />
+          <Grid item xs={1} />
         </Grid >
       }
     </div>);

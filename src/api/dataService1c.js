@@ -74,9 +74,12 @@ export const getProjectApi = (id, maketId) => {
 export const nextStepProject = (idProject, currentStage, objectImage, progress, objectsRecipients, isSave) => {
 
 
+
+    console.log('objectImage', objectImage);
+
     let objectImageR;
 
-    if (!isSave && objectImage.hasOwnProperty('files')) {
+    if (!isSave && objectImage.hasOwnProperty('files') && objectImage.files ) {
         objectImageR = { ...objectImage, files: objectImage.files.map(file => file.uid) };
     }
     else {
