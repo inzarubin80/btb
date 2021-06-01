@@ -16,8 +16,8 @@ import {
     ADD_PROJECT_FILE,
     REMOVE_PROJECT_FILE,
 
-    SAVE_PROJECT_MAKET
-
+    SAVE_PROJECT_MAKET,
+    FILLING_CONTROL_FILDS
 
 } from "../types"
 
@@ -27,6 +27,13 @@ export const MaketProjectReducer = (state, action) => {
     console.log(action);
     
     switch (action.type) {
+
+
+        case FILLING_CONTROL_FILDS:
+            return {
+                ...state,
+                fieldErrors: action.payload.fieldErrors,
+            }
 
         case SAVE_PROJECT_MAKET:
             return {
@@ -77,7 +84,8 @@ export const MaketProjectReducer = (state, action) => {
             return {
 
                 ...state,
-                objectImage: { ...state.objectImage, [action.payload.fildId]: action.payload.fildValue }
+                objectImage: { ...state.objectImage, [action.payload.fildId]: action.payload.fildValue },
+                fieldErrors: { ...state.fieldErrors, [action.payload.fildId]: false},
 
             }
 
@@ -87,6 +95,7 @@ export const MaketProjectReducer = (state, action) => {
             return {
 
                 ...state,
+                fieldErrors:{},
                 message: null,
                 stagesProject: [],
                 editorState:null,

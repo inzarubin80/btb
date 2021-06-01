@@ -17,10 +17,10 @@ import { withRouter } from "react-router-dom";
 import Modal from '@material-ui/core/Modal';
 import MuiAlert from '@material-ui/lab/Alert';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import Autocomplete from '@material-ui/lab/Autocomplete';
 
+import Autocomplete from '@material-ui/lab/Autocomplete';
+import FormControl from '@material-ui/core/FormControl';
+import FormHelperText from '@material-ui/core/FormHelperText';
 
 
 const { Step } = Steps;
@@ -32,6 +32,10 @@ const useStyles = makeStyles((theme) => ({
         justifyContent: 'center',
         marginTop: 10
 
+    },
+
+    margin: {
+        margin: theme.spacing(1),
     },
 
     stepsContent: {
@@ -166,6 +170,7 @@ const MaketProject = (props) => {
         addProjectFile,
         stageRequest,
         removeProjectFile,
+        fieldErrors
 
 
 
@@ -293,79 +298,105 @@ const MaketProject = (props) => {
                                 return (<div key={fild.id} />)
 
                             } else if (fild.type == 'inputSelect') {
-                                return (<div key={fild.id} className={classes.inputSelect}><InputLabel id={fild.id} className={classes.fild} >{fild.name}</InputLabel>
-                                    <Select
-                                        autoWidth={true}
+                                return (<div key={fild.id} className={classes.inputSelect}>
 
-                                        labelId={fild.id}
-                                        id={fild.id + 'select'}
-                                        value={objectImage[fild.id]}
-                                        onChange={(e) => { HendleChangeFild(fild.id, e.target.value) }}
+                                    <FormControl required={fild.emptyСontrol} className={classes.margin}>
 
-                                    >
+                                        <InputLabel shrink id={fild.id} className={classes.fild} htmlFor={fild.id}>{fild.name}</InputLabel>
+                                        <Select
+                                            autoWidth={true}
+                                            labelId={fild.id}
+                                            id={fild.id + 'select'}
+                                            value={objectImage[fild.id]}
+                                            onChange={(e) => { HendleChangeFild(fild.id, e.target.value) }}
 
-                                        {fild.selectValue.map((fildValue) =>
+                                        >
+                                            {fild.selectValue.map((fildValue) =>
 
-                                            (<MenuItem key={fildValue.value} value={fildValue.value}>{fildValue.representation}</MenuItem>))}
+                                                (<MenuItem key={fildValue.value} value={fildValue.value}>{fildValue.representation}</MenuItem>))}
 
-                                    </Select>
+                                        </Select>
+
+                                        {fieldErrors[fild.id] && <FormHelperText error={true} id={fild.id + "standard-weight-helper-text"} >Не заполнено значение поля</FormHelperText>}
+                                    </FormControl>
                                 </div>)
                             } else if (fild.type == 'inputNumber') {
                                 return (<div key={fild.id}>
 
-                                    <TextField
-                                        id={fild.id}
-                                        label={fild.name}
-                                        value={objectImage[fild.id]}
-                                        rows={1}
-                                        className={classes.inputNumber}
-                                        name="numberformat"
-                                        onChange={(e) => { HendleChangeFild(fild.id, e.target.value) }}
-                                        InputProps={{
-                                            inputComponent: NumberFormatCustom,
-                                        }}
+                                    <FormControl className={classes.margin} required={fild.emptyСontrol}>
+                                        <InputLabel shrink id={fild.id} className={classes.fild} htmlFor={fild.id}>{fild.name}</InputLabel>
 
-                                    />
+                                        <TextField
+                                            id={fild.id}
+                                            value={objectImage[fild.id]}
+                                            rows={1}
+                                            className={classes.inputNumber}
+                                            name="numberformat"
+                                            onChange={(e) => { HendleChangeFild(fild.id, e.target.value) }}
+                                            InputProps={{
+                                                inputComponent: NumberFormatCustom,
+                                            }}
+
+                                        />
+
+                                        {false && <FormHelperText error={true} id={fild.id + "standard-weight-helper-text"}>Weight</FormHelperText>}
+
+                                    </FormControl>
+
 
                                 </div>)
                             } else if (fild.type == 'inputString') {
                                 return (<div key={fild.id}>
 
-                                    <TextField
-                                        id={fild.id}
-                                        label={fild.name}
-                                        multiline
-                                        value={objectImage[fild.id]}
-                                        rows={fild.rows}
-                                        className={classes.inputString}
-                                        //  defaultValue="Default Value"
-                                        onChange={(e) => { HendleChangeFild(fild.id, e.target.value) }}
+                                    <FormControl className={classes.margin} required={fild.emptyСontrol}>
+                                        <InputLabel shrink id={fild.id} className={classes.fild} htmlFor={fild.id}>{fild.name}</InputLabel>
 
-                                    />
+                                        <TextField
+                                            id={fild.id}
+                                            label={fild.name}
+                                            multiline
+                                            value={objectImage[fild.id]}
+                                            rows={fild.rows}
+                                            className={classes.inputString}
+                                            required={fild.emptyСontrol}
+                                            //  defaultValue="Default Value"
+                                            onChange={(e) => { HendleChangeFild(fild.id, e.target.value) }}
+
+                                        />
+
+                                        {fieldErrors[fild.id] && <FormHelperText error={true} id={fild.id + "standard-weight-helper-text"} >Не заполнено значение поля</FormHelperText>}
+                                    </FormControl>
+
 
                                 </div>)
 
                             } else if (fild.type == 'inputStringEndSelect') {
                                 return (<div key={fild.id}>
+                                    <FormControl className={classes.margin} fullWidth={true} required={fild.emptyСontrol}>
+                                      
+                                        <InputLabel shrink id={fild.id} className={classes.fild} htmlFor={fild.id}>{fild.name}</InputLabel>
+
+                                        <Autocomplete
+                                            id={fild.id}
+                                            value={objectImage[fild.id]}
+                                            freeSolo
+                                            fullWidth={true}
+                                            getOptionLabel={option => option}
+
+                                            onChange={(e, v) => { HendleChangeFild(fild.id, v) }}
+                                            onInputChange={(e, v) => { HendleChangeFild(fild.id, v) }}
+
+                                            options={fild.selectValue.filter((option) => option.value.includes(objectImage[fild.id]) || !objectImage[fild.id]).map((option) => option.value)}
+                                            renderInput={(params) => (
+                                                <TextField {...params} margin="normal" variant="outlined" />
+                                            )}
+                                        />
 
 
-                                    <Autocomplete
-                                        id={fild.id}
-                                        value={objectImage[fild.id]}
-                                        freeSolo
 
-                                        getOptionLabel={option => option}
-                                       
-                                      onChange={(e, v) => { HendleChangeFild(fild.id, v) }}
-                                      onInputChange={(e, v) => { HendleChangeFild(fild.id, v) }}
-                                        
-                                       options={fild.selectValue.filter((option)=>option.value.includes(objectImage[fild.id]) || !objectImage[fild.id]).map((option) => option.value)}
-                                        renderInput={(params) => (
-                                            <TextField {...params} label={fild.name} margin="normal" variant="outlined" />
-                                        )}
-                                    />
-
-
+                                        {fieldErrors[fild.id] && <FormHelperText error={true} id={fild.id + "standard-weight-helper-text"} >Не заполнено значение поля</FormHelperText>}
+                                    
+                                    </FormControl>
 
                                 </div>)
 
@@ -388,19 +419,23 @@ const MaketProject = (props) => {
                             } else if (fild.type == 'inputFiles') {
                                 return (<div key={fild.id}>
 
+                                <FormControl  required={fild.emptyСontrol}>
+
                                     <AttachedFiles files={objectImage[fild.id]} removeFile={removeProjectFile} addFile={addProjectFile} />
+                                    {fieldErrors[fild.id] && <FormHelperText error={true} id={fild.id + "standard-weight-helper-text"} >Необходимо выбрать файлы задания</FormHelperText>}
+                                
+                                </FormControl>
 
                                 </div>)
                             } else if (fild.type == 'htmlText') {
-                                return (<div key={fild.id}>
-                                    <FormControlLabel
-                                        labelPlacement='top'
-                                        control={
-                                            <HTMLEditor editorState={objectImage[fild.id]} setEditorState={(newState) => { HendleChangeFild(fild.id, newState) }} />
-                                        }
-                                        label={fild.name}
-                                    />
-
+                                return (<div key={fild.id}>                                
+                                    <FormControl  required={fild.emptyСontrol}>
+                                       
+                                       <h1>Описание задачи</h1>
+                                        <HTMLEditor className={classes.margin} id={fild.id} editorState={objectImage[fild.id]} setEditorState={(newState) => { HendleChangeFild(fild.id, newState) }} />
+                                       
+                                        {fieldErrors[fild.id] && <FormHelperText error={true} id={fild.id + "standard-weight-helper-text"} >Не заполнено значение поля</FormHelperText>}
+                                    </FormControl>
                                 </div>)
                             }
 
@@ -411,12 +446,7 @@ const MaketProject = (props) => {
                         })}
 
 
-
                     </div>
-
-
-
-
 
 
                 </Grid>

@@ -10,6 +10,7 @@ const HTMLEditor = (props) => {
     return (<Editor editorClassName="editor"
         editorState={props.editorState}
         onEditorStateChange={props.setEditorState}
+        id = {props.id}
     />)
 }
 export default HTMLEditor;

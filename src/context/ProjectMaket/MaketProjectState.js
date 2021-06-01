@@ -18,7 +18,10 @@ import {
     ADD_PROJECT_FILE,
     REMOVE_PROJECT_FILE,
 
-    SAVE_PROJECT_MAKET
+    SAVE_PROJECT_MAKET,
+    FILLING_CONTROL_FILDS,
+
+
 
 } from '../types'
 
@@ -51,7 +54,8 @@ export const MaketProjectState = ({ children }) => {
         stageRequest: false,
         currentStage: 0,
         uidTask: '',
-        idMaket: ''
+        idMaket: '',
+        fieldErrors:{}
 
     }
 
@@ -142,12 +146,55 @@ export const MaketProjectState = ({ children }) => {
 
     const nextStage = (progress, history) => {
 
-        nextStageRequest();
 
         let objectImage1c = transformObjectImageTo1c(state.filds, state.objectImage);
         const objectsRecipients = { idMaket: state.idMaket, uidTask: state.uidTask };
 
-      
+    
+        let fieldErrors = {};
+
+        if (progress){
+            for (let i=0; i< state.filds.length; i++){
+
+                if (state.filds[i].emptyСontrol) {
+                
+                    if (state.filds[i].type=='htmlText') {
+
+                       const getCurrentContent = state.objectImage[state.filds[i].id].getCurrentContent();
+                       const blocks = convertToRaw(getCurrentContent).blocks;
+                       const value = blocks.map(block => (!block.text.trim() && '\n') || block.text).join('\n');
+                       if (!value=="\n") {
+                            fieldErrors[state.filds[i].id]=true;
+                        }
+                    
+                    } else if (state.filds[i].type=='inputFiles'){
+                        
+                        if (!state.objectImage[state.filds[i].id].length){
+                            fieldErrors[state.filds[i].id]=true;
+                        }
+                        
+    
+                    } else if (!objectImage1c[state.filds[i].id]){
+                        fieldErrors[state.filds[i].id]=true;
+                    }
+                
+                
+                }
+
+            }
+        }
+
+
+        dispatch({ type: FILLING_CONTROL_FILDS, payload: {fieldErrors}})
+
+        if (Object.keys(fieldErrors).length){
+            return;
+        }
+
+        
+        nextStageRequest();
+
+       
 
         const functionRequest = () => {
             const isSave = (state.currentStage == (state.stagesProject.length - 1) && progress);
@@ -300,6 +347,7 @@ export const MaketProjectState = ({ children }) => {
             objectImage: state.objectImage,
             currentStage: state.currentStage,
             stageRequest:state.stageRequest,
+            fieldErrors:state.fieldErrors,
             getProjects,
             getProject,
             changeProjectField,

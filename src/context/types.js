@@ -54,6 +54,11 @@ export const NEXT_STAGE_FAILURE             = 'NEXT_STAGE_FAILURE'
 export const NEXT_STAGE_SUCCESS             = 'NEXT_STAGE_SUCCESS'
 export const  ADD_PROJECT_FILE              = 'ADD_PROJECT_FILE'
 export const  REMOVE_PROJECT_FILE           = 'REMOVE_PROJECT_FILE'
+export const  FILLING_CONTROL_FILDS           = 'FILLING_CONTROL_FILDS'
+
+
+
+
 
 
 
