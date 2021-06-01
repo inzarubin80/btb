@@ -36,7 +36,7 @@ import htmlToDraft from 'html-to-draftjs';
 import draftToHtml from 'draftjs-to-html'
 
 
-import {maketsUpdateStatusRequired} from '../../redux/makets/maketsActions'
+import { maketsUpdateStatusRequired } from '../../redux/makets/maketsActions'
 
 
 export const MaketProjectState = ({ children }) => {
@@ -55,7 +55,7 @@ export const MaketProjectState = ({ children }) => {
         currentStage: 0,
         uidTask: '',
         idMaket: '',
-        fieldErrors:{}
+        fieldErrors: {}
 
     }
 
@@ -131,7 +131,7 @@ export const MaketProjectState = ({ children }) => {
     const clearMessagesaveMaketSuccess = (history) => {
         return (uid) => {
             dispatchRedux(maketsUpdateStatusRequired());
-            history.push({pathname: '/makets' })
+            history.push({ pathname: '/makets' })
             clearMessage(uid);
         }
     }
@@ -150,51 +150,54 @@ export const MaketProjectState = ({ children }) => {
         let objectImage1c = transformObjectImageTo1c(state.filds, state.objectImage);
         const objectsRecipients = { idMaket: state.idMaket, uidTask: state.uidTask };
 
-    
+
         let fieldErrors = {};
 
-        if (progress){
-            for (let i=0; i< state.filds.length; i++){
+
+        for (let i = 0; i < state.filds.length; i++) {
+
+            if (progress) {
+                
+                fieldErrors[state.filds[i].id] = false;
 
                 if (state.filds[i].emptyСontrol) {
-                
-                    if (state.filds[i].type=='htmlText') {
 
-                       const getCurrentContent = state.objectImage[state.filds[i].id].getCurrentContent();
-                       const blocks = convertToRaw(getCurrentContent).blocks;
-                       const value = blocks.map(block => (!block.text.trim() && '\n') || block.text).join('');
-                       if (value=="\n") {
-                            fieldErrors[state.filds[i].id]=true;
+                    if (state.filds[i].type == 'htmlText') {
+
+                        const getCurrentContent = state.objectImage[state.filds[i].id].getCurrentContent();
+                        const blocks = convertToRaw(getCurrentContent).blocks;
+                        const value = blocks.map(block => (!block.text.trim() && '\n') || block.text).join('\n');
+                        var value_ = value.replace("\n", '').trim();
+                        if (value_=='') {
+                            fieldErrors[state.filds[i].id] = true;
                         }
-                    
-                    } else if (state.filds[i].type=='inputFiles'){
-                        
-                        if (!state.objectImage[state.filds[i].id].length){
-                            fieldErrors[state.filds[i].id]=true;
+
+                    } else if (state.filds[i].type == 'inputFiles') {
+
+                        if (!state.objectImage[state.filds[i].id].length) {
+                            fieldErrors[state.filds[i].id] = true;
                         }
-                        
-    
-                    } else if (!objectImage1c[state.filds[i].id]){
-                        fieldErrors[state.filds[i].id]=true;
+
+
+                    } else if (!objectImage1c[state.filds[i].id]) {
+                        fieldErrors[state.filds[i].id] = true;
                     }
-                
-                
-                }
 
+                }
             }
         }
 
+        dispatch({ type: FILLING_CONTROL_FILDS, payload: { fieldErrors } })
 
-        dispatch({ type: FILLING_CONTROL_FILDS, payload: {fieldErrors}})
 
-        if (Object.keys(fieldErrors).length){
+        if (Object.values(fieldErrors).filter(value=>value).length) {
             return;
         }
 
-        
+
         nextStageRequest();
 
-       
+
 
         const functionRequest = () => {
             const isSave = (state.currentStage == (state.stagesProject.length - 1) && progress);
@@ -312,13 +315,13 @@ export const MaketProjectState = ({ children }) => {
             };
 
             const responseHandlingFunction = (json) => {
-                
+
                 if (json.error) {
-                    getProjectFailure(json.error) 
-                }else{
+                    getProjectFailure(json.error)
+                } else {
                     getProjectSuccess(json.stagesProject, json.filds, json.objectImage, json.projectId, json.projects, json.uidTask, json.idMaket);
-                }    
-           
+                }
+
             }
 
             const exceptionHandlingFunction = (error) => {
@@ -346,8 +349,8 @@ export const MaketProjectState = ({ children }) => {
             filds: state.filds,
             objectImage: state.objectImage,
             currentStage: state.currentStage,
-            stageRequest:state.stageRequest,
-            fieldErrors:state.fieldErrors,
+            stageRequest: state.stageRequest,
+            fieldErrors: state.fieldErrors,
             getProjects,
             getProject,
             changeProjectField,

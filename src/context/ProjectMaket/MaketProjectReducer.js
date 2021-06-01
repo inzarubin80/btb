@@ -32,7 +32,7 @@ export const MaketProjectReducer = (state, action) => {
         case FILLING_CONTROL_FILDS:
             return {
                 ...state,
-                fieldErrors: action.payload.fieldErrors,
+                fieldErrors: {...state.fieldErrors, ...action.payload.fieldErrors},
             }
 
         case SAVE_PROJECT_MAKET:
