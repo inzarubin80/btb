@@ -170,7 +170,8 @@ const MaketProject = (props) => {
         addProjectFile,
         stageRequest,
         removeProjectFile,
-        fieldErrors
+        fieldErrors,
+        fildIsVisible
 
 
 
@@ -187,20 +188,6 @@ const MaketProject = (props) => {
         changeProjectField(fildId.trim(), value)
     }
 
-    const fildIsVisible = (fild) => {
-
-
-        if (!fild.visibilityСonditions.length) {
-            return true;
-        }
-
-        for (let i = 0; i < fild.visibilityСonditions.length; i++) {
-            if (objectImage[fild.visibilityСonditions[i].idFieldParent] == fild.visibilityСonditions[i].valueParent) {
-                return true;
-            }
-        }
-        return false;
-    }
 
     React.useEffect(() => {
         if (props.match.params.id == 'new') {
@@ -343,7 +330,7 @@ const MaketProject = (props) => {
 
                                         />
 
-                                        {false && <FormHelperText error={true} id={fild.id + "standard-weight-helper-text"}>Weight</FormHelperText>}
+                                        {fieldErrors[fild.id] && <FormHelperText error={true} id={fild.id + "standard-weight-helper-text"} >Не заполнено значение поля</FormHelperText>}
 
                                     </FormControl>
 

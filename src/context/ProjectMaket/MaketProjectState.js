@@ -100,6 +100,23 @@ export const MaketProjectState = ({ children }) => {
 
     }
 
+
+    
+    const fildIsVisible = (fild) => {
+
+
+        if (!fild.visibilityСonditions.length) {
+            return true;
+        }
+
+        for (let i = 0; i < fild.visibilityСonditions.length; i++) {
+            if (state.objectImage[fild.visibilityСonditions[i].idFieldParent] == fild.visibilityСonditions[i].valueParent) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     //ProjectFile ////////////////////////////////////////////////////////////////////////////////////////
     const addProjectFile = (file) => {
         dispatch({ type: ADD_PROJECT_FILE, payload: file })
@@ -160,9 +177,10 @@ export const MaketProjectState = ({ children }) => {
                 
                 fieldErrors[state.filds[i].id] = false;
 
-                if (state.filds[i].emptyСontrol) {
+                if (state.filds[i].emptyСontrol && fildIsVisible(state.filds[i])) {
 
-                    if (state.filds[i].type == 'htmlText') {
+                   
+                    if (state.filds[i].type == 'htmlText' )  {
 
                         const getCurrentContent = state.objectImage[state.filds[i].id].getCurrentContent();
                         const blocks = convertToRaw(getCurrentContent).blocks;
@@ -357,7 +375,8 @@ export const MaketProjectState = ({ children }) => {
             nextStage,
             addProjectFile,
             removeProjectFile,
-            clearMessage
+            clearMessage,
+            fildIsVisible
 
 
         }}>{children}</MaketProjectContext.Provider>)
