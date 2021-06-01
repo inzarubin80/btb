@@ -434,7 +434,7 @@ const MaketProject = (props) => {
                                        <h1>Описание задачи</h1>
                                         <HTMLEditor className={classes.margin} id={fild.id} editorState={objectImage[fild.id]} setEditorState={(newState) => { HendleChangeFild(fild.id, newState) }} />
                                        
-                                        {fieldErrors[fild.id] && <FormHelperText error={true} id={fild.id + "standard-weight-helper-text"} >Не заполнено значение поля</FormHelperText>}
+                                        {fieldErrors[fild.id] && <FormHelperText error={true} id={fild.id + "standard-weight-helper-text"} >Не заполнено значение текста задачи</FormHelperText>}
                                     </FormControl>
                                 </div>)
                             }
