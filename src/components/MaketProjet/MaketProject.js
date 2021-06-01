@@ -179,6 +179,10 @@ const MaketProject = (props) => {
 
 
 
+    console.log('fieldErrors', fieldErrors);
+
+
+
     const HendleChangeFild = (fildId, value) => {
         changeProjectField(fildId.trim(), value)
     }

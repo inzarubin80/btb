@@ -55,6 +55,7 @@ export const MaketProjectReducer = (state, action) => {
             return {
                 ...state,
                 objectImage: { ...state.objectImage, files: [...state.objectImage.files, action.payload] },
+                fieldErrors: { ...state.fieldErrors, files: false},
             }
 
 

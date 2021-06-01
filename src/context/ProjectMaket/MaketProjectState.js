@@ -162,8 +162,8 @@ export const MaketProjectState = ({ children }) => {
 
                        const getCurrentContent = state.objectImage[state.filds[i].id].getCurrentContent();
                        const blocks = convertToRaw(getCurrentContent).blocks;
-                       const value = blocks.map(block => (!block.text.trim() && '\n') || block.text).join('\n');
-                       if (!value=="\n") {
+                       const value = blocks.map(block => (!block.text.trim() && '\n') || block.text).join('');
+                       if (value=="\n") {
                             fieldErrors[state.filds[i].id]=true;
                         }
                     
