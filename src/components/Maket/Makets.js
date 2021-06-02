@@ -154,7 +154,8 @@ export default function Makets() {
                 className={classes.buttonAdd}
                 startIcon={<AddCircleIcon />}
 
-                variant="contained"
+                variant="outlined"
+
                 color="primary"
                 size="small"
               >
