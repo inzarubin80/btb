@@ -27,8 +27,18 @@ const ParameterTable = ({ maket }) => {
       <Table className={classes.table} size="small" aria-label="a dense table">
         
        
+       
+      <TableBody>
+          <TableRow >
+            <TableCell component="th" scope="row" >
+            Конечный потребитель
+              </TableCell>
+            <TableCell align="left">
+            {maket.finalBuyer}
+            </TableCell>
+          </TableRow>
 
-        <TableBody>
+
           <TableRow >
             <TableCell component="th" scope="row" >
               Вид оболочки
@@ -37,6 +47,9 @@ const ParameterTable = ({ maket }) => {
               {maket.Shell}
             </TableCell>
           </TableRow>
+
+
+         
 
           <TableRow >
             <TableCell component="th" scope="row" >

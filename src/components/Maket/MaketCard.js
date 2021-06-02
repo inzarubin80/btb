@@ -41,10 +41,19 @@ function Alert(props) {
 }
 
 const useStyles = makeStyles((theme) => ({
+
+  card: {
+    marginTop: theme.spacing(3),
+    textAlign: 'center',
+    //margin: 'auto',
+
+  },
+
+
   root: {
     textAlign: 'center',
     margin: 'auto',
-    marginTop: 30
+    marginTop: theme.spacing(1),
   },
 
   messageBox: {
@@ -129,14 +138,14 @@ const MaketCard = (props) => {
 
 
   const createNewMaket = () => {
-    props.history.push({ pathname: '/maket-project/new' }, {id:props.match.params.id})
+    props.history.push({ pathname: '/maket-project/new' }, { id: props.match.params.id })
   }
-  
+
 
   return (
 
 
-    <div className={classes.root}>
+    <div className={classes.card}>
       {maket &&
 
         <Grid container spacing={0}>
@@ -150,45 +159,48 @@ const MaketCard = (props) => {
 
                   <div>
 
+                    {!statusBeingSet && maket.actions.map((action) => {
+                      if (action.progress) {
+                        return (<Button className={classes.button} size = 'small' onClick={() => { hendleSetMaketStatus(action.uid) }} variant="outlined" endIcon={<ArrowForwardIcon />} key={action.uid} color="primary"> {action.name}</Button>)
+                      } else {
+                        return (<Button className={classes.button} size = 'small'  onClick={() => { hendleSetMaketStatus(action.uid) }} variant="outlined" startIcon={<ArrowBackIcon />} key={action.uid} color="primary"> {action.name}</Button>)
+                      }
+                    }
+                    )}
+                    {statusBeingSet && <CircularProgress />}
+
 
                     <Tooltip title="Вернуться в список">
-                      <IconButton aria-label="settings" onClick={backToList}>
+                      <IconButton aria-label="settings" color="primary" onClick={backToList}>
                         <ViewListIcon />
                       </IconButton>
                     </Tooltip>
 
 
                     <Tooltip title="Создать новый макет">
-                      <IconButton aria-label="settings" onClick={createNewMaket}>
+                      <IconButton aria-label="settings" color="primary" onClick={createNewMaket}>
                         <LibraryAddIcon />
                       </IconButton>
                     </Tooltip>
 
 
-                  </div>
 
+
+
+
+
+                  </div>
 
 
                 }
 
-                title={"Макет №" + maket.code + " "}
+                title={"Макет №" + maket.code + " (" + maket.status + ")"}
                 subheader={maket.product}
 
               />
               <CardContent>
 
 
-                <div className={classes.buttonStatusGroup}>
-                  {!statusBeingSet && maket.actions.map((action) => {
-                    if (action.progress) {
-                      return (<Button onClick={() => { hendleSetMaketStatus(action.uid) }} variant="outlined" endIcon={<ArrowForwardIcon />} key={action.uid} color="primary"> {action.name}</Button>)
-                    } else {
-                      return (<Button onClick={() => { hendleSetMaketStatus(action.uid) }} variant="outlined" startIcon={<ArrowBackIcon />} key={action.uid} color="primary"> {action.name}</Button>)
-                    }
-                  }
-                  )}
-                  {statusBeingSet && <CircularProgress />}
-                </div>
 
                 <Modal
                   open={message ? true : false}
@@ -202,10 +214,9 @@ const MaketCard = (props) => {
                   </div>
                 </Modal>
 
-                <Descriptions layout="vertical" bordered >
-                  <Descriptions.Item label="Конечный потребитель">{maket.finalBuyer}</Descriptions.Item>
-                  <Descriptions.Item label="Статус">{maket.status}</Descriptions.Item>
-                </Descriptions>
+
+
+
                 <div className={classes.root}>
                   <AppBar position="static" color="default">
                     <Tabs
