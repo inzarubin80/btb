@@ -65,8 +65,8 @@ export const getProjectsMakets = () => {
 
 }
 
-export const getProjectApi = (id, maketId) => {
-    let body = getBody({ id, maketId })
+export const getProjectApi = (id, maketId, inputBased) => {
+    let body = getBody({ id, maketId, inputBased })
     return axios.post(`${API_URL}/?typerequest=getProject`,  body,  auth);
 }
 

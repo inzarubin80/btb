@@ -161,11 +161,11 @@ export const MaketProjectState = ({ children }) => {
     }
 
 
-    const nextStage = (progress, history) => {
+    const nextStage = (progress, history, idMaket) => {
 
 
         let objectImage1c = transformObjectImageTo1c(state.filds, state.objectImage);
-        const objectsRecipients = { idMaket: state.idMaket, uidTask: state.uidTask };
+        const objectsRecipients = {idMaket, uidTask: state.uidTask };
 
 
         let fieldErrors = {};
@@ -320,7 +320,7 @@ export const MaketProjectState = ({ children }) => {
     }
 
 
-    const getProject = (projectId = '', maketId = '') => {
+    const getProject = (projectId = '', maketId = '', inputBased = false) => {
 
         if (projectId || maketId) {
 
@@ -329,7 +329,7 @@ export const MaketProjectState = ({ children }) => {
 
 
             const functionRequest = () => {
-                return getProjectApi(projectId, maketId)
+                return getProjectApi(projectId, maketId, inputBased)
             };
 
             const responseHandlingFunction = (json) => {

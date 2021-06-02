@@ -21,12 +21,20 @@ import { withRouter } from "react-router-dom";
 import 'react-image-lightbox/style.css';
 import MuiAlert from '@material-ui/lab/Alert';
 import { MaketCardContext } from '../../context/MaketCard/MaketCardContext';
-import Typography from '@material-ui/core/Typography';
+
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import Button from '@material-ui/core/Button';
 import Modal from '@material-ui/core/Modal';
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 import Grid from '@material-ui/core/Grid';
+
+
+import CardHeader from '@material-ui/core/CardHeader';
+import IconButton from '@material-ui/core/IconButton';
+
+import ViewListIcon from '@material-ui/icons/ViewList';
+import LibraryAddIcon from '@material-ui/icons/LibraryAdd';
+import Tooltip from '@material-ui/core/Tooltip';
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -48,6 +56,10 @@ const useStyles = makeStyles((theme) => ({
     'width': '50%',
     'height': '30%',
     'margin': 'auto',
+  },
+
+  button: {
+    margin: theme.spacing(1),
   },
 
   buttonStatusGroup: {
@@ -107,14 +119,24 @@ const MaketCard = (props) => {
 
 
   React.useEffect(() => {
-        openCard(props.match.params.id)
-}, [props.match.params.id]);
+    openCard(props.match.params.id)
+  }, [props.match.params.id]);
 
+
+  const backToList = () => {
+    props.history.push({ pathname: '/makets' })
+  }
+
+
+  const createNewMaket = () => {
+    props.history.push({ pathname: '/maket-project/new' }, {id:props.match.params.id})
+  }
+  
 
   return (
-  
-  
-   <div className={classes.root}>
+
+
+    <div className={classes.root}>
       {maket &&
 
         <Grid container spacing={0}>
@@ -123,10 +145,38 @@ const MaketCard = (props) => {
           <Grid item xs={10}>
 
             <Card >
+              <CardHeader
+                action={
+
+                  <div>
+
+
+                    <Tooltip title="Вернуться в список">
+                      <IconButton aria-label="settings" onClick={backToList}>
+                        <ViewListIcon />
+                      </IconButton>
+                    </Tooltip>
+
+
+                    <Tooltip title="Создать новый макет">
+                      <IconButton aria-label="settings" onClick={createNewMaket}>
+                        <LibraryAddIcon />
+                      </IconButton>
+                    </Tooltip>
+
+
+                  </div>
+
+
+
+                }
+
+                title={"Макет №" + maket.code + " "}
+                subheader={maket.product}
+
+              />
               <CardContent>
-                <Typography gutterBottom variant="h5" component="h2">
-                  Макет №{maket.code + " "}
-                </Typography>
+
 
                 <div className={classes.buttonStatusGroup}>
                   {!statusBeingSet && maket.actions.map((action) => {
@@ -153,7 +203,6 @@ const MaketCard = (props) => {
                 </Modal>
 
                 <Descriptions layout="vertical" bordered >
-                  <Descriptions.Item label="Продукт">{maket.product}</Descriptions.Item>
                   <Descriptions.Item label="Конечный потребитель">{maket.finalBuyer}</Descriptions.Item>
                   <Descriptions.Item label="Статус">{maket.status}</Descriptions.Item>
                 </Descriptions>

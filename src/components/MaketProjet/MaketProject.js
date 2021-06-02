@@ -173,25 +173,23 @@ const MaketProject = (props) => {
         fieldErrors,
         fildIsVisible
 
-
-
     } = React.useContext(MaketProjectContext);
 
 
-
-
-    console.log('fieldErrors', fieldErrors);
-
-
-
+    if (props.location.state) {
+        console.log(props.location.state.id);
+    }
+    
     const HendleChangeFild = (fildId, value) => {
         changeProjectField(fildId.trim(), value)
     }
 
 
     React.useEffect(() => {
-        if (props.match.params.id == 'new') {
+        if (props.match.params.id == 'new' && !props.location.state) {
             getProjects()
+        } else if  (props.match.params.id == 'new' && props.location.state && props.location.state.id) {
+            getProject("", props.location.state.id, true)
         } else {
             getProject("", props.match.params.id)
 
@@ -202,13 +200,13 @@ const MaketProject = (props) => {
 
     const next = () => {
         if (stagesProject.length - 1 >= currentStage && !stageRequest) {
-            nextStage(true, props.history);
+            nextStage(true, props.history, props.match.params.id);
         }
     };
 
     const prev = () => {
         if (currentStage > 0 && !stageRequest) {
-            nextStage(false, props.history);
+            nextStage(false, props.history, props.match.params.id);
         }
     };
 
