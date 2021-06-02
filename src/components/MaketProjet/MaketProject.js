@@ -21,7 +21,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
-
+import Card from '@material-ui/core/Card';
 
 const { Step } = Steps;
 const useStyles = makeStyles((theme) => ({
@@ -38,14 +38,16 @@ const useStyles = makeStyles((theme) => ({
         margin: theme.spacing(1),
     },
 
+    card : {
+
+        marginTop: 10,
+    },
+
     stepsContent: {
 
-        //  minHeight: '200px',
         marginTop: 20,
-        // marginRight: 20,
         textAlign: 'center',
-        // backgroundColor: '#fafafa',
-        border: '1px dashed #e9e9e9',
+       
         borderRadius: '2px',
         verticalAlign: 'center'
     },
@@ -56,7 +58,7 @@ const useStyles = makeStyles((theme) => ({
         marginTop: 20,
         //marginLeft: 20,
         textAlign: 'center',
-        backgroundColor: '#fafafa',
+       // backgroundColor: '#fafafa',
         justifyContent: 'center',
     },
 
@@ -278,8 +280,10 @@ const MaketProject = (props) => {
 
                     </div>
 
-                    <div className={classes.stepsContent}>
 
+                    <Card className={classes.stepsContent}>
+
+                   
                         {filds.map((fild) => {
 
 
@@ -433,9 +437,8 @@ const MaketProject = (props) => {
                             }
 
                         })}
-
-
-                    </div>
+                    
+                    </Card>
 
 
                 </Grid>
