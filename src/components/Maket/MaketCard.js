@@ -10,7 +10,7 @@ import PropTypes from 'prop-types';
 import SwipeableViews from 'react-swipeable-views';
 import { Descriptions } from 'antd';
 import FilesTable from './FilesTable'
-import ColorsTable from './ColorsTable'
+import HistoryTable from './HistoryTable'
 import ParameterTable from './ParameterTable'
 import TasksTable from './TasksTable'
 import FormTask from './FormTask'
@@ -229,7 +229,7 @@ const MaketCard = (props) => {
                       <Tab label="Основные данные" {...a11yProps(0)} />
                       <Tab label={"Файлы (" + maket.files.length + ")"} {...a11yProps(1)} />
                       <Tab label={"Задания (" + maket.tasks.length + ")"} {...a11yProps(2)} />
-                      <Tab label={"Цвета (" + maket.colors.length + ")"} {...a11yProps(3)} />
+                      <Tab label={"История (" + maket.history.length + ")"} {...a11yProps(3)} />
                     </Tabs>
                   </AppBar>
                   <SwipeableViews
@@ -247,7 +247,7 @@ const MaketCard = (props) => {
                       {idTaskChange && <FormTask />}
                     </TabPanel>
                     <TabPanel value={indexСurrentTab} index={3} dir={theme.direction}>
-                      <ColorsTable colors={maket.colors} />
+                      <HistoryTable colors={maket.history} />
                     </TabPanel>
                   </SwipeableViews >
                 </div>

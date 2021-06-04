@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-const ColorsTable = ({ colors }) => {
+const HistoryTable = ({ colors }) => {
 
   const classes = useStyles();
 
@@ -28,10 +28,13 @@ const ColorsTable = ({ colors }) => {
       <Table className={classes.table} size="small" aria-label="a dense table">
         <TableHead>
           <TableRow>
-            <TableCell>Цвет</TableCell>
-            <TableCell>RGB</TableCell>
+            <TableCell>Пользователь</TableCell>
+            
+            <TableCell>Дата</TableCell>
+            
+            <TableCell>Статус</TableCell>
 
-            <TableCell align="right">Сторона</TableCell>
+            <TableCell>Комментарий</TableCell>
 
           </TableRow>
         </TableHead>
@@ -40,10 +43,20 @@ const ColorsTable = ({ colors }) => {
             <TableRow key={row.id}>
 
               <TableCell component="th" scope="row" >
-                {row.color}
+                {row.user}
               </TableCell>
-              <TableCell align="right" style={{ background: `rgb(${row.rgb})` }}></TableCell>
-              <TableCell align="right">{row.turnover}</TableCell>
+
+              <TableCell component="th" scope="row" >
+                {row.startDate}
+              </TableCell>
+
+              <TableCell component="th" scope="row">
+                 {row.state} 
+                 </TableCell>
+
+              <TableCell component="th" scope="row">
+                {row.coment}
+                </TableCell>
 
             </TableRow>
           ))}
@@ -55,4 +68,4 @@ const ColorsTable = ({ colors }) => {
 }
 
 
-export default ColorsTable
+export default HistoryTable

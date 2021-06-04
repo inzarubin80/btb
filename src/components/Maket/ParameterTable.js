@@ -49,6 +49,15 @@ const ParameterTable = ({ maket }) => {
           </TableRow>
 
 
+          <TableRow >
+            <TableCell component="th" scope="row" >
+              Дата печати
+              </TableCell>
+            <TableCell align="left">
+              {maket.printDate}
+            </TableCell>
+          </TableRow>
+
          
 
           <TableRow >
