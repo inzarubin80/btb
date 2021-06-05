@@ -492,6 +492,7 @@ export const MaketCardState = ({ children }) => {
             openFoldersTask: state.openFoldersTask,
             statusBeingSet: state.statusBeingSet,
             taskSaved:state.taskSaved,
+            maketRequest:state.maketRequest,
             openCard,
             openChangeTask,
             switchTab,

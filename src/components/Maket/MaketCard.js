@@ -117,7 +117,7 @@ function a11yProps(index) {
 const MaketCard = (props) => {
 
   const classes = useStyles();
-  const { maket, switchTab, indexСurrentTab, clearMessage, idTaskChange, openCard, hendleSetMaketStatus, statusBeingSet, message } = React.useContext(MaketCardContext);
+  const { maket, switchTab, indexСurrentTab, clearMessage, idTaskChange, openCard, hendleSetMaketStatus, statusBeingSet, message,maketRequest} = React.useContext(MaketCardContext);
   const theme = useTheme();
   const handleChange = (event, newValue) => {
     switchTab(newValue);
@@ -146,6 +146,25 @@ const MaketCard = (props) => {
 
 
     <div className={classes.card}>
+
+      <Modal
+        open={message ? true : false}
+        onClose={() => { }}
+        aria-labelledby="simple-modal-title"
+        aria-describedby="simple-modal-description"
+      >
+
+        <div className={classes.messageBox}>
+          {message && <Alert onClose={() => { clearMessage(message.uid) }} severity={message.type}>{message.str}</Alert>}
+        </div>
+      </Modal>
+
+
+      {maketRequest && <div>
+        <CircularProgress />
+      </div>}
+
+
       {maket &&
 
         <Grid container spacing={0}>
@@ -161,9 +180,9 @@ const MaketCard = (props) => {
 
                     {!statusBeingSet && maket.actions.map((action) => {
                       if (action.progress) {
-                        return (<Button className={classes.button} size = 'small' onClick={() => { hendleSetMaketStatus(action.uid) }} variant="outlined" endIcon={<ArrowForwardIcon />} key={action.uid} color="primary"> {action.name}</Button>)
+                        return (<Button className={classes.button} size='small' onClick={() => { hendleSetMaketStatus(action.uid) }} variant="outlined" endIcon={<ArrowForwardIcon />} key={action.uid} color="primary"> {action.name}</Button>)
                       } else {
-                        return (<Button className={classes.button} size = 'small'  onClick={() => { hendleSetMaketStatus(action.uid) }} variant="outlined" startIcon={<ArrowBackIcon />} key={action.uid} color="primary"> {action.name}</Button>)
+                        return (<Button className={classes.button} size='small' onClick={() => { hendleSetMaketStatus(action.uid) }} variant="outlined" startIcon={<ArrowBackIcon />} key={action.uid} color="primary"> {action.name}</Button>)
                       }
                     }
                     )}
@@ -202,17 +221,7 @@ const MaketCard = (props) => {
 
 
 
-                <Modal
-                  open={message ? true : false}
-                  onClose={() => { }}
-                  aria-labelledby="simple-modal-title"
-                  aria-describedby="simple-modal-description"
-                >
 
-                  <div className={classes.messageBox}>
-                    {message && <Alert onClose={() => { clearMessage(message.uid) }} severity={message.type}>{message.str}</Alert>}
-                  </div>
-                </Modal>
 
 
 
