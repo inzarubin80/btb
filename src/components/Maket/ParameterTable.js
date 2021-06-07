@@ -51,7 +51,7 @@ const ParameterTable = ({ maket }) => {
 
           <TableRow >
             <TableCell component="th" scope="row" >
-              Дата печати
+              Последняя дата печати
               </TableCell>
             <TableCell align="left">
               {maket.printDate}
