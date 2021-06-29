@@ -116,6 +116,7 @@ function a11yProps(index) {
 
 const MaketCard = (props) => {
 
+  
   const classes = useStyles();
   const { maket, switchTab, indexСurrentTab, clearMessage, idTaskChange, openCard, hendleSetMaketStatus, statusBeingSet, message,maketRequest} = React.useContext(MaketCardContext);
   const theme = useTheme();
@@ -205,7 +206,7 @@ const MaketCard = (props) => {
 
 
 
-
+                    
 
 
                   </div>
