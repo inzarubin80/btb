@@ -8,6 +8,8 @@ import { MaketCardContext } from '../../context/MaketCard/MaketCardContext';
 
 import AttachedFiles from '../AttachedFiles/AttachedFiles';
 
+let d = 1;
+
 const useStyles = makeStyles((theme) => ({
   table: {
     minWidth: 10,
